@@ -1,0 +1,31 @@
+curl --location 'https://deap-agent.dingtalk.com/deapHttpProxy/chat/h5/runtime/api/chat.json' \
+--header 'accept: text/event-stream' \
+--header 'accept-language: zh-CN,zh;q=0.9' \
+--header 'bx-v: 2.5.36' \
+--header 'content-type: application/json' \
+--header 'origin: https://deap-agent.dingtalk.com' \
+--header 'priority: u=1, i' \
+--header 'referer: https://deap-agent.dingtalk.com/h5/index.html?publish_h5=1&code=3cb8c29c-c817-4f41-b2ed-c5982399a9ab&dialogId=da0bd57f8b4d49b8bca3acb5e22e791f' \
+--header 'sec-ch-ua: "Not;A=Brand";v="8", "Chromium";v="150", "Google Chrome";v="150"' \
+--header 'sec-ch-ua-mobile: ?0' \
+--header 'sec-ch-ua-platform: "macOS"' \
+--header 'sec-fetch-dest: empty' \
+--header 'sec-fetch-mode: cors' \
+--header 'sec-fetch-site: same-origin' \
+--header 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36' \
+--header 'x-albert-chat-req: 1' \
+--header 'x-deap-referer: https://deap-agent.dingtalk.com/h5/index.html?publish_h5=1&code=3cb8c29c-c817-4f41-b2ed-c5982399a9ab' \
+--header 'Cookie: arms_uid=ba76261d-02a4-48e4-9813-6f8e3f4802c9; cna=SHaxIL0fcHECAQAAAADAWecr; dd_l=zh_CN; dd_home_locale=zh-cn; _lwc_=42.120.72.74_1783596436811603215; cs_client_mark={%22staff_id%22:%22225855%22%2C%22umid_token%22:%22CG5112EC%2C4D12%2C493@%2C@44E%2CB7@1E8CCG370%22}; doc_atoken=NjkwODEwNDAWqImOIxiUemggQZleZSCyoQkaEZYpIYt; xlly_s=1; dt_s=u-41e17d0-9f54ab43d6-b50ab41-4e627e-2537e1dd-bc3ba1f0-e9a6-44e7-9222-60e7c79a09db; account=oauth_k1%3AQS27Ejc61LA7%2BZ9wyJD69bJnh5WU3G%2Bv2HBRbbkSIwqWl0pq9TvF942jxKC4tt9M%2Bdc5lSM8Dn%2F9euRWr6KxPTp43HNOqzafTk2Nx6qivS0%3D; deviceid=a4efda806d7244329a505ca9ac10faeb; pub_uid=bGlO2E9tPX%2FtfEJ4vg3qPg%3D%3D; pub_org_id=CUoIoACFmpg2pCwjUvbkXA%3D%3D; RECENT_OPEN_DOC_KEYS=ABmOoW518pG7ZOaw%2CMp7ld75Pk8YzWOBQ; corp_id=dingf3e3ba62d7031dcf35c2f4657eb6378f; tfstk=g1RKYW0FPVUpuqlsDWDMq_B-XXuijAYe6H8bZgj3FhK90n3FqeMU27K9lTOkKUqRP3x1tTiFtQK9YZIB-Umzwzs9A7XHqQpawE8yt25o868Fa_immjvJ8e5rvixKiBF_5ZL_OW6SI1aiL5HsmjcDRv_FZFiDEakNVab5NwsCFPgOyae5N7wIWG_Ru8ZBV_gtWa_bFg_QNRG1kZC5V31SWFsNy__BV_g95G7SsoFN4Ys0wdj1YqTZhnV7NCQdBAYffnKjrwXdcestdvOTg9IXRGFSvM_V-G_v10rh4CL6OZxssWCJ5aKAOdn_93LB337XAfECJpTvoOdrc7QwCHWGJd37CMTfYE1HZlgd4Bxpw9Rjm5SBBCRRtdmLigWWIBW2tcNdGK8htLtsP7sJCasrgIAxCYrcDa2IWVezU9_Zs5xVRSx6Eq_OmVxQU8WT3NImWSwzU9_NWi0g48yPB-5..; isg=BLW1Y6TdMyLp5VXiL9sVZAavxDdvMmlEgA6Xxzfa1Cx7DtYA84AzFY_IWdI4coH8' \
+--data '{
+    "thread_id": "",
+    "message": "你好",
+    "run_id": "local-dfdfad52-9d66-4369-bb3c-5dc3a3d172f6",
+    "require_auth": false,
+    "dialogId": "da0bd57f8b4d49b8bca3acb5e22e791f",
+    "agentCode": "3cb8c29c-c817-4f41-b2ed-c5982399a9ab",
+    "attachmentIds": [],
+    "customAttachments": [],
+    "skillExecutionPlan": {},
+    "localUserMessageId": "local-dfdfad52-9d66-4369-bb3c-5dc3a3d172f6",
+    "query": "你好"
+}'

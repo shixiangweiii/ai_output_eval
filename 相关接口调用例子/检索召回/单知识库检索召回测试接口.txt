@@ -1,0 +1,26 @@
+# 接口例子
+curl 'https://deap.dingtalk.com/deapHttpProxy/studio2/proxy/dataset/fe/api/v2/dataset/manage/retrieval_test.json' \
+  -H 'accept: application/json, text/plain, */*' \
+  -H 'accept-language: zh-CN,zh;q=0.9' \
+  -H 'bx-v: 2.5.36' \
+  -H 'content-type: application/json' \
+  -b 'arms_uid=9b641528-e6d0-4408-b8f2-629daa1bce33; cna=SHaxIL0fcHECAQAAAADAWecr; dd_l=zh_CN; dd_home_locale=zh-cn; _lwc_=42.120.72.74_1783596436811603215; cs_client_mark={%22staff_id%22:%22225855%22%2C%22umid_token%22:%22CG5112EC%2C4D12%2C493@%2C@44E%2CB7@1E8CCG370%22}; doc_atoken=NjkwODEwNDAWqImOIxiUemggQZleZSCyoQkaEZYpIYt; XSRF-TOKEN=e549314e-8c53-486a-b3e6-c7ff7d0c6a69; xlly_s=1; dt_s=u-41e17d0-9f54ab43d6-b50ab41-4e627e-2537e1dd-bc3ba1f0-e9a6-44e7-9222-60e7c79a09db; corp_id=dingf3e3ba62d7031dcf35c2f4657eb6378f; account=oauth_k1%3AQS27Ejc61LA7%2BZ9wyJD69bJnh5WU3G%2Bv2HBRbbkSIwqWl0pq9TvF942jxKC4tt9M%2Bdc5lSM8Dn%2F9euRWr6KxPTp43HNOqzafTk2Nx6qivS0%3D; deviceid=a4efda806d7244329a505ca9ac10faeb; pub_uid=bGlO2E9tPX%2FtfEJ4vg3qPg%3D%3D; pub_org_id=CUoIoACFmpg2pCwjUvbkXA%3D%3D; RECENT_OPEN_DOC_KEYS=ABmOoW518pG7ZOaw%2CMp7ld75Pk8YzWOBQ; tfstk=goEsu44wkSEEdU6OMCWFANDfVYibh9SPDKMYE-KwHcnthnN4HqE47-RjHSPKbqCiboNQN7GTQ-5DcKhxtoWigNcvc82m6mzZ_xFQZWqw7RWglxextIKxMZvg-7yJbl7i0niimmCPagSPSRmmDEwnjoJivYDkDilxkpni3BVluxszIRvpCIBzJg7X8yQmBjFxWXeKUXd9MSLTp9Mx3CLvXSeddXD-MFHvDBdKQYMxDmFxvDhnHmHTMVBQpXDxDjhBDNDehX213stWwDXWVRlBDnEIdsDaC1xrCuD1LbyIOBITA30swRhBc1FA5khKFkCD_jqQplHz9M-scJHbNcUC9hNbBzVme5IB6AaTF8uQm_KjKyFi8AaCHehTef2-boRdCjqa1ogg2_-n6yZ3cczF13lmkyrirl5pf0UuQczY9tKxGyHA4c-rNg-ylpgkcvGPd9TDo1YkZRTbwwWxWvDeH96Bzh0tKvahd9TDoVHnLRXCdU-G.; isg=BAUFeruXw9IsteXy_0vFVFZfFEc_wrlUsJ5H9wdpxzwdni8Q0RcLJT84qcJokdEM' \
+  -H 'origin: https://deap.dingtalk.com' \
+  -H 'priority: u=1, i' \
+  -H 'referer: https://deap.dingtalk.com/fe/index' \
+  -H 'sec-ch-ua: "Not;A=Brand";v="8", "Chromium";v="150", "Google Chrome";v="150"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "macOS"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36' \
+  -H 'x-xsrf-token: e549314e-8c53-486a-b3e6-c7ff7d0c6a69' \
+  --data-raw '{"datasetId":"844b8ded-9bf4-44b6-bc1a-a5ccee745832","query":"架构"}'
+
+## 请求参数
+query 用户输入的测试召回内容，从评测集中读取问题
+datasetId 知识库ID，固定用 "844b8ded-9bf4-44b6-bc1a-a5ccee745832"
+
+# 返回结果
+{"success":true,"content":[{"datasetId":"844b8ded-9bf4-44b6-bc1a-a5ccee745832","documentId":"cfb4e25d-7928-4adc-bfe6-9b58864d92b3","documentName":"06_消费信贷智能风控体系设计说明书.md","chunkId":"0","content":"# 06_消费信贷智能风控体系设计说明书.md\n## 消费信贷智能风控体系设计说明书\n\n文档编号：RISK-ARCH-2026-011\n密级：机密\n适用系统：零售信贷风控中台（代号\"天秤\"，Libra）\n编写团队：风险管理部 · 模型与策略组\n\n## 1. 系统定位与背景\n\n\"天秤\"是我们零售信贷业务的风控大脑，覆盖从申请、审批、放款到贷后的全生命周期。它要回答的核心问题只有一个：**这笔钱借出去，能不能收回来？**\n\n风控不是简单地\"拒绝坏人\"。如果风控卡得太死，好客户也被拒，业务量上不去；卡得太松，坏账吃掉利润。所以风控的本质是**在风险和收益之间找平衡点**，这个\"平衡\"贯穿全文，第六节的额度策略会具体量化它。\n\n系统日均处理申请约 12 万笔，其中约 68% 由机器自动决策、无需人工介入。这个自动化率是我们和传统信审最大的区别。\n\n![](https://upload.wikimedia.org/wikipedia/commons/9/93/The_Risk_Management_Process.png)\n\n## 2. 三道防线的架构\n\n\"天秤\"的风控分三层，行内俗称\"三道闸\"：\n\n**贷前（准入）**：申请进来先过反欺诈规则和准入门槛。这一层拦的是\"根本不该借的人\"——身份造假、多头借贷、黑名单。\n**贷中（审批与额度）**：过了准入的，用信用评分模型算风险，决定批不批、批多少、什么利率。\n**贷后（监控与催收）**：放款后持续监控还款行为，异常预警，逾期分级处置。\n\n⚠️ **易混淆概念（务必分清）**：**反欺诈**和**信用风险**是两回事，很多新人混为一谈。反欺诈防的是\"骗子根本没打算还\"（主观恶意），信用风险防的是\"好人还不上\"（客观能力不足）。两者的数据特征、模型、处置方式完全不同——反欺诈重设备指纹和关系网络，信用风险重收入负债和历史履约。搞混了，策略就全错。","enabledState":true,"top":1,"relevanceScore":0.010314941,"query":"架构"},{"datasetId":"844b8ded-9bf4-44b6-bc1a-a5ccee745832","documentId":"f87f4ffd-cb11-4bbe-a305-fbd3c0801474","documentName":"09_在线教育平台自适应学习系统技术白皮书.md","chunkId":"1","content":"# 09_在线教育平台自适应学习系统技术白皮书.md\n### 3. 掌握度是怎么算出来的（易混淆）\n\n这里要澄清一个业内常被混淆的对比：**\"做对了\" ≠ \"掌握了\"**。\n\n**朴素做法（我们早期的错误版本）**：答对一题掌握度就 +0.1，答错 -0.1。问题很快暴露——学生蒙对、抄答案、或者靠死记硬背特定题型，掌握度虚高，一到变式题就露馅。这是个典型反例。\n\n**现在的做法**：引入类似\"知识追踪\"（Knowledge Tracing）的概率模型，综合考虑题目难度、作答用时、是否首次尝试、以及**猜对的概率**。一道简单题做对，加分很少；一道难题在没提示下首次做对，加分才多。这样掌握度才反映真实水平。\n\n## 4. 内容与题库：多模态呈现\n\n\"伯乐\"的内容库不只有文字题。同一个知识点，我们准备了多种形态：图文讲解、动画演示、真人微课视频、互动练习。系统会根据学生的偏好和历史数据，推送最适合他的形态——有的孩子看文字就懂，有的必须看动画。\n\n题目本身也做了难度分层和知识点标注，每道题挂在知识图谱的某个或某几个节点上。一道综合题可能同时考\"因式分解 + 一元二次方程\"两个点，做错时系统要能定位到底是哪个点崩了。\n\n## 5. 推荐算法：下一道题推什么（多跳推理）\n\n这是系统的大脑。当学生做错一道\"一元二次方程\"的题，系统不会简单地再推一道同类题硬刚，而是走一条推理链：\n\n第一跳：这道题挂在\"一元二次方程\"节点，学生做错了。\n第二跳：查知识图谱，该节点的先修是\"因式分解\"（第二章讲的先修关系）。\n第三跳：调出学生\"因式分解\"的掌握度——发现只有 0.4（偏低）。\n结论：**根因不在一元二次方程，而在因式分解**。于是系统先推因式分解的巩固内容，等这个短板补上，再回来攻一元二次方程。\n\n这就是\"因材施教\"的算法化：不是哪里错补哪里，而是**顺着知识依赖往前追到真正的薄弱根源**。这条链把第二节的图谱、第三节的掌握度、这一节的推荐全串起来了。","enabledState":true,"top":1,"relevanceScore":4.2676926E-5,"query":"架构"}],"requestId":"","responseMessage":"SUCCESS","responseCode":"0","totalCount":2}

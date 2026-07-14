@@ -1,0 +1,530 @@
+{
+  "exam_meta": {
+    "exam_id": "考卷-2026-07-14-01",
+    "title": "基于医疗/金融/政务教育产品三域语料的 RAG/GraphRAG 评测考卷",
+    "generated_date": "2026-07-14",
+    "corpus_dir": "/Users/shixiangweii/Desktop/ai_output_eval/生成的原始文档语料/2026-07-14-01",
+    "corpus_documents": [
+      "01_急性冠脉综合征院内诊疗路径.md",
+      "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+      "03_颅脑MRI检查在Chiari畸形诊断中的应用.md",
+      "04_口服抗凝药物用药安全警戒简报.md",
+      "05_量化交易策略研发内部笔记.md",
+      "06_消费信贷智能风控体系设计说明书.md",
+      "07_上市公司财报分析实务.md",
+      "08_一网通办政务服务平台业务办理指南.md",
+      "09_在线教育平台自适应学习系统技术白皮书.md",
+      "10_协同文档SaaS云笺多人实时协作功能PRD.md"
+    ],
+    "total_questions": 20,
+    "difficulty_distribution": {
+      "simple": 8,
+      "medium": 8,
+      "hard": 4,
+      "score_weight": "简单40分 + 中等40分 + 困难20分"
+    },
+    "capability_coverage": {
+      "single_chunk_recall": "单chunk事实召回",
+      "cross_chunk": "同文档跨章节拼接",
+      "cross_document": "跨文档多跳推理(3+跳)",
+      "multimodal_image_recall": "图片召回(含hard negative同图异境)",
+      "adversarial": "版本冲突/无答案/工具调用"
+    },
+    "scoring_rubric": {
+      "answer_correctness": "答案与GT一致，关键事实无错漏(占比≈50%)",
+      "reasoning_path_validity": "推理路径与GT的CoT一致，跳数与依赖正确(占比≈25%)",
+      "citation_accuracy": "召回来源文档与章节正确、无幻觉引用(占比≈15%)",
+      "multimodal_recall": "图片召回命中正确URL且区分干扰图(占比≈10%)",
+      "note": "对抗题以'是否正确拒答/是否识别冲突/是否声明需外部工具'为主要得分点"
+    },
+    "field_explanation": {
+      "question": "原始问题(提交给被测RAG系统的query)",
+      "retrieved_chunks": "该题应召回的目标结果片段(GT召回集)，含来源文档、章节、原文片段",
+      "answer": "基于语料的标准答案(Ground Truth)",
+      "reasoning_path": "得出答案的思维链",
+      "eval_criteria": "评分辅助字段(关键词/是否需工具/是否为对抗题)"
+    }
+  },
+  "questions": [
+    {
+      "id": "q_001",
+      "difficulty": "simple",
+      "type": "single_chunk_recall",
+      "question": "为什么胰岛素只能注射、不能做成口服药片？",
+      "retrieved_chunks": [
+        {
+          "source_document": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+          "section": "二、胰岛素到底是什么，它怎么工作",
+          "snippet": "正因为它是蛋白质，口服会被胃酸和消化酶破坏，所以只能打针、不能吃药片。"
+        }
+      ],
+      "answer": "因为胰岛素是蛋白质激素，口服会被胃酸和消化酶破坏而失效，所以只能通过注射给药。",
+      "reasoning_path": "直接定位第二节关于胰岛素本质的描述，属原文事实召回，无需推理。",
+      "eval_criteria": {
+        "keyword_match": ["蛋白质", "胃酸", "消化酶", "破坏", "注射/打针"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_002",
+      "difficulty": "simple",
+      "type": "single_chunk_recall",
+      "question": "急性冠脉综合征(ACS)中，ST段抬高型心梗(STEMI)的首选再灌注策略是什么？",
+      "retrieved_chunks": [
+        {
+          "source_document": "01_急性冠脉综合征院内诊疗路径.md",
+          "section": "5. 再灌注策略选择（PCI vs 溶栓）",
+          "snippet": "首选直接 PCI（经皮冠状动脉介入）。仅当预计 PCI 不可及、且发病 12 小时内时，才考虑溶栓。"
+        }
+      ],
+      "answer": "首选直接PCI（经皮冠状动脉介入）；只有在预计PCI不可及且发病12小时内时才考虑溶栓。",
+      "reasoning_path": "第5节明确给出再灌注策略优先级，直接事实召回。",
+      "eval_criteria": {
+        "keyword_match": ["直接PCI", "经皮冠状动脉介入", "溶栓"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_003",
+      "difficulty": "simple",
+      "type": "single_chunk_recall",
+      "question": "\"企业开办一件事\"集成套餐把过去要分别办的哪四件事打包在一起了？",
+      "retrieved_chunks": [
+        {
+          "source_document": "08_一网通办政务服务平台业务办理指南.md",
+          "section": "第一章 总则与适用范围",
+          "snippet": "打包了四件传统上要分别办的事：营业执照登记、公章刻制、税务登记（含发票申领）、社保开户。"
+        }
+      ],
+      "answer": "营业执照登记、公章刻制、税务登记（含发票申领）、社保开户。",
+      "reasoning_path": "第一章直接列举四项，事实召回。",
+      "eval_criteria": {
+        "keyword_match": ["营业执照", "公章", "税务登记", "社保开户"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_004",
+      "difficulty": "simple",
+      "type": "single_chunk_recall",
+      "question": "消费信贷风控中，预期损失(EL)是由哪三个因子相乘得到的？",
+      "retrieved_chunks": [
+        {
+          "source_document": "06_消费信贷智能风控体系设计说明书.md",
+          "section": "6. 额度与定价策略（呼应第一节的平衡）",
+          "snippet": "预期损失（EL）= 违约概率（PD）× 违约损失率（LGD）× 违约风险敞口（EAD）。"
+        }
+      ],
+      "answer": "预期损失EL = 违约概率PD × 违约损失率LGD × 违约风险敞口EAD。",
+      "reasoning_path": "第6节给出公式，直接事实召回。",
+      "eval_criteria": {
+        "keyword_match": ["PD", "LGD", "EAD", "违约概率", "违约损失率", "违约风险敞口"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_005",
+      "difficulty": "simple",
+      "type": "single_chunk_recall",
+      "question": "协同文档产品\"云笺\"在实时协作方案上，最终选择的是OT还是CRDT？",
+      "retrieved_chunks": [
+        {
+          "source_document": "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+          "section": "3. 技术方案选型：OT vs CRDT（Hard Case 对比）",
+          "snippet": "我们的选择：CRDT。理由和第一节的目标挂钩……我们的用户大量在移动端、地铁里弱网使用，离线可编辑、联网自动合并是刚需，OT 的弱离线支持是硬伤。"
+        }
+      ],
+      "answer": "选择的是CRDT（无冲突复制数据类型），因为目标用户多在移动端弱网场景，离线可编辑是刚需，而OT的弱离线支持是硬伤。",
+      "reasoning_path": "第3节明确给出选型结论，事实召回。",
+      "eval_criteria": {
+        "keyword_match": ["CRDT"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_006",
+      "difficulty": "simple",
+      "type": "single_chunk_recall",
+      "question": "怀疑患者有Chiari畸形（小脑扁桃体下疝畸形）时，影像检查应首选CT还是MRI？",
+      "retrieved_chunks": [
+        {
+          "source_document": "03_颅脑MRI检查在Chiari畸形诊断中的应用.md",
+          "section": "2. MRI 与 CT 的选择逻辑（关键消歧）",
+          "snippet": "怀疑 Chiari，首选 MRI，尤其正中矢状位。CT 仅用于评估合并的骨性异常。"
+        }
+      ],
+      "answer": "首选MRI（尤其正中矢状位）；CT只用于评估合并的骨性异常。",
+      "reasoning_path": "第2节给出明确结论，事实召回。",
+      "eval_criteria": {
+        "keyword_match": ["MRI", "正中矢状位", "CT"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_007",
+      "difficulty": "simple",
+      "type": "multimodal_image_recall",
+      "question": "在线教育自适应学习系统白皮书里，用来配合\"因材施教/课堂教学\"背景描述的那张配图，其图片链接是什么？",
+      "retrieved_chunks": [
+        {
+          "source_document": "09_在线教育平台自适应学习系统技术白皮书.md",
+          "section": "1. 我们要解决的教育痛点",
+          "snippet": "![课堂教学场景](https://upload.wikimedia.org/wikipedia/commons/4/4b/Edwards_School_of_Business_classroom_2020.jpg)"
+        }
+      ],
+      "answer": "图片链接为 https://upload.wikimedia.org/wikipedia/commons/4/4b/Edwards_School_of_Business_classroom_2020.jpg （课堂教学场景图）。",
+      "reasoning_path": "定位doc_09第1节的图片占位符，直接召回图片URL，属简单多模态召回。",
+      "eval_criteria": {
+        "keyword_match": ["Edwards_School_of_Business_classroom", "课堂教学"],
+        "expected_image_url": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Edwards_School_of_Business_classroom_2020.jpg",
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_008",
+      "difficulty": "simple",
+      "type": "single_chunk_recall",
+      "question": "在财报分析中，现金流量表里被认为最关键的指标是哪一个？",
+      "retrieved_chunks": [
+        {
+          "source_document": "07_上市公司财报分析实务.md",
+          "section": "四、现金流量表：照妖镜（引爆第二节的雷）",
+          "snippet": "它分经营、投资、筹资三块，其中\"经营活动现金流净额\"最关键。"
+        }
+      ],
+      "answer": "经营活动现金流净额。",
+      "reasoning_path": "第四节明确指出，事实召回。",
+      "eval_criteria": {
+        "keyword_match": ["经营活动现金流净额", "经营现金流"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_009",
+      "difficulty": "medium",
+      "type": "cross_chunk_single_doc",
+      "question": "为什么急性STEMI患者可以在肌钙蛋白结果还没出来、甚至首次抽血正常时就直接开通血管？请说明其背后的时间逻辑。",
+      "retrieved_chunks": [
+        {
+          "source_document": "01_急性冠脉综合征院内诊疗路径.md",
+          "section": "3. 诊断流程与分诊决策",
+          "snippet": "若 ST 段抬高达到诊断标准 → 直接进入 STEMI 通道 → 启动导管室，目标 D2B < 90 分钟。此时不必等肌钙蛋白结果。"
+        },
+        {
+          "source_document": "01_急性冠脉综合征院内诊疗路径.md",
+          "section": "4. 生物标志物的时间窗陷阱",
+          "snippet": "急性心肌坏死后，hs-cTnT 通常在 3–4 小时才开始爬升……一个发病 1 小时的 STEMI 患者，头一次抽血肌钙蛋白很可能是正常的……心电图定通道 → 标志物定分型 → 但急性 STEMI 阶段标志物不作为放行门槛。"
+        }
+      ],
+      "answer": "因为肌钙蛋白（hs-cTnT）升高有延迟，急性心肌坏死后通常要3-4小时才开始爬升，所以发病早期的STEMI患者首次抽血肌钙蛋白可能正常。若死等它转阳会浪费黄金再灌注时间。诊疗逻辑是\"心电图定通道、标志物定分型\"，急性STEMI阶段心电图已足以确诊，标志物不作为放行门槛。",
+      "reasoning_path": "1.第3节确认STEMI通道不必等肌钙蛋白；2.第4节解释原因——标志物升高延迟；3.综合两节得出\"心电图优先于标志物\"的时间逻辑。属同文档跨章节2跳。",
+      "eval_criteria": {
+        "keyword_match": ["延迟", "3-4小时", "心电图优先", "浪费再灌注时间"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_010",
+      "difficulty": "medium",
+      "type": "cross_chunk_single_doc",
+      "question": "一位糖尿病患者发现血糖怎么打胰岛素都降不下来，他第一反应就想加大剂量。根据手册，这样做为什么可能是错的？他应该先排查什么？",
+      "retrieved_chunks": [
+        {
+          "source_document": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+          "section": "八、储存与出行：胰岛素也会\"变质\"",
+          "snippet": "有患者夏天把胰岛素笔放在汽车仪表盘上暴晒，之后血糖怎么打都降不下来，还以为是病情加重加大剂量，差点酿成大祸——其实是药早失效了……血糖不对，先别急着改剂量，要先排查种类（三节）、储存（本节）、注射（七节）这些\"变量\"。"
+        },
+        {
+          "source_document": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+          "section": "三、胰岛素的种类：一个容易搞混的清单",
+          "snippet": "速效和长效长得像、名字也像，但打错后果完全不同。"
+        }
+      ],
+      "answer": "可能是错的，因为血糖降不下来未必是病情加重，很可能是胰岛素失效或用法出错。应先排查三类\"变量\"：胰岛素种类是否打错（第三节）、储存是否得当导致失效（如高温暴晒，第八节）、以及注射方法/部位是否有问题（第七节），而不是盲目加大剂量。",
+      "reasoning_path": "1.第八节给出反例并点出\"先排查变量再改剂量\"；2.关联第三节(种类)、第七节(注射)；3.综合得出应先排查而非加量。属同文档跨章节推理。",
+      "eval_criteria": {
+        "keyword_match": ["失效", "储存/高温", "种类打错", "注射方法", "先排查"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_011",
+      "difficulty": "medium",
+      "type": "cross_chunk_single_doc",
+      "question": "做颅脑MRI排查Chiari畸形时，如果只扫了矢状位T1、没扫T2（如按2022旧规范），可能漏掉什么？这会导致临床决策出现什么偏差？",
+      "retrieved_chunks": [
+        {
+          "source_document": "03_颅脑MRI检查在Chiari畸形诊断中的应用.md",
+          "section": "3. 扫描序列与体位规范",
+          "snippet": "2022 旧规范只要求矢状位 T1，未强制 T2。由于漏掉 T2 导致过脊髓空洞漏诊，新规范强制增加矢状位 T2WI。"
+        },
+        {
+          "source_document": "03_颅脑MRI检查在Chiari畸形诊断中的应用.md",
+          "section": "5. 从影像到临床决策的多跳推理",
+          "snippet": "第二跳：矢状位 T2 发现颈髓内长条状高信号——这是脊髓空洞（syrinx）……如果只做了 T1（旧规范），第二跳断掉，整条推理链就得出\"随访即可\"的错误结论。"
+        }
+      ],
+      "answer": "会漏掉脊髓空洞（syrinx）。脊髓空洞需靠矢状位T2才能发现。一旦漏掉，\"下疝+脊髓空洞→倾向手术减压\"的推理链就断在第二跳，医生可能错误地得出\"随访即可\"的结论，从而延误本应手术的患者。",
+      "reasoning_path": "1.第3节说明旧规范缺T2会漏脊髓空洞；2.第5节说明脊髓空洞是决策链关键中间节点；3.综合得出漏T2→漏空洞→错误随访结论。属同文档跨章节2跳。",
+      "eval_criteria": {
+        "keyword_match": ["脊髓空洞", "syrinx", "T2", "随访", "错误结论/漏诊"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_012",
+      "difficulty": "medium",
+      "type": "cross_chunk_single_doc",
+      "question": "量化笔记里，为什么不能只用均线金叉作为买入信号，而要额外加上成交量确认？加了之后有什么效果？",
+      "retrieved_chunks": [
+        {
+          "source_document": "05_量化交易策略研发内部笔记.md",
+          "section": "2. 均线系统：最朴素也最容易过拟合",
+          "snippet": "均线是滞后指标……用纯 MA5/MA20 金叉死叉策略跑单边震荡市，被反复\"打脸\"（频繁假信号来回止损）。"
+        },
+        {
+          "source_document": "05_量化交易策略研发内部笔记.md",
+          "section": "3. 用成交量给信号\"验真\"",
+          "snippet": "真突破 → 通常伴随成交量放大……假突破往往缩量。所以我们把规则改成：金叉 + 当日成交量 > 过去 5 日均量的 1.5 倍，才算有效买入信号。加了这个过滤后，同一段震荡行情的假信号砍掉约 60%。"
+        }
+      ],
+      "answer": "因为均线是滞后指标，纯金叉在震荡市会产生大量假信号导致反复止损。加成交量确认的逻辑是：真突破通常伴随放量、假突破往往缩量，所以规则改为\"金叉+当日成交量>过去5日均量的1.5倍\"才算有效信号。加了这个过滤后，同一段震荡行情的假信号被砍掉约60%。",
+      "reasoning_path": "1.第2节指出纯均线假信号问题；2.第3节给出成交量确认逻辑与效果；3.综合两节因果。属同文档跨章节推理。",
+      "eval_criteria": {
+        "keyword_match": ["滞后指标", "假信号", "成交量放大", "1.5倍", "砍掉约60%"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_013",
+      "difficulty": "medium",
+      "type": "cross_chunk_single_doc",
+      "question": "晨光精密2025年净利润5.6亿、增35%，数字很漂亮，但博主为什么仍然警惕它？请结合利润、应收账款和现金流说明。",
+      "retrieved_chunks": [
+        {
+          "source_document": "07_上市公司财报分析实务.md",
+          "section": "二、利润表：最容易被\"美化\"的一张",
+          "snippet": "净利润是\"算出来的\"，不是\"收到的\"。它包含大量会计估计和非现金项目。增速好看，未必等于口袋里真进了钱。"
+        },
+        {
+          "source_document": "07_上市公司财报分析实务.md",
+          "section": "三、资产负债表：家底与隐患",
+          "snippet": "应收账款从 6 亿涨到 11 亿，涨幅远超营收增速……卖出去的货，钱大量还没收回来。"
+        },
+        {
+          "source_document": "07_上市公司财报分析实务.md",
+          "section": "四、现金流量表：照妖镜（引爆第二节的雷）",
+          "snippet": "净利润 5.6 亿，但经营活动现金流净额只有 0.8 亿……利润表在笑，现金流量表在哭。"
+        }
+      ],
+      "answer": "因为漂亮的净利润是\"算出来的\"而非\"收到的\"：晨光应收账款从6亿暴增到11亿（涨幅远超营收），说明大量货款只是挂账没真收回；对应地，净利润5.6亿而经营活动现金流净额只有0.8亿，二者严重背离。所以利润是\"纸面富贵\"，盈利质量存疑。",
+      "reasoning_path": "1.第二节:净利润非现金、可能不等于真进钱；2.第三节:应收账款暴增;3.第四节:现金流与利润背离。三处拼接得出\"利润漂亮但质量存疑\"。属同文档跨章节多处拼接。",
+      "eval_criteria": {
+        "keyword_match": ["应收账款", "11亿", "经营现金流", "0.8亿", "背离", "纸面富贵"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_014",
+      "difficulty": "medium",
+      "type": "concept_disambiguation",
+      "question": "在消费信贷风控里，\"反欺诈\"和\"信用风险\"是不是一回事？它们分别防的是什么，处置侧重点有何不同？",
+      "retrieved_chunks": [
+        {
+          "source_document": "06_消费信贷智能风控体系设计说明书.md",
+          "section": "2. 三道防线的架构",
+          "snippet": "反欺诈防的是\"骗子根本没打算还\"（主观恶意），信用风险防的是\"好人还不上\"（客观能力不足）。两者的数据特征、模型、处置方式完全不同——反欺诈重设备指纹和关系网络，信用风险重收入负债和历史履约。"
+        }
+      ],
+      "answer": "不是一回事。反欺诈防的是\"骗子根本没打算还\"（主观恶意），侧重设备指纹和关系网络；信用风险防的是\"好人还不上\"（客观能力不足），侧重收入负债和历史履约。二者的数据特征、模型和处置方式完全不同。",
+      "reasoning_path": "定位第2节的易混淆概念澄清段落，识别两概念的区别，属概念消歧类中等题。",
+      "eval_criteria": {
+        "keyword_match": ["主观恶意", "客观能力不足", "设备指纹", "收入负债", "履约"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_015",
+      "difficulty": "medium",
+      "type": "hard_negative_concept",
+      "question": "有办事人认为\"一网通办\"的并联审批就意味着不用审、能秒过，这个理解对吗？为什么？",
+      "retrieved_chunks": [
+        {
+          "source_document": "08_一网通办政务服务平台业务办理指南.md",
+          "section": "第二章 核心概念：并联审批 vs 串联审批",
+          "snippet": "有办事人以为\"并联\"就是\"不用审了、秒过\"。错。并联指的是\"同时审\"而非\"不审\"，每个部门的审核标准一分没降，只是把等待时间从\"相加\"变成了\"取最大值\"。"
+        }
+      ],
+      "answer": "不对。并联审批指的是多个部门\"同时审\"而非\"不审\"，每个部门的审核标准一分没降，只是把等待时间从各环节\"相加\"变成了\"取最大值\"，从而缩短总时长。因此材料不齐仍会被退回。",
+      "reasoning_path": "定位第二章对\"并联=秒过\"这一误解的纠正，属识别hard negative误区类中等题。",
+      "eval_criteria": {
+        "keyword_match": ["同时审", "不是不审", "标准没降", "取最大值"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_016",
+      "difficulty": "medium",
+      "type": "multimodal_cross_doc_image",
+      "question": "整套语料里，有一张\"风险管理流程/风险管理过程\"的示意图被复用在了两篇不同文档中。请指出是哪张图（给出链接），以及它分别出现在哪两篇文档、对应什么主题。",
+      "retrieved_chunks": [
+        {
+          "source_document": "04_口服抗凝药物用药安全警戒简报.md",
+          "section": "二、抗凝药物的两大阵营",
+          "snippet": "![抗凝治疗风险管理流程](https://upload.wikimedia.org/wikipedia/commons/9/93/The_Risk_Management_Process.png)"
+        },
+        {
+          "source_document": "06_消费信贷智能风控体系设计说明书.md",
+          "section": "1. 系统定位与背景",
+          "snippet": "![风控体系流程总览](https://upload.wikimedia.org/wikipedia/commons/9/93/The_Risk_Management_Process.png)"
+        }
+      ],
+      "answer": "是 The_Risk_Management_Process.png（链接 https://upload.wikimedia.org/wikipedia/commons/9/93/The_Risk_Management_Process.png）。它出现在《04 口服抗凝药物用药安全警戒简报》作为\"抗凝治疗风险管理流程\"，以及《06 消费信贷智能风控体系设计说明书》作为\"风控体系流程总览\"——一个是医疗药物警戒主题，一个是金融风控主题。",
+      "reasoning_path": "1.在多篇文档中检索图片URL；2.发现同一URL(The_Risk_Management_Process.png)出现于doc_04与doc_06；3.分别归纳其上下文主题。属跨文档多模态图片召回。",
+      "eval_criteria": {
+        "keyword_match": ["The_Risk_Management_Process", "doc_04/抗凝", "doc_06/风控"],
+        "expected_image_url": "https://upload.wikimedia.org/wikipedia/commons/9/93/The_Risk_Management_Process.png",
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_017",
+      "difficulty": "hard",
+      "type": "cross_document_multihop",
+      "question": "假设一位刚做完PCI的急性冠脉综合征患者，正在按医嘱服用阿司匹林等抗血小板药物；他因为关节痛，想自己买点布洛芬（一种NSAID）止痛。综合两篇医疗文档，这样做有什么风险？为什么？",
+      "retrieved_chunks": [
+        {
+          "source_document": "01_急性冠脉综合征院内诊疗路径.md",
+          "section": "7. 抗栓与辅助用药的协同（跨科室高频问题）",
+          "snippet": "所有确诊 ACS 的患者，除非有绝对禁忌，均需尽快给予双联抗血小板治疗（DAPT，即阿司匹林 + 一种 P2Y12 抑制剂如替格瑞洛或氯吡格雷）。"
+        },
+        {
+          "source_document": "04_口服抗凝药物用药安全警戒简报.md",
+          "section": "五、本期重点案例复盘（多跳推理）",
+          "snippet": "同期患者又自行服用了某种非甾体抗炎药（NSAID）止痛 → NSAID 本身刺激胃黏膜且抑制血小板 → 与抗凝叠加。终点：消化道大出血入院。"
+        },
+        {
+          "source_document": "04_口服抗凝药物用药安全警戒简报.md",
+          "section": "十、患者教育：警戒不能只靠专业人员",
+          "snippet": "很多人觉得布洛芬、阿司匹林是\"家庭常备小药\"，随便吃，殊不知它们和抗凝药叠加就是消化道出血的导火索。任何新增用药……都要先问医生或药师。"
+        }
+      ],
+      "answer": "风险是显著增加消化道出血（乃至大出血）的可能。推理：ACS患者本就在用抗血小板治疗（DAPT，含阿司匹林），本身已增加出血倾向；而NSAID（布洛芬）会刺激胃黏膜并抑制血小板，二者叠加会形成出血风险的协同放大——doc_04的案例正是抗栓+NSAID叠加导致消化道大出血入院。因此患者不应自行加用NSAID，任何新增用药都应先咨询医生或药师。",
+      "reasoning_path": "1.doc_01第7节确认ACS患者在用阿司匹林抗血小板；2.doc_04第5节案例说明NSAID与抗栓叠加导致消化道大出血；3.doc_04第10节患者教育再次强调该组合是出血导火索；4.跨文档综合得出\"抗血小板+NSAID→出血风险协同放大，应咨询医师\"。跨文档3跳。",
+      "eval_criteria": {
+        "keyword_match": ["消化道出血", "抗血小板/阿司匹林", "NSAID/布洛芬", "叠加/协同", "咨询医生药师"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_018",
+      "difficulty": "hard",
+      "type": "adversarial_version_conflict",
+      "question": "我看到一份资料说急性心梗的溶栓时间窗是\"发病6小时内\"，请问这个说法对吗？现行标准到底是多少小时？",
+      "retrieved_chunks": [
+        {
+          "source_document": "01_急性冠脉综合征院内诊疗路径.md",
+          "section": "5. 再灌注策略选择（PCI vs 溶栓）",
+          "snippet": "旧版 V2.8 曾写\"溶栓时间窗为发病 6 小时内\"，该口径已作废。现行标准是 12 小时内可获益，3 小时内获益最大。若你在某份 2023 年的转诊单上看到\"6 小时\"，那是过期信息，以本节为准。"
+        },
+        {
+          "source_document": "01_急性冠脉综合征院内诊疗路径.md",
+          "section": "文档头部版本说明",
+          "snippet": "本文档替代 2023 年发布的 V2.8，V2.8 中关于溶栓时间窗的表述已作废，请勿再引用旧版口径。"
+        }
+      ],
+      "answer": "\"6小时\"这个说法是过期/已作废的口径，出自旧版V2.8，不应再引用。现行标准（V3.2）是发病12小时内溶栓可获益、3小时内获益最大。回答时应明确指出该资料信息过期并给出现行正确值。",
+      "reasoning_path": "1.识别问题中\"6小时\"对应旧版V2.8已作废口径；2.定位第5节及文档头部版本说明确认现行为12小时；3.作为版本冲突对抗题，需明确指出旧值作废而非直接采信。",
+      "eval_criteria": {
+        "keyword_match": ["6小时已作废/过期", "12小时", "3小时获益最大", "V2.8旧版"],
+        "requires_tool": false,
+        "is_adversarial": true,
+        "adversarial_type": "版本冲突/时间敏感——须识别旧口径已作废"
+      }
+    },
+    {
+      "id": "q_019",
+      "difficulty": "hard",
+      "type": "cross_document_multihop",
+      "question": "量化交易笔记和消费信贷风控说明书分属不同领域，但在\"单一失误 vs 组合失误\"以及\"风险与收益优先级\"上，它们其实传达了高度一致的风险观。请跨这两篇文档提炼出这个共同结论，并各引一处佐证。",
+      "retrieved_chunks": [
+        {
+          "source_document": "05_量化交易策略研发内部笔记.md",
+          "section": "7. 一次完整的策略失效复盘（多跳链条）",
+          "snippet": "这不是某一个环节的错，而是\"过拟合 + 跳过验证 + 仓位过大 + 手动干预\"四个失误叠加的必然结果……从来不是被一颗子弹打死的，而是被一连串本可避免的小错拖垮的。"
+        },
+        {
+          "source_document": "05_量化交易策略研发内部笔记.md",
+          "section": "6. 我们现在的纪律",
+          "snippet": "风控永远优先于收益——活下来比赚快钱重要。"
+        },
+        {
+          "source_document": "04_口服抗凝药物用药安全警戒简报.md",
+          "section": "八、多重用药与老年患者的特殊警戒",
+          "snippet": "抗凝安全的敌人，很少是单一药物的单一问题，而几乎总是\"多个看似无害的因素叠加\"。"
+        },
+        {
+          "source_document": "06_消费信贷智能风控体系设计说明书.md",
+          "section": "1. 系统定位与背景",
+          "snippet": "风控的本质是在风险和收益之间找平衡点。"
+        }
+      ],
+      "answer": "共同结论有两点：其一，重大损失往往不是单一失误造成的，而是多个看似无害的小失误/风险因素叠加的必然结果（量化笔记：\"过拟合+跳过验证+仓位过大+手动干预四个失误叠加……被一连串小错拖垮\"；抗凝简报也印证\"敌人几乎总是多个看似无害因素叠加\"）。其二，风险管理优先于收益追逐（量化笔记：\"风控永远优先于收益，活下来比赚快钱重要\"；风控说明书：\"风控的本质是在风险和收益之间找平衡点\"）。两个不同领域殊途同归，都强调防范组合风险、把风控置于收益之上。",
+      "reasoning_path": "1.从doc_05提炼\"组合失误致命\"与\"风控优先于收益\"；2.从doc_06提炼\"风险收益平衡\"；3.（可选)用doc_04\"叠加\"佐证跨域普适性；4.跨文档归纳共同风险观。跨文档3+跳、需抽象归纳。",
+      "eval_criteria": {
+        "keyword_match": ["组合/叠加失误", "一连串小错", "风控优先于收益", "风险收益平衡", "活下来"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_020",
+      "difficulty": "hard",
+      "type": "adversarial_no_answer_multimodal",
+      "question": "请告诉我《上市公司财报分析实务》里那家公司\"晨光精密\"当前的股价和市盈率(PE)具体是多少？另外，那张12导联心电图配图既然出现在这篇财报文档相关的语料集里，是不是说明晨光精密是一家医疗器械公司？",
+      "retrieved_chunks": [
+        {
+          "source_document": "07_上市公司财报分析实务.md",
+          "section": "一、开篇 / 免责声明",
+          "snippet": "用一家虚构的制造业公司\"晨光精密\"（后文简称\"晨光\"或\"公司\"，别当成真实上市公司）来串讲……内容仅供学习交流，不构成投资建议。"
+        },
+        {
+          "source_document": "07_上市公司财报分析实务.md",
+          "section": "五、为什么不能只看一张表（Hard Case 对比）",
+          "snippet": "只看净利润和市盈率（PE）……（文档仅将PE作为概念讲解，未给出晨光的具体股价或PE数值）"
+        },
+        {
+          "source_document": "05_量化交易策略研发内部笔记.md",
+          "section": "3. 用成交量给信号\"验真\"",
+          "snippet": "![某段行情蜡烛图（含波动区间）](https://upload.wikimedia.org/wikipedia/commons/d/df/12_lead_ECG.jpg) 注：上图借用一张周期性波动的信号图辅助理解……与金融 K 线的形态识别在视觉模式上有相通之处。"
+        }
+      ],
+      "answer": "两个子问题都应拒答或纠正：(1)股价与PE具体数值——语料中查不到。\"晨光精密\"是文档明确声明的虚构公司，文中只把PE当概念讲解，从未给出任何股价或PE具体数值；若需真实公司实时股价/PE，需调用外部行情数据工具（如股价查询MCP），且对虚构公司无意义。(2)12导联心电图配图并不出现在财报文档(doc_07)中，而是被《05量化交易笔记》借用作\"行情波动示意\"的干扰配图，与医疗无关；据此推断\"晨光是医疗器械公司\"是错误的，属被无关图片误导。",
+      "reasoning_path": "1.识别\"晨光精密\"为虚构公司且文档无具体股价/PE数值→无答案，须拒答或声明需外部工具；2.核查12导联心电图图片实际归属doc_05且为借用示意，并非doc_07→驳斥错误前提；3.综合给出拒答+纠偏。对抗题(无答案+多模态误导)。",
+      "eval_criteria": {
+        "keyword_match": ["虚构公司", "无具体数值", "拒答/需外部工具", "心电图图片属doc_05/借用", "非医疗器械"],
+        "requires_tool": true,
+        "tool_name": "get_stock_price(仅对真实公司有意义；本题公司虚构，应说明无法/无需调用)",
+        "is_adversarial": true,
+        "adversarial_type": "无答案 + 多模态误导(同图异境hard negative) + 错误前提反问"
+      }
+    }
+  ]
+}
