@@ -35,7 +35,12 @@ except ImportError:
 METRICS_VERSION = "2.0"
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_EXAM_DIR = PROJECT_ROOT / "基于语料生成的评测集" / "考卷"
-DEFAULT_OUT_DIR = PROJECT_ROOT / "基于语料生成的评测集" / "考试结果"
+RESULTS_ROOT = PROJECT_ROOT / "基于语料生成的评测集"
+# 评测结果按检索后端分目录归档：考试结果-<backend>。只有列入 ONLINE_BACKENDS 的
+# 后端才有已实现的在线检索客户端；其余后端仅支持离线校验或手动归档。
+SUPPORTED_BACKENDS = ("arag", "dify")
+DEFAULT_BACKEND = "arag"
+ONLINE_BACKENDS = frozenset({"arag"})
 
 BASE_URL = (
     "https://deap.dingtalk.com/deapHttpProxy/studio2/proxy/dataset/fe/api/v2/"
@@ -1019,14 +1024,32 @@ def nonnegative_float(value: str) -> float:
     return parsed
 
 
+def resolve_out_dir(args: argparse.Namespace) -> Path:
+    """结果输出根目录：显式 --out-dir 优先，否则按后端取 考试结果-<backend>。"""
+    if args.out_dir:
+        return Path(args.out_dir).expanduser()
+    return RESULTS_ROOT / f"考试结果-{args.backend}"
+
+
 def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="单知识库检索召回评测脚本 v2.0")
     parser.add_argument("--exam-dir", default=str(DEFAULT_EXAM_DIR), help="考卷目录")
     parser.add_argument("--exam", default=None, help="指定单份考卷文件")
     parser.add_argument("--dataset-id", default=DATASET_ID, help="知识库 ID")
+    parser.add_argument(
+        "--backend",
+        choices=SUPPORTED_BACKENDS,
+        default=DEFAULT_BACKEND,
+        help="检索后端，决定默认输出目录 考试结果-<backend>"
+        "（arag=钉钉在线检索；dify 在线检索暂未实现，仅支持离线校验/手动归档）",
+    )
     parser.add_argument("--top-k", type=positive_int, default=5, help="评测 Top-K")
     parser.add_argument("--limit", type=nonnegative_int, default=0, help="只跑前 N 题")
-    parser.add_argument("--out-dir", default=str(DEFAULT_OUT_DIR), help="结果输出根目录")
+    parser.add_argument(
+        "--out-dir",
+        default=None,
+        help="结果输出根目录（默认按 --backend 取 考试结果-<backend>）",
+    )
     parser.add_argument("--sleep", type=nonnegative_float, default=0.5, help="题间限流秒数")
     parser.add_argument("--timeout", type=positive_float, default=30.0, help="单次请求超时秒数")
     parser.add_argument("--retries", type=positive_int, default=3, help="失败重试次数")
@@ -1058,6 +1081,16 @@ def main(argv: Optional[List[str]] = None) -> int:
             print(f"[校验通过] {path}：{len(exam['questions'])} 题")
         return 0
 
+    if args.backend not in ONLINE_BACKENDS:
+        sys.stderr.write(
+            f"[错误] 后端 '{args.backend}' 的在线检索客户端尚未实现，当前仅支持: "
+            f"{', '.join(sorted(ONLINE_BACKENDS))}。"
+            "可用 --validate-only 离线校验，或改用已实现的后端。\n"
+        )
+        return 4
+
+    out_root = resolve_out_dir(args)
+
     try:
         headers = build_headers()
     except AuthenticationError as exc:
@@ -1068,8 +1101,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     session.headers.update(headers)
     timestamp = _dt.datetime.now().strftime("%Y%m%d_%H%M%S")
     print(
-        f"共发现 {len(loaded_exams)} 份考卷，Top-K={args.top_k}，"
-        f"rank_by={args.rank_by}\n"
+        f"共发现 {len(loaded_exams)} 份考卷，后端={args.backend}，Top-K={args.top_k}，"
+        f"rank_by={args.rank_by}\n输出目录: {out_root}\n"
     )
 
     for path, exam in loaded_exams:
@@ -1085,7 +1118,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                 total_expected=exc.total_questions,
             )
             out_dir = write_outputs(
-                args.out_dir,
+                str(out_root),
                 exam_meta,
                 summary,
                 exc.partial_results,
@@ -1103,7 +1136,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             total_expected=len(results),
         )
         out_dir = write_outputs(
-            args.out_dir,
+            str(out_root),
             exam_meta,
             summary,
             results,

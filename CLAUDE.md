@@ -8,7 +8,7 @@ A RAG evaluation workspace. The only implemented evaluator so far scores **retri
 
 Directory names are intentionally Chinese; preserve them. Rough map:
 - `评测脚本/retrieval_eval.py` — the evaluator (metrics **v2.0**).
-- `基于语料生成的评测集/考卷/考卷-YYYY-MM-DD-NN.json` — exam files ("考卷"), the input; newest is `考卷-2026-07-15-02` (25 all-hard questions). `基于语料生成的评测集/考试结果/` — generated output (treat as artifacts).
+- `基于语料生成的评测集/考卷/考卷-YYYY-MM-DD-NN.json` — exam files ("考卷"), the input; newest is `考卷-2026-07-15-02` (25 all-hard questions). `基于语料生成的评测集/考试结果-<backend>/` — generated output, split per retrieval backend (`考试结果-arag` = DingTalk/aRAG runs; `考试结果-dify` = placeholder for the Dify backend). Treat as artifacts.
 - `生成的原始文档语料/<date>/` — source corpus the exams are built from. **This on-disk corpus must stay in sync with the live retrieval KB** (`DATASET_ID` in `retrieval_eval.py`): scoring matches GT snippets against chunks returned by that one fixed knowledge base, so **editing the corpus changes nothing until it is re-ingested**. Docs 05/06/09 were expanded for `考卷-2026-07-15-02` (a shared risk-management image reused across 04/05/06, plus precision/recall paragraphs) and that corpus has been re-ingested.
 - `相关接口调用例子/` — raw curl request/response samples for the live APIs.
 - `评测相关参考文档/` — methodology notes (the "why", not code).
@@ -27,12 +27,14 @@ python -m pytest tests/                                          # full unit sui
 python -m pytest tests/test_retrieval_eval.py::test_name -q      # single test
 python 评测脚本/retrieval_eval.py --validate-only               # validate all exams, no creds/network
 
-# Live run — requires credentials as env vars, hits the DingTalk retrieval API:
+# Live run — requires credentials as env vars, hits the DingTalk retrieval API.
+# --backend {arag,dify} (default arag) picks the output root 考试结果-<backend>;
+# only arag has an online retrieval client, so a live --backend dify run exits 4.
 RETRIEVAL_COOKIE=... RETRIEVAL_XSRF_TOKEN=... \
-  python 评测脚本/retrieval_eval.py --limit 3 --top-k 5          # small smoke run
+  python 评测脚本/retrieval_eval.py --backend arag --limit 3 --top-k 5   # smoke run → 考试结果-arag
 ```
 
-`tests/test_retrieval_eval.py` loads the evaluator via `importlib` from its Chinese path and mocks all HTTP, so the suite needs no credentials. `--exam`/`--exam-dir`/`--out-dir` override the built-in paths; `--help` lists everything.
+`tests/test_retrieval_eval.py` loads the evaluator via `importlib` from its Chinese path and mocks all HTTP, so the suite needs no credentials. `--backend {arag,dify}` selects the output root `考试结果-<backend>` (default `arag`); `--out-dir` overrides that per-backend default; `--exam`/`--exam-dir` override the input paths; `--help` lists everything.
 
 Credentials are **only** ever passed through `RETRIEVAL_COOKIE` / `RETRIEVAL_XSRF_TOKEN`. Never paste live cookies, tokens, or private corpus/API content into code, commits, or reports — the curl samples in `相关接口调用例子/` already contain stale example cookies; do not treat them as reusable.
 
@@ -60,7 +62,7 @@ Each question carries the Ground Truth inline:
 - `call_retrieval_api` retries **only** transient failures (network errors, 408, 429, 5xx) with exponential backoff. A `401/403` raises `AuthenticationError`, which aborts the *entire* run via `EvaluationAborted`, still writing partial results with `run_status="aborted_auth"` and a null capability score. Other per-question errors are recorded as a 0-score result and the run continues.
 
 ### Outputs
-`write_outputs` writes three files to `<out-dir>/<exam_id>/<timestamp>/`: `results_*.json` (per-question detail + truncated raw responses), `summary_*.json` (aggregates), `report_*.md` (human-readable, includes per-question hit/miss evidence diagnosis; a partial run — e.g. `--limit`, where the evaluated count differs from `exam_meta.total_questions` — prints a "部分运行" banner so the capability score isn't mistaken for a full-exam score). All JSON is `ensure_ascii=False`, 2-space indent.
+`write_outputs` writes three files to `<out-dir>/<exam_id>/<timestamp>/` (where `<out-dir>` defaults to `考试结果-<backend>`): `results_*.json` (per-question detail + truncated raw responses), `summary_*.json` (aggregates), `report_*.md` (human-readable, includes per-question hit/miss evidence diagnosis; a partial run — e.g. `--limit`, where the evaluated count differs from `exam_meta.total_questions` — prints a "部分运行" banner so the capability score isn't mistaken for a full-exam score). All JSON is `ensure_ascii=False`, 2-space indent.
 
 ## Conventions specific to this repo
 - Exam ids and files follow `考卷-YYYY-MM-DD-NN`.

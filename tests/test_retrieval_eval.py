@@ -398,7 +398,9 @@ def test_exam_validation_defaults_report_and_output_schema(tmp_path):
     args = evaluator.parse_args([])
 
     assert Path(args.exam_dir) == ROOT / "基于语料生成的评测集" / "考卷"
-    assert Path(args.out_dir) == ROOT / "基于语料生成的评测集" / "考试结果"
+    assert args.out_dir is None
+    assert args.backend == "arag"
+    assert evaluator.resolve_out_dir(args) == ROOT / "基于语料生成的评测集" / "考试结果-arag"
     assert args.rank_by == "response"
 
     result_metrics = metrics(gt(("A.md", "章节", "必需证据")), [retrieved(1, "A.md", "必需证据")])
@@ -514,3 +516,35 @@ def test_formal_run_requires_both_credentials(tmp_path, monkeypatch):
     monkeypatch.delenv("RETRIEVAL_XSRF_TOKEN", raising=False)
 
     assert evaluator.main(["--exam-dir", str(tmp_path), "--exam", exam_file.name]) == 3
+
+
+def test_backend_selects_output_dir_and_blocks_unimplemented_live_run(tmp_path, monkeypatch):
+    exam_file = tmp_path / "exam.json"
+    exam_file.write_text(json.dumps(exam_payload(), ensure_ascii=False), encoding="utf-8")
+
+    # default backend -> 考试结果-arag; dify -> 考试结果-dify; --out-dir overrides both
+    assert evaluator.resolve_out_dir(evaluator.parse_args([])) == (
+        ROOT / "基于语料生成的评测集" / "考试结果-arag"
+    )
+    assert evaluator.resolve_out_dir(evaluator.parse_args(["--backend", "dify"])) == (
+        ROOT / "基于语料生成的评测集" / "考试结果-dify"
+    )
+    assert evaluator.resolve_out_dir(
+        evaluator.parse_args(["--backend", "dify", "--out-dir", str(tmp_path / "x")])
+    ) == (tmp_path / "x")
+
+    # validate-only works for any backend (no creds, no network)
+    assert evaluator.main(
+        ["--validate-only", "--backend", "dify", "--exam-dir", str(tmp_path), "--exam", exam_file.name]
+    ) == 0
+
+    # a live run against a backend with no retrieval client fails fast, before creds
+    monkeypatch.delenv("RETRIEVAL_COOKIE", raising=False)
+    monkeypatch.delenv("RETRIEVAL_XSRF_TOKEN", raising=False)
+    assert evaluator.main(
+        ["--backend", "dify", "--exam-dir", str(tmp_path), "--exam", exam_file.name]
+    ) == 4
+
+    # an unsupported backend value is rejected by argparse
+    with pytest.raises(SystemExit):
+        evaluator.parse_args(["--backend", "milvus"])
