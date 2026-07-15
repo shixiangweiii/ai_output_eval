@@ -1,0 +1,792 @@
+{
+  "exam_meta": {
+    "exam_id": "考卷-2026-07-15-02",
+    "title": "RAG 检索召回超高难度专项考卷（25 题全困难）",
+    "generated_date": "2026-07-15",
+    "corpus_dir": "/Users/shixiangweii/run_proj/ai_output_eval/生成的原始文档语料/2026-07-14-01",
+    "corpus_documents": [
+      "01_急性冠脉综合征院内诊疗路径.md",
+      "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+      "03_颅脑MRI检查在Chiari畸形诊断中的应用.md",
+      "04_口服抗凝药物用药安全警戒简报.md",
+      "05_量化交易策略研发内部笔记.md",
+      "06_消费信贷智能风控体系设计说明书.md",
+      "07_上市公司财报分析实务.md",
+      "08_一网通办政务服务平台业务办理指南.md",
+      "09_在线教育平台自适应学习系统技术白皮书.md",
+      "10_协同文档SaaS云笺多人实时协作功能PRD.md"
+    ],
+    "total_questions": 25,
+    "difficulty_distribution": {
+      "simple": 0,
+      "medium": 0,
+      "hard": 25,
+      "ratio": "0% / 0% / 100%",
+      "note": "全部为困难题；本卷不设简单/中等题，用于压测检索系统在多文档、多模态、版本冲突与对抗场景下的召回上限。"
+    },
+    "design_intent": {
+      "why_this_is_hard": "参考上两次考试结果：检索系统在单文档/双文档题几乎满分，但一旦必需证据跨 3 篇及以上文档、或同一图片需在每篇来源文档都被召回时，Top-5 会被 1~2 篇高词面相似文档挤满，稳定丢掉第 3 篇（见 07-15-01 报告 q_019/020/025/026/028/030）。本卷刻意把 18 道题设为 3 文档、1 道设为 4 文档，并让 query 与 GT 片段词面尽量低重合，专门打这个弱点。",
+      "spread_stat": "GT 文档数分布：1 文档 2 题、2 文档 5 题、3 文档 17 题、4 文档 1 题。",
+      "capability_coverage": {
+        "cross_document_multihop_3doc": "跨 3 篇文档多跳综合（主力，压 Top-K 召回上限）",
+        "cross_document_multihop_4doc": "跨 4 篇文档综合（肾功能枢纽题，极限召回）",
+        "multimodal_cross_doc_image": "同一图片在每篇来源文档的图片来源覆盖",
+        "multimodal_hard_negative": "同图异境导致的错误领域推断",
+        "version_conflict_cross_doc": "跨文档旧版本口径识别与现行替代",
+        "concept_disambiguation": "相似命名/相似类别/相似卖点的消歧",
+        "adversarial_no_answer_and_scope": "虚构/无实时数据/超业务范围的边界识别",
+        "low_lexical_overlap": "问题措辞与 GT 片段词面低重合，考语义检索"
+      }
+    },
+    "corpus_expansion_note": [
+      "本卷为『评测初始阶段』扩充了语料，涉及 3 个文件，均保持原文件名不变：",
+      "1) 05_量化…：在第 4 节新增『精确率/召回率评估纪律』段落；在第 6 节新增一段并复用 The_Risk_Management_Process.png（使该图从 04/06 两篇扩展为 04/05/06 三篇复用，支撑 q_005 的三文档图片题）。",
+      "2) 06_消费信贷…：在第 4 节新增『精确率/召回率 与 KS』评估段落。",
+      "3) 09_在线教育…：在第 6 节新增『精确率/召回率评估口径』段落。",
+      "⚠️ 依赖扩充内容的题目为 q_005（doc05 新增图）、q_012（doc05/06 新增文本）。运行 live 评测前必须把上述扩充后的语料重新入库到检索知识库（dataset_id），否则这两题会因 KB 未更新而假阴性。其余 23 题只依赖既有、已入库并在前两次评测中验证可召回的原文，不受入库进度影响。"
+    ],
+    "field_explanation": {
+      "question": "提交给检索系统的 query",
+      "retrieved_chunks": "必须召回的 Ground Truth：source_document 为语料文件名，snippet 为原文可召回片段（已确保是归一化后的逐字子串）",
+      "answer": "语料内可验证的标准答案（供人工复核，脚本不评分）",
+      "reasoning_path": "从必需 GT 得出答案的依赖链（供人工复核）",
+      "eval_criteria": "关键词（诊断用）、图片 URL、对抗属性与工具边界"
+    }
+  },
+  "questions": [
+    {
+      "id": "q_001",
+      "difficulty": "hard",
+      "type": "cross_document_multihop",
+      "question": "肌钙蛋白、华法林 INR、以及均线信号都存在“反馈滞后”，但它们对操作节奏的要求并不一致。请跨三篇材料说明各自滞后多久、以及正确的应对姿态分别是什么。",
+      "retrieved_chunks": [
+        {
+          "source_document": "01_急性冠脉综合征院内诊疗路径.md",
+          "section": "4. 生物标志物的时间窗陷阱",
+          "snippet": "急性心肌坏死后，hs-cTnT 通常在 3–4 小时才开始爬升，峰值要到 12–24 小时。"
+        },
+        {
+          "source_document": "04_口服抗凝药物用药安全警戒简报.md",
+          "section": "三、华法林：为什么它这么“难伺候”",
+          "snippet": "华法林起效慢，加量后要好几天 INR 才反映出来"
+        },
+        {
+          "source_document": "05_量化交易策略研发内部笔记.md",
+          "section": "2. 均线系统：最朴素也最容易过拟合",
+          "snippet": "均线是滞后指标。它反映的是过去，等金叉出现，行情往往已经走了一大段。"
+        }
+      ],
+      "answer": "肌钙蛋白发病后 3–4 小时才升、峰值 12–24 小时，早期 STEMI 不能等它转阳，要靠心电图先定通道；华法林加量后要好几天 INR 才体现，不能凭单次低值激进加量，需等待复查；均线是滞后指标，金叉出现时行情常已走完一大段，不能把它当预测、要配合确认与纪律。滞后信号的应对不是一味等或一味抢，取决于误差的代价方向。",
+      "reasoning_path": "分别定位三种滞后信号的时间特性，再结合各自“等/不等”的代价推出相反的操作姿态。",
+      "eval_criteria": {
+        "keyword_match": ["3–4小时/3-4 小时", "12–24小时/12-24 小时", "加量后要好几天", "INR", "滞后指标", "金叉"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_002",
+      "difficulty": "hard",
+      "type": "cross_document_multihop",
+      "question": "财报里漂亮的净利润、量化里漂亮的回测、信贷里稳定的评分模型，为什么都可能是“会骗人的数字”？请跨三篇材料各给出一个拆穿它的独立信号或机制。",
+      "retrieved_chunks": [
+        {
+          "source_document": "07_上市公司财报分析实务.md",
+          "section": "四、现金流量表：照妖镜",
+          "snippet": "净利润 5.6 亿，但经营活动现金流净额只有 0.8 亿。"
+        },
+        {
+          "source_document": "05_量化交易策略研发内部笔记.md",
+          "section": "4. 过拟合：策略研发最大的敌人",
+          "snippet": "回测年化 90%。上实盘三个月，亏 12%。"
+        },
+        {
+          "source_document": "06_消费信贷智能风控体系设计说明书.md",
+          "section": "7. 风险与展望",
+          "snippet": "我们要求评分模型至少每季度做一次稳定性监测（PSI 指标），超阈值就重训。"
+        }
+      ],
+      "answer": "净利润 5.6 亿而经营现金流仅 0.8 亿，用现金流拆穿赊销撑起的利润；回测年化 90% 却实盘三个月亏 12%，用样本外/实盘拆穿过拟合；评分模型会随分布漂移失准，用季度 PSI 稳定性监测并超阈值重训来拆穿“历史稳定”。三者都是把静态或历史指标当结论。",
+      "reasoning_path": "识别三种“漂亮数字”的不同生成机制，再各自引入独立的验证信号。",
+      "eval_criteria": {
+        "keyword_match": ["0.8亿/0.8 亿", "经营活动现金流", "回测年化90%/年化 90%", "亏12%/亏 12%", "PSI", "重训"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_003",
+      "difficulty": "hard",
+      "type": "cross_document_differential",
+      "question": "一位打胰岛素、且因房颤在用达比加群的糖尿病老人，突然出冷汗、乏力，但没有典型胸痛。为什么这三条线索既不能只按低血糖处理、也不能忽略心梗和出血风险？三篇材料各给了什么关键点。",
+      "retrieved_chunks": [
+        {
+          "source_document": "01_急性冠脉综合征院内诊疗路径.md",
+          "section": "8. 特殊人群与不典型表现",
+          "snippet": "糖尿病患者因神经病变，可能仅表现为乏力、气促而无明显胸痛"
+        },
+        {
+          "source_document": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+          "section": "五、低血糖：比高血糖更急的敌人",
+          "snippet": "一旦出现，立刻吃 15 克快速升糖的东西（几块方糖、半杯果汁），等 15 分钟复测"
+        },
+        {
+          "source_document": "04_口服抗凝药物用药安全警戒简报.md",
+          "section": "四、NOAC：省心不等于零风险",
+          "snippet": "达比加群约 80% 经肾脏排泄 → 肾功能下降时药物蓄积 → 血药浓度升高 → 出血风险上升。"
+        }
+      ],
+      "answer": "出冷汗、乏力提示胰岛素相关低血糖，应立即测血糖并按 15-15 法则处理；但糖尿病可表现为无痛性心梗，不能因无胸痛排除 ACS；同时患者在用达比加群，若肾功能不全会蓄积、出血风险上升，任何处置都要顾及出血。三条线索必须并行评估。",
+      "reasoning_path": "用症状触发低血糖处置，用无痛性心梗特点触发 ACS 筛查，用达比加群肾排泄特性提示出血风险，三线并列。",
+      "eval_criteria": {
+        "keyword_match": ["无明显胸痛/无痛性心梗", "15克/15 克", "复测", "达比加群", "肾脏排泄", "出血风险"],
+        "requires_tool": false,
+        "is_adversarial": true,
+        "adversarial_type": "相似症状导致的过早排除"
+      }
+    },
+    {
+      "id": "q_004",
+      "difficulty": "hard",
+      "type": "cross_document_multihop",
+      "question": "抗凝的“每种药都在剂量内”、信贷的“评分卡看是好客户”、教育的“这题做对了”，为什么都可能给出错误结论？请跨三篇说明各自漏看了什么。",
+      "retrieved_chunks": [
+        {
+          "source_document": "04_口服抗凝药物用药安全警戒简报.md",
+          "section": "八、多重用药与老年患者的特殊警戒",
+          "snippet": "单看每种药都在说明书剂量内，合起来却可能致命"
+        },
+        {
+          "source_document": "06_消费信贷智能风控体系设计说明书.md",
+          "section": "5. 一个真实的多头借贷案例",
+          "snippet": "单个维度（评分卡）看是好客户，但把贷前查询、贷后行为拼起来，真相就变了。"
+        },
+        {
+          "source_document": "09_在线教育平台自适应学习系统技术白皮书.md",
+          "section": "3. 掌握度是怎么算出来的",
+          "snippet": "一道简单题做对，加分很少；一道难题在没提示下首次做对，加分才多。"
+        }
+      ],
+      "answer": "抗凝要看药物组合叠加而非单药剂量；信贷要把贷前查询、贷后行为与评分卡拼起来而非只看单维度；教育要看题目难度、是否首次无提示做对，而非“做对了就等于掌握”。三者都错在把局部单点当完整事实。",
+      "reasoning_path": "从三域各取一个“单点信号会误判”的证据，归纳为需多源/情境化判断。",
+      "eval_criteria": {
+        "keyword_match": ["合起来却可能致命", "单个维度", "贷前查询", "贷后行为", "首次做对", "加分才多"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_005",
+      "difficulty": "hard",
+      "type": "multimodal_cross_doc_image",
+      "question": "有一张“风险管理流程/风险管理过程”示意图被三篇不同领域文档当作同一张底图复用。请给出它的 URL，并分别说明它在抗凝简报、量化笔记、消费信贷说明书里代表什么流程。",
+      "retrieved_chunks": [
+        {
+          "source_document": "04_口服抗凝药物用药安全警戒简报.md",
+          "section": "二、抗凝药物的两大阵营",
+          "snippet": "https://upload.wikimedia.org/wikipedia/commons/9/93/The_Risk_Management_Process.png"
+        },
+        {
+          "source_document": "05_量化交易策略研发内部笔记.md",
+          "section": "6. 我们现在的纪律",
+          "snippet": "https://upload.wikimedia.org/wikipedia/commons/9/93/The_Risk_Management_Process.png"
+        },
+        {
+          "source_document": "06_消费信贷智能风控体系设计说明书.md",
+          "section": "1. 系统定位与背景",
+          "snippet": "https://upload.wikimedia.org/wikipedia/commons/9/93/The_Risk_Management_Process.png"
+        }
+      ],
+      "answer": "URL 为 https://upload.wikimedia.org/wikipedia/commons/9/93/The_Risk_Management_Process.png 。在抗凝简报中表示抗凝治疗的风险管理流程，在量化笔记中表示策略上线的风控流程，在信贷说明书中表示消费信贷风控体系流程总览——同一张“识别—评估—处置—复盘”底图，换了业务含义。",
+      "reasoning_path": "以相同图片 URL 完成跨三文档实体对齐，再读各自上下文说明其业务语境。",
+      "eval_criteria": {
+        "keyword_match": ["The_Risk_Management_Process", "抗凝", "策略风控/量化", "消费信贷/风控体系", "同一张底图/识别—评估—处置"],
+        "expected_image_url": "https://upload.wikimedia.org/wikipedia/commons/9/93/The_Risk_Management_Process.png",
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_006",
+      "difficulty": "hard",
+      "type": "multimodal_cross_doc_image",
+      "question": "BalanceSheet.jpg 这张图被抗凝简报、消费信贷说明书、财报分析三篇文档复用。请给出 URL，并指出它在每篇里各自被当作什么图来用。",
+      "retrieved_chunks": [
+        {
+          "source_document": "04_口服抗凝药物用药安全警戒简报.md",
+          "section": "六、数据解读的陷阱",
+          "snippet": "https://upload.wikimedia.org/wikipedia/commons/a/a5/BalanceSheet.jpg"
+        },
+        {
+          "source_document": "06_消费信贷智能风控体系设计说明书.md",
+          "section": "4. 机器学习模型：更准，但更“黑”",
+          "snippet": "https://upload.wikimedia.org/wikipedia/commons/a/a5/BalanceSheet.jpg"
+        },
+        {
+          "source_document": "07_上市公司财报分析实务.md",
+          "section": "一、开篇：财报是公司的“体检报告”",
+          "snippet": "https://upload.wikimedia.org/wikipedia/commons/a/a5/BalanceSheet.jpg"
+        }
+      ],
+      "answer": "URL 为 https://upload.wikimedia.org/wikipedia/commons/a/a5/BalanceSheet.jpg 。它在抗凝简报里作为本季度不良事件上报来源构成图，在信贷说明书里作为信用与利率相关性堆叠图，在财报分析里作为资产负债表结构示意图。",
+      "reasoning_path": "以 URL 为稳定主键跨三文档召回，再用各自相邻文字确定用途。",
+      "eval_criteria": {
+        "keyword_match": ["BalanceSheet", "上报来源", "信用与利率", "资产负债表"],
+        "expected_image_url": "https://upload.wikimedia.org/wikipedia/commons/a/a5/BalanceSheet.jpg",
+        "requires_tool": false,
+        "is_adversarial": true,
+        "adversarial_type": "同图跨三域复用"
+      }
+    },
+    {
+      "id": "q_007",
+      "difficulty": "hard",
+      "type": "multimodal_cross_doc_image",
+      "question": "一张“两层网络架构”图同时出现在一网通办指南和云笺协作 PRD 里。请给出 URL，并说明它在政务数据共享语境和协同文档系统语境中分别代表什么。",
+      "retrieved_chunks": [
+        {
+          "source_document": "08_一网通办政务服务平台业务办理指南.md",
+          "section": "第四章 数据共享的底层逻辑",
+          "snippet": "https://upload.wikimedia.org/wikipedia/commons/1/13/Network_architecture_2levels.png"
+        },
+        {
+          "source_document": "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+          "section": "1. 背景与目标",
+          "snippet": "https://upload.wikimedia.org/wikipedia/commons/1/13/Network_architecture_2levels.png"
+        }
+      ],
+      "answer": "URL 为 https://upload.wikimedia.org/wikipedia/commons/1/13/Network_architecture_2levels.png 。在政务指南里表示上层统一受理入口、下层部门数据交换枢纽的两层技术架构；在云笺 PRD 里作为协同系统整体的两层架构示意。",
+      "reasoning_path": "按相同 URL 对齐两篇文档，再分别读取上下文语境。",
+      "eval_criteria": {
+        "keyword_match": ["Network_architecture_2levels", "统一受理入口/数据交换", "云笺", "系统整体架构/两层"],
+        "expected_image_url": "https://upload.wikimedia.org/wikipedia/commons/1/13/Network_architecture_2levels.png",
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_008",
+      "difficulty": "hard",
+      "type": "multimodal_hard_negative",
+      "question": "同一张 12_lead_ECG.jpg 既出现在急性冠脉综合征路径里，也出现在量化交易笔记里。请给出 URL，并解释为什么它出现在量化笔记里，并不能说明那份笔记是医疗文档。",
+      "retrieved_chunks": [
+        {
+          "source_document": "01_急性冠脉综合征院内诊疗路径.md",
+          "section": "1. 背景与适用场景",
+          "snippet": "https://upload.wikimedia.org/wikipedia/commons/d/df/12_lead_ECG.jpg"
+        },
+        {
+          "source_document": "05_量化交易策略研发内部笔记.md",
+          "section": "3. 用成交量给信号“验真”",
+          "snippet": "https://upload.wikimedia.org/wikipedia/commons/d/df/12_lead_ECG.jpg"
+        }
+      ],
+      "answer": "URL 为 https://upload.wikimedia.org/wikipedia/commons/d/df/12_lead_ECG.jpg 。在 ACS 路径里它是真实的 12 导联心电图示例；量化笔记明确说明是借用一张周期性波动的信号图来辅助理解波峰波谷，与 K 线形态在视觉上相通，图片的领域归属不改变文档本身是金融研发笔记的属性。",
+      "reasoning_path": "完成同 URL 跨文档召回后，依据量化文档的借用说明纠正“图片决定领域”的错误推断。",
+      "eval_criteria": {
+        "keyword_match": ["12_lead_ECG", "借用", "周期性波动", "K线/K 线", "金融/研发笔记"],
+        "expected_image_url": "https://upload.wikimedia.org/wikipedia/commons/d/df/12_lead_ECG.jpg",
+        "requires_tool": false,
+        "is_adversarial": true,
+        "adversarial_type": "同图异境与错误领域推断"
+      }
+    },
+    {
+      "id": "q_009",
+      "difficulty": "hard",
+      "type": "adversarial_version_conflict_cross_doc",
+      "question": "有一份陈旧的《跨系统操作速记》写着：“Chiari 只扫矢状位 T1 即可”“企业开办按环节一个个串起来办、大约要三五天”“云笺多人冲突就按谁最后写谁覆盖”。请逐项指出为什么已经过期，并给出现行做法。",
+      "retrieved_chunks": [
+        {
+          "source_document": "03_颅脑MRI检查在Chiari畸形诊断中的应用.md",
+          "section": "3. 扫描序列与体位规范",
+          "snippet": "由于漏掉 T2 导致过脊髓空洞漏诊，新规范强制增加矢状位 T2WI。"
+        },
+        {
+          "source_document": "08_一网通办政务服务平台业务办理指南.md",
+          "section": "第二章 核心概念：并联审批 vs 串联审批",
+          "snippet": "环节 A 办完才能办 B，B 完才能办 C，像接力赛。"
+        },
+        {
+          "source_document": "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+          "section": "5. 冲突处理：为什么废弃 V1.x 方案",
+          "snippet": "A 辛苦写的三行字被 B 一个字的修改整段覆盖"
+        }
+      ],
+      "answer": "Chiari 旧规范只扫矢状位 T1，会漏脊髓空洞，2026 版强制增加矢状位 T2WI；企业开办旧的串联模式（A→B→C 像接力赛、要三五天）已被 V5.0 并联审批取代，压缩到 1 个工作日；云笺 V1.x 的“最后写入者获胜”会让整段被覆盖，V2.1 改用 CRDT 字符级合并。三项都是旧口径，需给现行替代。",
+      "reasoning_path": "分别识别三篇里的旧版本标记，并召回各自现行替代规则。",
+      "eval_criteria": {
+        "keyword_match": ["矢状位T2WI/T2", "脊髓空洞", "串联/接力赛", "并联", "整段覆盖", "CRDT"],
+        "requires_tool": false,
+        "is_adversarial": true,
+        "adversarial_type": "跨三文档旧版本拼接"
+      }
+    },
+    {
+      "id": "q_010",
+      "difficulty": "hard",
+      "type": "adversarial_no_answer",
+      "question": "作者“老陈”的这套量化策略现在实盘净值和年化收益是多少？请据此告诉我现在该不该跟着买入。",
+      "retrieved_chunks": [
+        {
+          "source_document": "05_量化交易策略研发内部笔记.md",
+          "section": "文档头部说明",
+          "snippet": "文档性质：研发过程记录，非合规宣传材料，不构成任何投资建议"
+        },
+        {
+          "source_document": "05_量化交易策略研发内部笔记.md",
+          "section": "0. 先叠个甲",
+          "snippet": "有些结论是阶段性的、后来又被推翻的，读的时候注意看日期标注。"
+        }
+      ],
+      "answer": "应拒绝给出实盘净值/年化并拒绝给买入建议。文档自述是内部研发过程记录、非宣传材料、不构成任何投资建议，其中结论是阶段性的、后来又被推翻的；文中不存在可查询的实时净值，也无外部行情工具能对“老陈”这份内部笔记给出真实实盘数据。",
+      "reasoning_path": "先召回免责与“阶段性结论”声明；文档不提供实时净值、且属不构成投资建议材料，故不应生成买入建议。",
+      "eval_criteria": {
+        "keyword_match": ["不构成任何投资建议", "研发过程记录", "阶段性", "后来又被推翻"],
+        "requires_tool": true,
+        "tool_name": "get_strategy_nav（仅对真实公开产品适用；本题为内部研发笔记，应识别后不调用）",
+        "is_adversarial": true,
+        "adversarial_type": "内部材料 + 实时数据诱导 + 投资建议诱导"
+      }
+    },
+    {
+      "id": "q_011",
+      "difficulty": "hard",
+      "type": "adversarial_scope_boundary",
+      "question": "既然自适应学习系统这么会分析学生，能不能直接用它来诊断某个学生是不是有多动症、并给出治疗建议？",
+      "retrieved_chunks": [
+        {
+          "source_document": "09_在线教育平台自适应学习系统技术白皮书.md",
+          "section": "7. 局限与展望",
+          "snippet": "但对作文、开放性问答这类主观内容，自动评估仍不成熟，还得靠老师。"
+        },
+        {
+          "source_document": "09_在线教育平台自适应学习系统技术白皮书.md",
+          "section": "7. 局限与展望",
+          "snippet": "技术是放大老师的杠杆，不是替代老师——这是我们的产品价值观底线。"
+        }
+      ],
+      "answer": "不能。该系统的定位是评估学科知识点掌握度、辅助因材施教，连作文这类主观内容都还得靠老师，更不具备医学诊断能力；白皮书强调技术是放大老师的杠杆、不是替代老师。医学诊断超出其业务范围，应转向专业医疗评估。",
+      "reasoning_path": "召回系统能力边界与价值观底线，据此拒绝超范围的医疗诊断诉求。",
+      "eval_criteria": {
+        "keyword_match": ["主观内容", "自动评估仍不成熟", "还得靠老师", "放大老师", "不是替代老师"],
+        "requires_tool": false,
+        "is_adversarial": true,
+        "adversarial_type": "超业务范围 + 越界诊断诱导"
+      }
+    },
+    {
+      "id": "q_012",
+      "difficulty": "hard",
+      "type": "cross_document_concept_disambiguation",
+      "question": "同样是在“精确率”和“召回率”之间做取舍，为什么消费信贷风控和量化交易策略往往会偏向不同的一端？",
+      "retrieved_chunks": [
+        {
+          "source_document": "06_消费信贷智能风控体系设计说明书.md",
+          "section": "4. 机器学习模型：更准，但更“黑”",
+          "snippet": "信贷更怕放走坏客户，所以往往宁可牺牲一点精确率也要保住召回率"
+        },
+        {
+          "source_document": "05_量化交易策略研发内部笔记.md",
+          "section": "4. 过拟合：策略研发最大的敌人",
+          "snippet": "高频策略更怕误报（要精确率），趋势策略更怕错过大行情（要召回率）。"
+        }
+      ],
+      "answer": "两者用同一套精确率/召回率指标，但业务诉求不同：信贷最怕放走坏客户（漏掉违约者），所以宁可牺牲一点精确率也要保召回率；量化里取舍看策略风格——高频策略最怕误报要保精确率，趋势策略最怕错过大行情要保召回率。指标相同，权衡方向由代价结构决定。",
+      "reasoning_path": "分别召回两域对精确率/召回率取舍的表述，抽象出“同指标、按代价结构反向权衡”。",
+      "eval_criteria": {
+        "keyword_match": ["精确率", "召回率", "宁可牺牲一点精确率", "保住召回率", "高频策略/误报", "趋势策略/错过"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_013",
+      "difficulty": "hard",
+      "type": "cross_document_multihop",
+      "question": "抗凝出血、信贷逾期、急诊胸痛三种场景，为什么都强调“按严重程度/性质分层处置”而不是一刀切？请跨三篇各举其分层逻辑。",
+      "retrieved_chunks": [
+        {
+          "source_document": "04_口服抗凝药物用药安全警戒简报.md",
+          "section": "七、出血事件的分级与处置",
+          "snippet": "轻微出血往往只需观察、暂缓或减量；而大出血则要立即停药、评估是否需要逆转剂。"
+        },
+        {
+          "source_document": "06_消费信贷智能风控体系设计说明书.md",
+          "section": "8. 贷后管理与智能催收",
+          "snippet": "前者可协商延期、分期，帮他渡过难关反而能收回本金；后者（尤其带欺诈性质的）则要走法律和征信惩戒。"
+        },
+        {
+          "source_document": "01_急性冠脉综合征院内诊疗路径.md",
+          "section": "3. 诊断流程与分诊决策",
+          "snippet": "若肌钙蛋白动态升高 → 诊断 NSTEMI；若始终阴性且症状缓解 → 归为 UA 或非心源性胸痛。"
+        }
+      ],
+      "answer": "抗凝出血按轻微/大出血分层，前者观察减量、后者立即停药评估逆转剂；催收区分“还不上”（协商延期分期）与“不想还/欺诈”（法律征信惩戒）；急诊按标志物与症状把胸痛分流为 NSTEMI 或 UA/非心源性。三者都用分层把有限资源与处置强度对准真实风险。",
+      "reasoning_path": "从三域各取一处分层处置证据，归纳“按严重度/性质分档”的共同原则。",
+      "eval_criteria": {
+        "keyword_match": ["轻微出血", "大出血", "逆转剂", "延期/分期", "法律和征信", "NSTEMI/UA"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_014",
+      "difficulty": "hard",
+      "type": "cross_document_system_dependency",
+      "question": "MRI 扫哪些序列、信贷模型能用哪些变量、给新生推哪道题，为什么都不是“核心算法自己说了算”？请跨三篇说明各自被什么上游输入卡住。",
+      "retrieved_chunks": [
+        {
+          "source_document": "03_颅脑MRI检查在Chiari畸形诊断中的应用.md",
+          "section": "7. 与放射科的协作规范：申请单该怎么开",
+          "snippet": "源头其实在临床申请单提供的信息量。"
+        },
+        {
+          "source_document": "06_消费信贷智能风控体系设计说明书.md",
+          "section": "9. 数据合规与用户隐私红线",
+          "snippet": "所有进入模型的变量都必须来源合法、用户授权、且符合监管对个人信息保护的要求。"
+        },
+        {
+          "source_document": "09_在线教育平台自适应学习系统技术白皮书.md",
+          "section": "8. 冷启动与数据稀疏问题",
+          "snippet": "题目按知识图谱的关键节点分布，用尽量少的题（十几道）覆盖尽量多的先修链，快速给出一个粗略的能力画像。"
+        }
+      ],
+      "answer": "MRI 扫什么序列取决于临床申请单提供的信息量；信贷模型能用哪些变量被“来源合法、用户授权、合规”这道上游门槛卡住；给新生推题依赖冷启动摸底测验先探出能力画像。三者的下游决策都受制于上游输入的质量与合法性，算法本身不能凭空补齐。",
+      "reasoning_path": "分别追踪申请单信息、数据合规、摸底数据这三类上游输入对下游决策的约束。",
+      "eval_criteria": {
+        "keyword_match": ["临床申请单", "信息量", "来源合法", "用户授权", "摸底/关键节点", "能力画像"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_015",
+      "difficulty": "hard",
+      "type": "cross_document_statistical_reasoning",
+      "question": "财报的“净利润增速”、教育的“14% 提分”、抗凝的“不良事件上升”都被拿来支持强结论。请跨三篇分别说明这些数字可能怎样误导，以及应补什么解释。",
+      "retrieved_chunks": [
+        {
+          "source_document": "07_上市公司财报分析实务.md",
+          "section": "六、时间维度：一年的数据会骗人",
+          "snippet": "把晨光近五年的经营现金流/净利润比值拉出来：2021 年 0.9，2022 年 0.7，2023 年 0.5，2024 年 0.3，2025 年 0.14。"
+        },
+        {
+          "source_document": "09_在线教育平台自适应学习系统技术白皮书.md",
+          "section": "6. 效果数据与诚实的辨析",
+          "snippet": "真正能归因于自适应算法的净效应，我们内部保守估计在 5–7%。"
+        },
+        {
+          "source_document": "04_口服抗凝药物用药安全警戒简报.md",
+          "section": "六、数据解读的陷阱",
+          "snippet": "真实临床事件其实和上季度持平，增量主要来自上报系统更灵敏"
+        }
+      ],
+      "answer": "净利润好看要拉长看趋势——经营现金流/净利润比值从 0.9 逐年跌到 0.14，说明盈利质量系统性恶化；14% 提分混入学校投入、家长配合、多练等选择偏差，算法净效应保守估计仅 5–7%，别把相关当因果；不良事件“上升”部分来自上报系统更灵敏、真实事件与上季度持平，需先校准统计口径再谈趋势。",
+      "reasoning_path": "分别识别趋势掩盖、选择偏差、统计口径变化三类统计陷阱。",
+      "eval_criteria": {
+        "keyword_match": ["0.14", "逐年恶化/趋势", "5–7%/5-7%", "选择偏差/净效应", "上报系统", "持平"],
+        "requires_tool": false,
+        "is_adversarial": true,
+        "adversarial_type": "统计指标强结论诱导"
+      }
+    },
+    {
+      "id": "q_016",
+      "difficulty": "hard",
+      "type": "cross_document_abstract_reasoning",
+      "question": "量化策略、信贷评分模型、自适应学习的冷启动先验，为什么都会“在环境或人群变化后失效”？请跨三篇说明各自的分布如何变、以及该怎么办。",
+      "retrieved_chunks": [
+        {
+          "source_document": "05_量化交易策略研发内部笔记.md",
+          "section": "5. 跨市场移植的坑",
+          "snippet": "2015 年有效的策略，到 2025 年可能因为市场参与者结构变化（散户变机构、机构变算法）而失效。"
+        },
+        {
+          "source_document": "06_消费信贷智能风控体系设计说明书.md",
+          "section": "7. 风险与展望",
+          "snippet": "大量原本优质的工薪客户突然还款能力下降"
+        },
+        {
+          "source_document": "09_在线教育平台自适应学习系统技术白皮书.md",
+          "section": "8. 冷启动与数据稀疏问题",
+          "snippet": "如果用群体平均做先验，而这个群体本身有偏（比如都是重点校的），那对一个基础薄弱的新生就会高估、推题过难、打击信心。"
+        }
+      ],
+      "answer": "量化策略随市场参与者结构进化而失效（时间上的分布漂移），需重新校准与迭代；信贷模型遇产业裁员导致优质客户还款能力下降（宏观分布漂移），需 PSI 监测与重训；教育冷启动用有偏群体先验会高估基础薄弱新生（人群分布不匹配），需保守探测并快速过渡到个人估计。三者都是分布不匹配。",
+      "reasoning_path": "把时间上的漂移与人群上的偏差统一为分布不匹配，再分别给出再校准手段。",
+      "eval_criteria": {
+        "keyword_match": ["2015/2025", "结构变化/失效", "还款能力下降", "群体平均/先验", "有偏", "高估"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_017",
+      "difficulty": "hard",
+      "type": "cross_document_multihop",
+      "question": "抗栓方案、胰岛素剂量、抗凝换药，为什么都强调“不能照搬标准剂量/别人的用法”？请跨三篇分别说明个体化要看哪些变量。",
+      "retrieved_chunks": [
+        {
+          "source_document": "01_急性冠脉综合征院内诊疗路径.md",
+          "section": "7. 抗栓与辅助用药的协同",
+          "snippet": "老年、低体重、肾功能不全的患者，抗栓方案必须个体化下调，不能照搬标准剂量。"
+        },
+        {
+          "source_document": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+          "section": "四、剂量怎么定：为什么不能照抄别人",
+          "snippet": "因为每个人的胰岛素抵抗程度、残余分泌能力、饮食运动都不同"
+        },
+        {
+          "source_document": "04_口服抗凝药物用药安全警戒简报.md",
+          "section": "九、行动建议",
+          "snippet": "换用 NOAC 前必须评估肌酐清除率；华法林调量后 3–5 天复查 INR、勿凭单次结果激进加量"
+        }
+      ],
+      "answer": "抗栓要按老年、低体重、肾功能不全个体化下调，不能照搬标准剂量；胰岛素剂量要看个人胰岛素抵抗、残余分泌、饮食运动，不能照抄别人；抗凝换药前要评估肌酐清除率、华法林调量后 3–5 天复查 INR、不凭单次结果激进加量。三者都要求把标准剂量落到个体变量上。",
+      "reasoning_path": "从三处分别取个体化变量，归纳“禁止照搬、必须依个体调整”。",
+      "eval_criteria": {
+        "keyword_match": ["个体化下调", "照搬标准剂量", "胰岛素抵抗", "残余分泌", "肌酐清除率", "3–5天/3-5 天"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_018",
+      "difficulty": "hard",
+      "type": "cross_document_abstract_reasoning",
+      "question": "急诊交接、抗凝患者宣教、政务适老服务，为什么都说明“再先进的系统也要靠人把最后一公里补上”？请跨三篇各举一处兜底动作。",
+      "retrieved_chunks": [
+        {
+          "source_document": "01_急性冠脉综合征院内诊疗路径.md",
+          "section": "10. 交接班与信息传递规范",
+          "snippet": "一次含糊的交接可能直接抹掉前面所有争分夺秒省下来的时间。"
+        },
+        {
+          "source_document": "04_口服抗凝药物用药安全警戒简报.md",
+          "section": "十、患者教育：警戒不能只靠专业人员",
+          "snippet": "任何新增用药，哪怕是感冒药、保健品，都要先问医生或药师。"
+        },
+        {
+          "source_document": "08_一网通办政务服务平台业务办理指南.md",
+          "section": "第八章 适老化与无障碍服务",
+          "snippet": "老年人可持身份证到政务大厅由帮办代办人员协助全程办理"
+        }
+      ],
+      "answer": "ACS 路径强调交接班——一次含糊的交接会抹掉前面省下的所有时间；抗凝强调患者宣教——任何新增用药哪怕感冒药保健品都要先问医生或药师；政务强调适老兜底——老年人可到大厅由帮办代办协助全程办理。三者都把“人”作为系统之外不可省的最后一环。",
+      "reasoning_path": "从三域各取一处“靠人补位”的证据，归纳最后一公里的人因防线。",
+      "eval_criteria": {
+        "keyword_match": ["交接", "含糊的交接", "先问医生或药师", "帮办代办", "全程办理"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_019",
+      "difficulty": "hard",
+      "type": "cross_document_concept_disambiguation",
+      "question": "“Q 波心梗就是 STEMI”和“NOAC 和 DOAC 是两类药”是两种相反的命名错误。请分别用心内科路径和抗凝简报说明它们各自错在哪。",
+      "retrieved_chunks": [
+        {
+          "source_document": "01_急性冠脉综合征院内诊疗路径.md",
+          "section": "2. 核心概念与术语体系",
+          "snippet": "Q 波是心梗后期演变的结果，而 STEMI/NSTEMI 是急性期按 ST 段划分。"
+        },
+        {
+          "source_document": "04_口服抗凝药物用药安全警戒简报.md",
+          "section": "二、抗凝药物的两大阵营",
+          "snippet": "NOAC 和 DOAC 是同义词（Novel/Direct Oral AntiCoagulant），不是两类药。"
+        }
+      ],
+      "answer": "“Q 波心梗=STEMI”是把不同维度的东西当相同：Q 波是后期演变结果，STEMI/NSTEMI 是急性期按 ST 段划分，命名维度不同；“NOAC 与 DOAC 是两类药”是把相同的当不同：二者是同义词、指同一类药。一个错在混同，一个错在割裂。",
+      "reasoning_path": "识别两处命名陷阱的相反方向：不同当相同、相同当不同。",
+      "eval_criteria": {
+        "keyword_match": ["Q波/后期演变", "STEMI/NSTEMI", "ST段/ST 段", "NOAC", "DOAC", "同义词"],
+        "requires_tool": false,
+        "is_adversarial": true,
+        "adversarial_type": "相反方向的命名混淆"
+      }
+    },
+    {
+      "id": "q_020",
+      "difficulty": "hard",
+      "type": "cross_document_multihop",
+      "question": "云笺的越权离线编辑、一网通办的用错指南、信贷的违规数据，为什么都属于“越过就无条件拒绝”的硬边界？请跨三篇说明各自那条红线。",
+      "retrieved_chunks": [
+        {
+          "source_document": "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+          "section": "8. 权限与协作边界",
+          "snippet": "以服务端最终权限为准，离线期间越权产生的编辑一律拒绝合并并提示用户。"
+        },
+        {
+          "source_document": "08_一网通办政务服务平台业务办理指南.md",
+          "section": "第一章 总则与适用范围",
+          "snippet": "个体工商户、分支机构设立另有专门指南，不在此列"
+        },
+        {
+          "source_document": "06_消费信贷智能风控体系设计说明书.md",
+          "section": "9. 数据合规与用户隐私红线",
+          "snippet": "用了违规数据，模型再准也是定时炸弹。"
+        }
+      ],
+      "answer": "云笺以服务端最终权限为准，离线期间越权产生的编辑一律拒绝合并；一网通办本指南只适用有限责任公司，个体户/分支机构不在此列、用错指南直接退回；信贷合规是一票否决红线，用了违规数据模型再准也是定时炸弹。三者都设“越界即拒”的硬边界，性能再好也不能突破。",
+      "reasoning_path": "分别召回三处“无条件拒绝/一票否决”的边界规则，归纳硬约束优先于性能。",
+      "eval_criteria": {
+        "keyword_match": ["服务端最终权限", "拒绝合并", "不在此列", "违规数据", "定时炸弹"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_021",
+      "difficulty": "hard",
+      "type": "cross_document_ethics",
+      "question": "一个又快又准的系统，如果拒贷不给理由、把老人挡在门外、或把学生长期锁在简单题，三篇材料分别要求什么纠偏机制来保障使用者的权利？",
+      "retrieved_chunks": [
+        {
+          "source_document": "06_消费信贷智能风控体系设计说明书.md",
+          "section": "9. 数据合规与用户隐私红线",
+          "snippet": "模型不得使用可能构成歧视的变量（如民族、宗教）；用户有权知道自己被拒的大致原因"
+        },
+        {
+          "source_document": "08_一网通办政务服务平台业务办理指南.md",
+          "section": "第八章 适老化与无障碍服务",
+          "snippet": "字体放大、流程简化、去掉花哨功能"
+        },
+        {
+          "source_document": "09_在线教育平台自适应学习系统技术白皮书.md",
+          "section": "9. 数据隐私与算法伦理",
+          "snippet": "定期推送略高于当前水平的内容，防止系统把学生的成长天花板给算死了。"
+        }
+      ],
+      "answer": "信贷要禁用歧视性变量、并保障用户对被拒原因的知情权；政务要用长辈模式（字体放大、流程简化、去花哨）等适老兜底，别让老人掉队；教育要加入适度挑战、定期推送略高于当前水平的内容，防止把学生成长天花板算死。三者分别对应知情、可达、不被固化的权利。",
+      "reasoning_path": "从公平、可达性、成长机会三角度召回高性能系统仍须满足的纠偏机制。",
+      "eval_criteria": {
+        "keyword_match": ["歧视", "被拒的大致原因/知情", "长辈模式/字体放大", "适度挑战", "成长天花板"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_022",
+      "difficulty": "hard",
+      "type": "cross_document_abstract_reasoning",
+      "question": "量化的过拟合、信贷的黑箱、教育的固化，为什么都是“追求更准/更贴合历史”反而带来的新代价？请跨三篇说明各自的副作用。",
+      "retrieved_chunks": [
+        {
+          "source_document": "05_量化交易策略研发内部笔记.md",
+          "section": "4. 过拟合：策略研发最大的敌人",
+          "snippet": "所谓过拟合，就是你的策略在历史数据上表现完美，一到实盘就崩。"
+        },
+        {
+          "source_document": "06_消费信贷智能风控体系设计说明书.md",
+          "section": "4. 机器学习模型：更准，但更“黑”",
+          "snippet": "这在需要向客户出具拒绝理由、向监管报备模型逻辑时非常被动。"
+        },
+        {
+          "source_document": "09_在线教育平台自适应学习系统技术白皮书.md",
+          "section": "9. 数据隐私与算法伦理",
+          "snippet": "如果算法总是根据历史表现给某个孩子推简单题，他就永远没机会接触更有挑战的内容"
+        }
+      ],
+      "answer": "量化把参数调到在历史上表现完美，一到实盘就崩（过拟合）；信贷上更准的机器学习模型是黑箱，出拒绝理由、向监管报备时非常被动；教育若总按历史表现推简单题，会把学生固化、锁死在低水平。三者都说明“更准/更贴合历史”会引入过拟合、不可解释、固化等新代价，需用样本外、可解释代理、适度挑战来对冲。",
+      "reasoning_path": "从三域各取一处“追求更准的副作用”，归纳需配平衡机制。",
+      "eval_criteria": {
+        "keyword_match": ["过拟合", "一到实盘就崩", "拒绝理由", "报备", "历史表现", "推简单题"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_023",
+      "difficulty": "hard",
+      "type": "cross_document_temporal_reasoning",
+      "question": "ACS 二级预防用药、糖尿病并发症、以及财报的五年比值，为什么都强调“别只盯当下这一个点，要看更长的时间尺度”？请跨三篇说明各自看的是什么时间跨度。",
+      "retrieved_chunks": [
+        {
+          "source_document": "01_急性冠脉综合征院内诊疗路径.md",
+          "section": "7. 抗栓与辅助用药的协同",
+          "snippet": "β 受体阻滞剂、他汀、ACEI/ARB 构成 ACS 二级预防的"
+        },
+        {
+          "source_document": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+          "section": "九、并发症的长期视角",
+          "snippet": "很多人只盯着今天血糖高不高，却忽略了长期达标才是防并发症的关键。"
+        },
+        {
+          "source_document": "07_上市公司财报分析实务.md",
+          "section": "六、时间维度：一年的数据会骗人",
+          "snippet": "这个比值逐年恶化，是持续性的趋势，不是偶然"
+        }
+      ],
+      "answer": "ACS 的二级预防三件套管的是“下一次心梗的概率”，是长期演化视角、要出院启动长期维持；糖尿病并发症是未来十年二十年的账，别只盯今天血糖、长期达标才防并发症；财报的经营现金流/净利润比值逐年恶化说明是持续趋势而非偶然。三者都要求把决策放到更长的时间尺度上。",
+      "reasoning_path": "识别三处“当下一个点 vs 长期尺度”的对比，归纳时间维度的重要性。",
+      "eval_criteria": {
+        "keyword_match": ["二级预防", "长期达标", "防并发症", "逐年恶化", "持续性的趋势", "不是偶然"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    },
+    {
+      "id": "q_024",
+      "difficulty": "hard",
+      "type": "cross_document_concept_disambiguation",
+      "question": "“自己拍照的执照”和“电子证照”、“可评论”和“可编辑的弱化版”，为什么都是看着像、其实是完全不同的类别或数据通道？请分别用政务指南和云笺 PRD 说明。",
+      "retrieved_chunks": [
+        {
+          "source_document": "08_一网通办政务服务平台业务办理指南.md",
+          "section": "第七章 电子证照与“免证办”的联动",
+          "snippet": "电子证照是由签发机关加盖电子印章、具备法律效力的官方数据，而你手机里拍的照片只是图像、不具备被其它部门直接采信的效力。"
+        },
+        {
+          "source_document": "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+          "section": "8. 权限与协作边界",
+          "snippet": "正文走第三节的 CRDT 实时合并，而评论是挂在文档某个锚点上的独立数据层，不参与正文的字符级合并。"
+        }
+      ],
+      "answer": "电子证照是签发机关加盖电子印章、有法律效力的官方数据，自拍照片只是图像、不能被直接采信，二者法律与数据属性根本不同；“可评论”不是“可编辑”的弱化版，而是独立协作模式——正文走 CRDT 字符级合并，评论是挂在锚点上的独立数据层、不参与正文合并。两处都是“形似而类别/通道不同”。",
+      "reasoning_path": "分别召回两处“看似相似实为不同类别/通道”的澄清，抽象出同一类消歧。",
+      "eval_criteria": {
+        "keyword_match": ["电子印章", "只是图像", "直接采信", "独立数据层", "不参与正文的字符级合并"],
+        "requires_tool": false,
+        "is_adversarial": true,
+        "adversarial_type": "形似实异的类别/通道混淆"
+      }
+    },
+    {
+      "id": "q_025",
+      "difficulty": "hard",
+      "type": "cross_document_multihop",
+      "question": "一位老年患者同时在做 ACS 二级预防、打胰岛素、用抗凝药，又要做增强 MRI 排查 Chiari。请跨四篇材料说明，为什么“肾功能”几乎是贯穿全程的共同枢纽，哪些看似无害的因素叠加会出事。",
+      "retrieved_chunks": [
+        {
+          "source_document": "01_急性冠脉综合征院内诊疗路径.md",
+          "section": "7. 抗栓与辅助用药的协同",
+          "snippet": "老年、低体重、肾功能不全的患者，抗栓方案必须个体化下调，不能照搬标准剂量。"
+        },
+        {
+          "source_document": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+          "section": "八、储存与出行：胰岛素也会“变质”",
+          "snippet": "血糖不对，先别急着改剂量，要先排查种类（三节）、储存（本节）、注射（七节）这些"
+        },
+        {
+          "source_document": "03_颅脑MRI检查在Chiari畸形诊断中的应用.md",
+          "section": "6. 安全禁忌与风险提示",
+          "snippet": "注射钆对比剂在严重肾功能不全者中还有风险（可能诱发肾源性系统性纤维化）"
+        },
+        {
+          "source_document": "04_口服抗凝药物用药安全警戒简报.md",
+          "section": "五、本期重点案例复盘",
+          "snippet": "第三跳：同期患者又自行服用了某种非甾体抗炎药（NSAID）止痛 → NSAID 本身刺激胃黏膜且抑制血小板 → 与抗凝叠加。"
+        }
+      ],
+      "answer": "肾功能贯穿全程：抗栓方案在老年、低体重、肾功能不全者要个体化下调；抗凝药（如达比加群经肾排泄）在肾功能差时蓄积、出血风险升高；增强 MRI 的钆对比剂在严重肾功能不全者可能诱发肾源性系统性纤维化。再叠加自行服用 NSAID 刺激胃黏膜、抑制血小板与抗凝叠加，以及胰岛素血糖波动先排查变量而非盲目加量——多个看似无害的因素叠加即可致命。",
+      "reasoning_path": "以“肾功能”为枢纽把四篇文档的风险点串起来，再叠加 NSAID/胰岛素形成组合风险链。",
+      "eval_criteria": {
+        "keyword_match": ["个体化下调", "肾功能不全", "钆对比剂", "肾源性系统性纤维化", "NSAID", "抑制血小板"],
+        "requires_tool": false,
+        "is_adversarial": false
+      }
+    }
+  ]
+}

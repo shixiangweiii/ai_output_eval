@@ -289,14 +289,12 @@ def _mean(values: Sequence[float]) -> float:
 
 
 def _chunk_matches_evidence(
-    chunk: Dict[str, Any],
+    document_name: str,
+    normalized_content: str,
     normalized_evidence: Sequence[Tuple[str, str]],
 ) -> bool:
-    chunk_content = normalize_text(chunk["content"])
     return any(
-        source_document == chunk["document_name"]
-        and snippet
-        and snippet in chunk_content
+        source_document == document_name and snippet and snippet in normalized_content
         for source_document, snippet in normalized_evidence
     )
 
@@ -310,6 +308,10 @@ def compute_metrics(
 ) -> Dict[str, Any]:
     """计算单题 v2.0 文档、证据、排序和图片来源指标。"""
     top_chunks = retrieved[:top_k]
+    # Normalize each retrieved chunk's content exactly once, then reuse it for
+    # evidence, keyword and image matching so every matcher shares one identical
+    # normalization pass (no raw-vs-normalized divergence).
+    normalized_top_contents = [normalize_text(chunk["content"]) for chunk in top_chunks]
     gt_docs: List[str] = gt["gt_docs"]
     top_docs = [chunk["document_name"] for chunk in top_chunks]
     unique_top_docs = _unique(top_docs)
@@ -342,11 +344,11 @@ def compute_metrics(
         gt["gt_chunks"], normalized_evidence
     ):
         matched_chunk: Optional[Dict[str, Any]] = None
-        for chunk in top_chunks:
+        for chunk, normalized_content in zip(top_chunks, normalized_top_contents):
             if (
                 chunk["document_name"] == source_document
                 and normalized_snippet
-                and normalized_snippet in normalize_text(chunk["content"])
+                and normalized_snippet in normalized_content
             ):
                 matched_chunk = chunk
                 break
@@ -366,7 +368,10 @@ def compute_metrics(
     evidence_count = len(snippet_detail)
     evidence_recall = evidence_hits / evidence_count
     chunk_relevance = [
-        _chunk_matches_evidence(chunk, normalized_evidence) for chunk in top_chunks
+        _chunk_matches_evidence(
+            chunk["document_name"], normalized_content, normalized_evidence
+        )
+        for chunk, normalized_content in zip(top_chunks, normalized_top_contents)
     ]
     evidence_precision = (
         sum(chunk_relevance) / len(top_chunks) if top_chunks else 0.0
@@ -380,9 +385,7 @@ def compute_metrics(
             evidence_mrr_at_k = 1.0 / chunk["rank"]
             break
 
-    normalized_top_content = normalize_text(
-        "".join(chunk["content"] for chunk in top_chunks)
-    )
+    normalized_top_content = "".join(normalized_top_contents)
     keyword_detail = []
     keyword_hits = 0
     for group in gt["keyword_match"]:
@@ -398,14 +401,21 @@ def compute_metrics(
     image_source_coverage: Optional[float] = None
     image_hit: Optional[bool] = None
     if expected_image_url:
+        # Match the image URL through the same normalization as the evidence
+        # snippets so image_source_coverage cannot disagree with evidence_recall
+        # over the same URL (e.g. case or Markdown differences from ingestion).
+        normalized_image_url = normalize_text(expected_image_url)
         required_image_docs = gt_docs
         for source_document in required_image_docs:
             matched = next(
                 (
                     chunk
-                    for chunk in top_chunks
+                    for chunk, normalized_content in zip(
+                        top_chunks, normalized_top_contents
+                    )
                     if chunk["document_name"] == source_document
-                    and expected_image_url in chunk["content"]
+                    and normalized_image_url
+                    and normalized_image_url in normalized_content
                 ),
                 None,
             )
@@ -632,6 +642,13 @@ def build_markdown_report(
         "- 说明: 主分为 GT 证据片段 Recall@K 的全题微平均；普通请求异常按 0 分。"
         "本报告不评答案、推理、拒答或工具调用行为。"
     )
+    declared_total = exam_meta.get("total_questions")
+    if isinstance(declared_total, int) and declared_total != overall["num_questions"]:
+        lines.append(
+            f"- ⚠️ 部分运行: 本次仅评测 {overall['num_questions']} 题，"
+            f"考卷声明共 {declared_total} 题；检索能力得分仅代表已评测子集，"
+            "不可当作整卷成绩。"
+        )
     lines.append("")
 
     lines.extend(

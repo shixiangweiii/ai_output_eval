@@ -179,6 +179,51 @@ def test_image_url_must_be_covered_in_every_required_source():
     assert [item["hit"] for item in result["image_source_detail"]] == [True, False]
 
 
+def test_image_coverage_uses_same_normalization_as_evidence():
+    # URL carries uppercase + underscore; ingestion stored the chunk lowercased
+    # inside Markdown. A raw substring check would miss it while evidence_recall
+    # (normalized) matches — the two must not disagree over the same URL.
+    url = "https://example.com/Risk_Management.png"
+    stored = f"配图 ![]({url.lower()})"
+    result = metrics(
+        gt(("A.md", "图", url), image_url=url),
+        [retrieved(1, "A.md", stored)],
+    )
+
+    assert result["evidence_recall@k"] == 1.0
+    assert result["image_source_coverage"] == 1.0
+    assert result["image_hit"] is True
+    assert result["image_source_detail"][0]["hit"] is True
+
+
+def test_report_flags_partial_run_when_evaluated_fewer_than_declared():
+    result_metrics = metrics(
+        gt(("A.md", "章节", "必需证据")), [retrieved(1, "A.md", "必需证据")]
+    )
+    results = [
+        {
+            "id": "q_001",
+            "difficulty": "hard",
+            "type": "cross_document",
+            "question": "测试问题？",
+            "has_expected_image": False,
+            "status": "ok",
+            "metrics": result_metrics,
+        }
+    ]
+    summary = evaluator.aggregate(results, "response")  # num_questions == 1
+
+    partial = evaluator.build_markdown_report(
+        {"exam_id": "e", "title": "t", "total_questions": 25}, summary, results, 5
+    )
+    assert "部分运行" in partial
+
+    full = evaluator.build_markdown_report(
+        {"exam_id": "e", "title": "t", "total_questions": 1}, summary, results, 5
+    )
+    assert "部分运行" not in full
+
+
 def test_normalization_handles_markdown_image_alt_dashes_quotes_and_whitespace():
     url = "https://example.com/a.png"
     expected = f'**风险 – 分级** “说明” ![不同 alt]({url})'
