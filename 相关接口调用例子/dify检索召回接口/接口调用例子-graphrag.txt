@@ -3,7 +3,7 @@ curl 'http://localhost:5001/console/api/datasets/0a8b3810-f2dd-4be3-9cc7-ef52509
   -H 'Accept: */*' \
   -H 'Accept-Language: zh-CN,zh;q=0.9' \
   -H 'Connection: keep-alive' \
-  -b 'locale=zh-Hans; csrf_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODQxMDM0NzAsInN1YiI6Ijk4NzU5MjdiLTc0MzUtNGI3Ny05NDYxLWEwZjQ1ZTNlNDcwZSJ9.k3_bffChgnRyPOFyFtq1WwRbvFdKAeI3j4Vxz_ZSSUc; access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiOTg3NTkyN2ItNzQzNS00Yjc3LTk0NjEtYTBmNDVlM2U0NzBlIiwiZXhwIjoxNzg0MTAzNDcwLCJpc3MiOiJTRUxGX0hPU1RFRCIsInN1YiI6IkNvbnNvbGUgQVBJIFBhc3Nwb3J0In0.KKlHyMDV_oZx7t7AHultf5SFq5VXi6m97aKKMOcg7-M; refresh_token=1f5d973b4570a2847b7692c609701b9674e9f1a00c0feeae8fdecacb0ed52060ff332c8c704b72ea7f87909bc7b61f4d2bf8a325ee662dbafe82ae98f70342da' \
+  -b 'locale=zh-Hans; csrf_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODQxMjMyNjksInN1YiI6Ijk4NzU5MjdiLTc0MzUtNGI3Ny05NDYxLWEwZjQ1ZTNlNDcwZSJ9.Df2me-5wKBy6u5L6G9gpg__GITzKmCOVsoC-bIxDGe4; access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiOTg3NTkyN2ItNzQzNS00Yjc3LTk0NjEtYTBmNDVlM2U0NzBlIiwiZXhwIjoxNzg0MTIzMjY5LCJpc3MiOiJTRUxGX0hPU1RFRCIsInN1YiI6IkNvbnNvbGUgQVBJIFBhc3Nwb3J0In0.fxxEia_-G3TGD_ZDOs56tFwZGPGpASYMJRBh71KZuak; refresh_token=73ff6ecd467a449e934df8ba4b55be8d18b358278a86c4cb24095830a478fb3e1e62f03bed0dfe26f640216fe1eaa72f881e8b3148dda5556a52323b2cf7fbe9' \
   -H 'Origin: http://localhost:3000' \
   -H 'Referer: http://localhost:3000/' \
   -H 'Sec-Fetch-Dest: empty' \
@@ -14,8 +14,9 @@ curl 'http://localhost:5001/console/api/datasets/0a8b3810-f2dd-4be3-9cc7-ef52509
   -H 'sec-ch-ua: "Not;A=Brand";v="8", "Chromium";v="150", "Google Chrome";v="150"' \
   -H 'sec-ch-ua-mobile: ?0' \
   -H 'sec-ch-ua-platform: "macOS"' \
-  -H 'x-csrf-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODQxMDM0NzAsInN1YiI6Ijk4NzU5MjdiLTc0MzUtNGI3Ny05NDYxLWEwZjQ1ZTNlNDcwZSJ9.k3_bffChgnRyPOFyFtq1WwRbvFdKAeI3j4Vxz_ZSSUc' \
-  --data-raw '{"query":"测试\n","attachment_ids":[],"retrieval_model":{"search_method":"hybrid_search","reranking_enable":true,"reranking_mode":"reranking_model","reranking_model":{"reranking_provider_name":"langgenius/tongyi/tongyi","reranking_model_name":"qwen3-rerank"},"weights":{"weight_type":"customized","keyword_setting":{"keyword_weight":0.3},"vector_setting":{"vector_weight":0.7,"embedding_model_name":"","embedding_provider_name":""}},"top_k":5,"score_threshold_enabled":false,"score_threshold":null,"graph_search":{"enabled":true,"top_k":null,"weight":0.5,"mode":"mix"}}}'
+  -H 'x-csrf-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3ODQxMjMyNjksInN1YiI6Ijk4NzU5MjdiLTc0MzUtNGI3Ny05NDYxLWEwZjQ1ZTNlNDcwZSJ9.Df2me-5wKBy6u5L6G9gpg__GITzKmCOVsoC-bIxDGe4' \
+  --data-raw '{"query":"你好","attachment_ids":[],"retrieval_model":{"search_method":"hybrid_search","reranking_enable":true,"reranking_mode":"reranking_model","reranking_model":{"reranking_provider_name":"langgenius/tongyi/tongyi","reranking_model_name":"qwen3-rerank"},"weights":{"weight_type":"customized","keyword_setting":{"keyword_weight":0.3},"vector_setting":{"vector_weight":0.7,"embedding_model_name":"","embedding_provider_name":""}},"top_k":5,"score_threshold_enabled":false,"score_threshold":null,"graph_search":{"enabled":true,"top_k":null,"weight":0.5,"mode":"mix"}}}'
+
 
 # 返回
 {
