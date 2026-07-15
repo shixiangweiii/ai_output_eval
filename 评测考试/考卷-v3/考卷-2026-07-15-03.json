@@ -1,0 +1,672 @@
+{
+  "schema_version": "3.0",
+  "exam_meta": {
+    "exam_id": "考卷-2026-07-15-03",
+    "title": "RAG 检索回归考卷 v3：原子证据、完整证据链与新颖性排序",
+    "generated_date": "2026-07-15",
+    "purpose": "基于现有 10 篇语料的回归评测集，不作为独立盲测基准。",
+    "primary_k": 5,
+    "eval_ks": [1, 3, 5, 10],
+    "char_budgets": [1000, 2000, 4000],
+    "corpus": {
+      "snapshot_id": "corpus-2026-07-14-01-v3",
+      "relative_dir": "生成的原始文档语料/2026-07-14-01",
+      "documents": [
+        {"name": "01_急性冠脉综合征院内诊疗路径.md", "sha256": "9e7368ae12794fdd8e610fefb01493daf01d68e15dbcf44e782881a7835e09ae"},
+        {"name": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md", "sha256": "973b7adc9dc3a11f3dd00896affb026dd5683b8758c91d0e2849437854c1d6b1"},
+        {"name": "03_颅脑MRI检查在Chiari畸形诊断中的应用.md", "sha256": "c4f5ff280ee189290f6537f69ce8083e4a7a6ddee1e13adb03dba0302a1684f2"},
+        {"name": "04_口服抗凝药物用药安全警戒简报.md", "sha256": "20c52b41aa02a0de030ef4e93174618bb380633676f2290c4a305038bdaa1136"},
+        {"name": "05_量化交易策略研发内部笔记.md", "sha256": "b8a848e2a6323ecbd3054f20f7d15b7bf28f17f68164cc2ad41e608cd5b3f65d"},
+        {"name": "06_消费信贷智能风控体系设计说明书.md", "sha256": "81fb473163e3d52cc082053496891c44875576ba7a0c9856ade72f3dd59f5e12"},
+        {"name": "07_上市公司财报分析实务.md", "sha256": "dba09a80efca06c2886625f98d3d5597de8aa07e2223449afbd8e89710dc9552"},
+        {"name": "08_一网通办政务服务平台业务办理指南.md", "sha256": "b51236a5615049b7dc1db620e74b6cc1adbf36a7709b30a584a4c3f124315622"},
+        {"name": "09_在线教育平台自适应学习系统技术白皮书.md", "sha256": "48f1936e98cb39b97d92dfd1e37d255fe48ffe34c5f54202008a3a5eb3a11a21"},
+        {"name": "10_协同文档SaaS云笺多人实时协作功能PRD.md", "sha256": "7b87403d0cae7a631d031fb1df7a960b269b0d47c9384d23c74ec1f8b350ea96"}
+      ]
+    },
+    "question_counts": {
+      "total": 40,
+      "scored": 36,
+      "diagnostic": 4,
+      "by_primary_type": {
+        "single_doc_fact": 8,
+        "single_doc_multi_claim": 6,
+        "cross_doc_compare": 8,
+        "cross_doc_chain": 8,
+        "disambiguation_hard_negative": 3,
+        "asset_reference_retrieval": 3,
+        "unanswerable_diagnostic": 4
+      },
+      "by_difficulty": {
+        "simple": 8,
+        "medium": 14,
+        "hard": 14,
+        "diagnostic": 4
+      }
+    },
+    "design_constraints": {
+      "min_claims_per_document": 6,
+      "max_claim_share_per_document": 0.15,
+      "min_low_lexical_overlap_questions": 12,
+      "min_hard_negative_questions": 8,
+      "claim_reuse_policy": "同一 source_document + normalized accepted_span 不得在正式题中复用"
+    },
+    "scoring_note": "仅 claims 进入检索评分；reference_answer 与 evidence_chain 用于人工审查。4 道 diagnostic 题不进入三项主指标。"
+  },
+  "questions": [
+    {
+      "id": "v3_q001",
+      "scored": true,
+      "difficulty": "simple",
+      "primary_type": "single_doc_fact",
+      "tags": ["single_doc", "time_requirement"],
+      "question": "疑似急性冠脉综合征患者到急诊后，首份十二导联心电图最迟应在多久内完成？",
+      "claims": [
+        {"id": "v3_q001_c1", "kind": "text", "source_document": "01_急性冠脉综合征院内诊疗路径.md", "section": "3. 诊断流程与分诊决策", "accepted_spans": ["患者到达急诊，10 分钟内必须完成首份 12 导联心电图"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "到达急诊后 10 分钟内完成。",
+      "evidence_chain": ["v3_q001_c1"]
+    },
+    {
+      "id": "v3_q002",
+      "scored": true,
+      "difficulty": "simple",
+      "primary_type": "single_doc_fact",
+      "tags": ["single_doc", "storage"],
+      "question": "未开封的胰岛素应该怎样保存，曾经结冰后还能否继续使用？",
+      "claims": [
+        {"id": "v3_q002_c1", "kind": "text", "source_document": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md", "section": "八、储存与出行", "accepted_spans": ["没开封的：冷藏（2–8℃），别放冷冻层，冻过的胰岛素直接报废"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "未开封时 2–8℃冷藏，不能冷冻；冻过后直接报废。",
+      "evidence_chain": ["v3_q002_c1"]
+    },
+    {
+      "id": "v3_q003",
+      "scored": true,
+      "difficulty": "simple",
+      "primary_type": "single_doc_fact",
+      "tags": ["single_doc", "threshold"],
+      "question": "小脑扁桃体低于 McRae 线多少毫米时符合 Chiari I 型影像标准？",
+      "claims": [
+        {"id": "v3_q003_c1", "kind": "text", "source_document": "03_颅脑MRI检查在Chiari畸形诊断中的应用.md", "section": "4. 读片与量化标准", "accepted_spans": ["下疝 > 5 mm：符合 Chiari I 型的影像标准"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "下疝大于 5 mm。",
+      "evidence_chain": ["v3_q003_c1"]
+    },
+    {
+      "id": "v3_q004",
+      "scored": true,
+      "difficulty": "simple",
+      "primary_type": "single_doc_fact",
+      "tags": ["single_doc", "drug_monitoring"],
+      "question": "华法林治疗通常把 INR 控制在哪个目标区间？",
+      "claims": [
+        {"id": "v3_q004_c1", "kind": "text", "source_document": "04_口服抗凝药物用药安全警戒简报.md", "section": "三、华法林", "accepted_spans": ["目标区间通常是 2.0–3.0"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "通常为 2.0–3.0。",
+      "evidence_chain": ["v3_q004_c1"]
+    },
+    {
+      "id": "v3_q005",
+      "scored": true,
+      "difficulty": "simple",
+      "primary_type": "single_doc_fact",
+      "tags": ["single_doc", "risk_limit"],
+      "question": "量化策略的单笔交易最大亏损红线是多少？",
+      "claims": [
+        {"id": "v3_q005_c1", "kind": "text", "source_document": "05_量化交易策略研发内部笔记.md", "section": "6. 我们现在的纪律", "accepted_spans": ["一笔交易最大亏损不超过总资金的 2%"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "不超过总资金的 2%。",
+      "evidence_chain": ["v3_q005_c1"]
+    },
+    {
+      "id": "v3_q006",
+      "scored": true,
+      "difficulty": "simple",
+      "primary_type": "single_doc_fact",
+      "tags": ["single_doc", "formula"],
+      "question": "消费信贷中的预期损失 EL 由哪三个量相乘得到？",
+      "claims": [
+        {"id": "v3_q006_c1", "kind": "text", "source_document": "06_消费信贷智能风控体系设计说明书.md", "section": "6. 额度与定价策略", "accepted_spans": ["预期损失（EL）= 违约概率（PD）× 违约损失率（LGD）× 违约风险敞口（EAD）"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "EL = PD × LGD × EAD。",
+      "evidence_chain": ["v3_q006_c1"]
+    },
+    {
+      "id": "v3_q007",
+      "scored": true,
+      "difficulty": "simple",
+      "primary_type": "single_doc_fact",
+      "tags": ["single_doc", "financial_ratio"],
+      "question": "晨光精密的应收账款周转天数从多少天延长到了多少天？",
+      "claims": [
+        {"id": "v3_q007_c1", "kind": "text", "source_document": "07_上市公司财报分析实务.md", "section": "八、几个进阶比率", "accepted_spans": ["晨光从 45 天拉长到 83 天，几乎翻倍"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "从 45 天延长到 83 天。",
+      "evidence_chain": ["v3_q007_c1"]
+    },
+    {
+      "id": "v3_q008",
+      "scored": true,
+      "difficulty": "simple",
+      "primary_type": "single_doc_fact",
+      "tags": ["single_doc", "service_sla"],
+      "question": "材料齐全合规时，企业开办承诺在多长时间内办结？",
+      "claims": [
+        {"id": "v3_q008_c1", "kind": "text", "source_document": "08_一网通办政务服务平台业务办理指南.md", "section": "第六章 时限承诺与救济渠道", "accepted_spans": ["企业开办压缩至 1 个工作日内办结"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "1 个工作日内。",
+      "evidence_chain": ["v3_q008_c1"]
+    },
+    {
+      "id": "v3_q009",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "single_doc_multi_claim",
+      "tags": ["single_doc", "multi_claim", "cold_start"],
+      "question": "新学生没有历史答题数据时，自适应系统如何先形成粗略画像，再逐步变成个体估计？",
+      "claims": [
+        {"id": "v3_q009_c1", "kind": "text", "source_document": "09_在线教育平台自适应学习系统技术白皮书.md", "section": "8. 冷启动与数据稀疏问题", "accepted_spans": ["第一步，用一套精心设计的\"摸底测验\"快速探测"]},
+        {"id": "v3_q009_c2", "kind": "text", "source_document": "09_在线教育平台自适应学习系统技术白皮书.md", "section": "8. 冷启动与数据稀疏问题", "accepted_spans": ["随着该学生答题增多，再逐渐从\"群体先验\"过渡到\"个人真实估计\""]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "先用摸底测验和同类群体先验形成粗略画像，随后随个人答题数据增加过渡到个人估计。",
+      "evidence_chain": ["v3_q009_c1", "v3_q009_c2"]
+    },
+    {
+      "id": "v3_q010",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "single_doc_multi_claim",
+      "tags": ["single_doc", "multi_claim", "acceptance_criteria"],
+      "question": "云笺实时协作在同步时延与长时间离线恢复方面分别有哪些硬性验收要求？",
+      "claims": [
+        {"id": "v3_q010_c1", "kind": "text", "source_document": "10_协同文档SaaS云笺多人实时协作功能PRD.md", "section": "6. 验收标准与埋点", "accepted_spans": ["两端编辑同步延迟 P95 < 500ms"]},
+        {"id": "v3_q010_c2", "kind": "text", "source_document": "10_协同文档SaaS云笺多人实时协作功能PRD.md", "section": "6. 验收标准与埋点", "accepted_spans": ["离线编辑 30 分钟后联网，内容零丢失"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "正常环境 P95 小于 500ms；离线编辑 30 分钟后恢复联网必须零丢失。",
+      "evidence_chain": ["v3_q010_c1", "v3_q010_c2"]
+    },
+    {
+      "id": "v3_q011",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "single_doc_multi_claim",
+      "tags": ["single_doc", "multi_claim", "version_current"],
+      "question": "现行 ACS 路径中，溶栓获益时间窗和导管室开通目标分别是什么？",
+      "claims": [
+        {"id": "v3_q011_c1", "kind": "text", "source_document": "01_急性冠脉综合征院内诊疗路径.md", "section": "5. 再灌注策略选择", "accepted_spans": ["现行标准是 12 小时内可获益，3 小时内获益最大"]},
+        {"id": "v3_q011_c2", "kind": "text", "source_document": "01_急性冠脉综合征院内诊疗路径.md", "section": "3. 诊断流程与分诊决策", "accepted_spans": ["目标 D2B < 90 分钟"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "溶栓在发病 12 小时内可获益、3 小时内最大；D2B 目标小于 90 分钟。",
+      "evidence_chain": ["v3_q011_c1", "v3_q011_c2"]
+    },
+    {
+      "id": "v3_q012",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "single_doc_multi_claim",
+      "tags": ["single_doc", "multi_claim", "dose_titration"],
+      "question": "基础胰岛素通常怎样确定起点，后续调量为何不能看一次孤立血糖？",
+      "claims": [
+        {"id": "v3_q012_c1", "kind": "text", "source_document": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md", "section": "四、剂量怎么定", "accepted_spans": ["基础胰岛素常从每公斤体重 0.1–0.2 单位起步"]},
+        {"id": "v3_q012_c2", "kind": "text", "source_document": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md", "section": "四、剂量怎么定", "accepted_spans": ["要看连续三天的规律"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "可从每公斤 0.1–0.2 单位估算起点，之后依据连续三天趋势滴定。",
+      "evidence_chain": ["v3_q012_c1", "v3_q012_c2"]
+    },
+    {
+      "id": "v3_q013",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "single_doc_multi_claim",
+      "tags": ["single_doc", "multi_claim", "imaging_protocol"],
+      "question": "Chiari 规范中的矢状位 T1WI 和 T2WI 分别承担什么任务？",
+      "claims": [
+        {"id": "v3_q013_c1", "kind": "text", "source_document": "03_颅脑MRI检查在Chiari畸形诊断中的应用.md", "section": "3. 扫描序列与体位规范", "accepted_spans": ["正中矢状位 T1WI —— 主力序列，用于测量下疝程度"]},
+        {"id": "v3_q013_c2", "kind": "text", "source_document": "03_颅脑MRI检查在Chiari畸形诊断中的应用.md", "section": "3. 扫描序列与体位规范", "accepted_spans": ["矢状位 T2WI —— 观察是否合并脊髓空洞"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "T1WI 用于测量下疝，T2WI 用于观察脊髓空洞。",
+      "evidence_chain": ["v3_q013_c1", "v3_q013_c2"]
+    },
+    {
+      "id": "v3_q014",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "single_doc_multi_claim",
+      "tags": ["single_doc", "multi_claim", "medication_safety"],
+      "question": "口服抗凝药换用和华法林调量后，各自必须补上的监测动作是什么？",
+      "claims": [
+        {"id": "v3_q014_c1", "kind": "text", "source_document": "04_口服抗凝药物用药安全警戒简报.md", "section": "九、行动建议", "accepted_spans": ["换用 NOAC 前必须评估肌酐清除率"]},
+        {"id": "v3_q014_c2", "kind": "text", "source_document": "04_口服抗凝药物用药安全警戒简报.md", "section": "九、行动建议", "accepted_spans": ["华法林调量后 3–5 天复查 INR"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "换用 NOAC 前评估肌酐清除率；华法林调量后 3–5 天复查 INR。",
+      "evidence_chain": ["v3_q014_c1", "v3_q014_c2"]
+    },
+    {
+      "id": "v3_q015",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "cross_doc_compare",
+      "tags": ["cross_doc", "metric_tradeoff", "low_lexical_overlap"],
+      "question": "同样面对误报与漏报，短周期交易信号和放贷准入为何会选择相反的容错方向？",
+      "claims": [
+        {"id": "v3_q015_c1", "kind": "text", "source_document": "05_量化交易策略研发内部笔记.md", "section": "4. 过拟合", "accepted_spans": ["高频策略更怕误报（要精确率），趋势策略更怕错过大行情（要召回率）"]},
+        {"id": "v3_q015_c2", "kind": "text", "source_document": "06_消费信贷智能风控体系设计说明书.md", "section": "4. 机器学习模型", "accepted_spans": ["信贷更怕放走坏客户，所以往往宁可牺牲一点精确率也要保住召回率"]}
+      ],
+      "negative_evidence": [
+        {"id": "v3_q015_n1", "source_document": "09_在线教育平台自适应学习系统技术白皮书.md", "section": "6. 效果数据与诚实的辨析", "accepted_spans": ["精确率高代表被判为\"已掌握\"的知识点大多真掌握了"]}
+      ],
+      "reference_answer": "高频策略优先减少误报，信贷则更怕漏掉坏客户而偏向召回率。",
+      "evidence_chain": ["v3_q015_c1", "v3_q015_c2"]
+    },
+    {
+      "id": "v3_q016",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "cross_doc_compare",
+      "tags": ["cross_doc", "headline_number", "low_lexical_overlap"],
+      "question": "一个逐年下滑的比值和一个流程提速术语，分别需要怎样补充上下文才不会被表面数字或字眼骗到？",
+      "claims": [
+        {"id": "v3_q016_c1", "kind": "text", "source_document": "07_上市公司财报分析实务.md", "section": "六、时间维度", "accepted_spans": ["这个比值逐年恶化，是持续性的趋势，不是偶然"]},
+        {"id": "v3_q016_c2", "kind": "text", "source_document": "08_一网通办政务服务平台业务办理指南.md", "section": "第二章 核心概念", "accepted_spans": ["并联指的是\"同时审\"而非\"不审\""]}
+      ],
+      "negative_evidence": [
+        {"id": "v3_q016_n1", "source_document": "04_口服抗凝药物用药安全警戒简报.md", "section": "一、本期核心信息", "accepted_spans": ["本季度共收到抗凝相关不良事件（ADE）上报 47 例"]}
+      ],
+      "reference_answer": "财务比值要看跨年趋势；并联审批只是同时审核，并未取消审核标准。",
+      "evidence_chain": ["v3_q016_c1", "v3_q016_c2"]
+    },
+    {
+      "id": "v3_q017",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "cross_doc_compare",
+      "tags": ["cross_doc", "personalization", "low_lexical_overlap"],
+      "question": "两个数字化系统都掌握了用户历史信息后，为何一个要主动探索，另一个却必须服从中心端最新状态？",
+      "claims": [
+        {"id": "v3_q017_c1", "kind": "text", "source_document": "09_在线教育平台自适应学习系统技术白皮书.md", "section": "9. 数据隐私与算法伦理", "accepted_spans": ["自适应系统可能无意中\"固化\"学生"]},
+        {"id": "v3_q017_c2", "kind": "text", "source_document": "10_协同文档SaaS云笺多人实时协作功能PRD.md", "section": "8. 权限与协作边界", "accepted_spans": ["以服务端最终权限为准，离线期间越权产生的编辑一律拒绝合并并提示用户"]}
+      ],
+      "negative_evidence": [
+        {"id": "v3_q017_n1", "source_document": "09_在线教育平台自适应学习系统技术白皮书.md", "section": "8. 冷启动与数据稀疏问题", "accepted_spans": ["先借用\"同类人群的平均掌握度\"作为先验"]}
+      ],
+      "reference_answer": "教育系统要防止历史表现固化学生并保留探索；协作文档则必须以服务端最终权限作为安全边界。",
+      "evidence_chain": ["v3_q017_c1", "v3_q017_c2"]
+    },
+    {
+      "id": "v3_q018",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "cross_doc_compare",
+      "tags": ["cross_doc", "longitudinal_evidence", "low_lexical_overlap"],
+      "question": "急诊化验和家庭监测都出现一次看似正常或异常的读数时，为什么都不能立即结束判断？",
+      "claims": [
+        {"id": "v3_q018_c1", "kind": "text", "source_document": "01_急性冠脉综合征院内诊疗路径.md", "section": "9. 附录：常见问答", "accepted_spans": ["单次不能，需结合症状与 0h/1h 动态"]},
+        {"id": "v3_q018_c2", "kind": "text", "source_document": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md", "section": "四、剂量怎么定", "accepted_spans": ["调整的依据是空腹和餐后血糖的趋势，不是某一次的孤立数值"]}
+      ],
+      "negative_evidence": [
+        {"id": "v3_q018_n1", "source_document": "01_急性冠脉综合征院内诊疗路径.md", "section": "4. 生物标志物的时间窗陷阱", "accepted_spans": ["头一次抽血肌钙蛋白很可能是正常的"]}
+      ],
+      "reference_answer": "ACS 要结合症状及 0h/1h 动态，胰岛素调量要看连续趋势，不能用单点读数作结论。",
+      "evidence_chain": ["v3_q018_c1", "v3_q018_c2"]
+    },
+    {
+      "id": "v3_q019",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "cross_doc_compare",
+      "tags": ["cross_doc", "safety_boundary", "low_lexical_overlap"],
+      "question": "取消一种常规风险检查为何不等于整个方案没有风险？请分别给出影像检查和抗凝治疗中的剩余门槛。",
+      "claims": [
+        {"id": "v3_q019_c1", "kind": "text", "source_document": "03_颅脑MRI检查在Chiari畸形诊断中的应用.md", "section": "6. 安全禁忌与风险提示", "accepted_spans": ["\"无辐射\"只解决了辐射这一个维度的顾虑，其它禁忌一个都不能省"]},
+        {"id": "v3_q019_c2", "kind": "text", "source_document": "04_口服抗凝药物用药安全警戒简报.md", "section": "四、NOAC", "accepted_spans": ["NOAC 不用查 INR，很多人就误以为\"绝对安全\"。错。它的隐藏风险在肾功能"]}
+      ],
+      "negative_evidence": [
+        {"id": "v3_q019_n1", "source_document": "03_颅脑MRI检查在Chiari畸形诊断中的应用.md", "section": "1. 概述与检查目的", "accepted_spans": ["它不使用电离辐射"]}
+      ],
+      "reference_answer": "MRI 无辐射仍有金属和对比剂等禁忌；NOAC 无需常规 INR 仍须关注肾功能。",
+      "evidence_chain": ["v3_q019_c1", "v3_q019_c2"]
+    },
+    {
+      "id": "v3_q020",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "cross_doc_compare",
+      "tags": ["cross_doc", "independent_validation", "low_lexical_overlap"],
+      "question": "策略曲线和公司利润都很漂亮时，各自需要哪一种独立证据来验证它不是纸面繁荣？",
+      "claims": [
+        {"id": "v3_q020_c1", "kind": "text", "source_document": "05_量化交易策略研发内部笔记.md", "section": "4. 过拟合", "accepted_spans": ["任何策略必须做样本外测试（out-of-sample）"]},
+        {"id": "v3_q020_c2", "kind": "text", "source_document": "07_上市公司财报分析实务.md", "section": "五、为什么不能只看一张表", "accepted_spans": ["利润好，还要问\"现金收到没\"（查经营现金流）"]}
+      ],
+      "negative_evidence": [
+        {"id": "v3_q020_n1", "source_document": "05_量化交易策略研发内部笔记.md", "section": "4. 过拟合", "accepted_spans": ["回测年化 90%"]}
+      ],
+      "reference_answer": "策略要用样本外测试验证，利润要用经营现金流验证。",
+      "evidence_chain": ["v3_q020_c1", "v3_q020_c2"]
+    },
+    {
+      "id": "v3_q021",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "cross_doc_compare",
+      "tags": ["cross_doc", "model_governance", "low_lexical_overlap"],
+      "question": "模型多几个点的效果提升和班级成绩上涨，都不能直接成为上线宣传结论；两份材料分别要求补什么约束？",
+      "claims": [
+        {"id": "v3_q021_c1", "kind": "text", "source_document": "06_消费信贷智能风控体系设计说明书.md", "section": "3. 信用评分卡", "accepted_spans": ["可解释性有时比那 2% 的准确率更重要"]},
+        {"id": "v3_q021_c2", "kind": "text", "source_document": "09_在线教育平台自适应学习系统技术白皮书.md", "section": "6. 效果数据与诚实的辨析", "accepted_spans": ["真正能归因于自适应算法的净效应，我们内部保守估计在 5–7%"]}
+      ],
+      "negative_evidence": [
+        {"id": "v3_q021_n1", "source_document": "09_在线教育平台自适应学习系统技术白皮书.md", "section": "6. 效果数据与诚实的辨析", "accepted_spans": ["单元测试平均正确率比对照班高 14%"]}
+      ],
+      "reference_answer": "信贷要保留可解释性，教育效果要控制选择偏差后只归因 5–7% 的净效应。",
+      "evidence_chain": ["v3_q021_c1", "v3_q021_c2"]
+    },
+    {
+      "id": "v3_q022",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "cross_doc_compare",
+      "tags": ["cross_doc", "concurrency", "low_lexical_overlap"],
+      "question": "两个并发系统分别怎样避免把顺序等待或到达次序变成结果错误？",
+      "claims": [
+        {"id": "v3_q022_c1", "kind": "text", "source_document": "08_一网通办政务服务平台业务办理指南.md", "section": "第二章 核心概念", "accepted_spans": ["把等待时间从\"相加\"变成了\"取最大值\""]},
+        {"id": "v3_q022_c2", "kind": "text", "source_document": "10_协同文档SaaS云笺多人实时协作功能PRD.md", "section": "3. 技术方案选型", "accepted_spans": ["无论操作以什么顺序到达，最终结果一致"]}
+      ],
+      "negative_evidence": [
+        {"id": "v3_q022_n1", "source_document": "08_一网通办政务服务平台业务办理指南.md", "section": "第二章 核心概念", "accepted_spans": ["企业开办以前要 3–5 个工作日"]}
+      ],
+      "reference_answer": "政务并联审批让等待时间取各部门最大值；CRDT 保证不同到达顺序仍最终一致。",
+      "evidence_chain": ["v3_q022_c1", "v3_q022_c2"]
+    },
+    {
+      "id": "v3_q023",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["cross_doc", "three_doc", "low_lexical_overlap", "temporal_shift"],
+      "question": "为什么一个总体均值、一个历史有效规则和一个观察到的成绩差异，都不足以直接推出稳定决策？",
+      "claims": [
+        {"id": "v3_q023_c1", "kind": "text", "source_document": "01_急性冠脉综合征院内诊疗路径.md", "section": "1. 背景与适用场景", "accepted_spans": ["夜班时段（22:00–次日 8:00）实际是 89 分钟"]},
+        {"id": "v3_q023_c2", "kind": "text", "source_document": "05_量化交易策略研发内部笔记.md", "section": "5. 跨市场移植的坑", "accepted_spans": ["市场是会\"进化\"的，你的策略也得跟着迭代"]},
+        {"id": "v3_q023_c3", "kind": "text", "source_document": "09_在线教育平台自适应学习系统技术白皮书.md", "section": "6. 效果数据与诚实的辨析", "accepted_spans": ["把相关当因果，是教育技术宣传里最常见的陷阱"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "总体均值会掩盖夜班差异，市场规律随时间演化，教育成绩差异还可能来自选择偏差，三者都需补充分层或因果验证。",
+      "evidence_chain": ["v3_q023_c1", "v3_q023_c2", "v3_q023_c3"]
+    },
+    {
+      "id": "v3_q024",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["cross_doc", "three_doc", "low_lexical_overlap", "context_specificity"],
+      "question": "治疗参数、风险边界和产品技术路线为什么都不能直接复制别人的现成答案？",
+      "claims": [
+        {"id": "v3_q024_c1", "kind": "text", "source_document": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md", "section": "四、剂量怎么定", "accepted_spans": ["照抄别人的剂量是本手册明令禁止的高危行为"]},
+        {"id": "v3_q024_c2", "kind": "text", "source_document": "06_消费信贷智能风控体系设计说明书.md", "section": "7. 风险与展望", "accepted_spans": ["风控的平衡点不是一次定死的，它会随宏观环境漂移，必须动态再平衡"]},
+        {"id": "v3_q024_c3", "kind": "text", "source_document": "10_协同文档SaaS云笺多人实时协作功能PRD.md", "section": "9. 竞品对比与差异化定位", "accepted_spans": ["如果盲目照抄竞品的 OT 方案，反而丢掉了我们唯一的差异化优势"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "个体生理条件、宏观风险环境和目标用户场景都不同，因此剂量、风控阈值和技术路线必须按本地上下文调整。",
+      "evidence_chain": ["v3_q024_c1", "v3_q024_c2", "v3_q024_c3"]
+    },
+    {
+      "id": "v3_q025",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["cross_doc", "three_doc", "low_lexical_overlap", "context_completeness"],
+      "question": "一份技术报告、一次投资判断和一份线上申请，分别遗漏哪类上下文时最容易产生错误结论？",
+      "claims": [
+        {"id": "v3_q025_c1", "kind": "text", "source_document": "03_颅脑MRI检查在Chiari畸形诊断中的应用.md", "section": "8. 报告书写与随访建议", "accepted_spans": ["一份合格的 Chiari MRI 报告，不能只甩一个下疝数值了事"]},
+        {"id": "v3_q025_c2", "kind": "text", "source_document": "07_上市公司财报分析实务.md", "section": "五、为什么不能只看一张表", "accepted_spans": ["任何单一指标都能被管理层\"管理\"，只有交叉验证才难以造假"]},
+        {"id": "v3_q025_c3", "kind": "text", "source_document": "08_一网通办政务服务平台业务办理指南.md", "section": "第五章 常见退回原因", "accepted_spans": ["股东实名认证未完成就提交"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "影像报告要结合症状及伴随征象，投资判断要做多表交叉验证，政务申请要完成前置认证与材料。",
+      "evidence_chain": ["v3_q025_c1", "v3_q025_c2", "v3_q025_c3"]
+    },
+    {
+      "id": "v3_q026",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["cross_doc", "three_doc", "low_lexical_overlap", "compound_risk"],
+      "question": "三个领域的严重失败为什么通常不是单点越界，而是多个局部合理动作叠加后的系统性事故？",
+      "claims": [
+        {"id": "v3_q026_c1", "kind": "text", "source_document": "04_口服抗凝药物用药安全警戒简报.md", "section": "八、多重用药与老年患者的特殊警戒", "accepted_spans": ["单看每种药都在说明书剂量内，合起来却可能致命"]},
+        {"id": "v3_q026_c2", "kind": "text", "source_document": "05_量化交易策略研发内部笔记.md", "section": "7. 一次完整的策略失效复盘", "accepted_spans": ["过拟合 + 跳过验证 + 仓位过大 + 手动干预"]},
+        {"id": "v3_q026_c3", "kind": "text", "source_document": "06_消费信贷智能风控体系设计说明书.md", "section": "5. 一个真实的多头借贷案例", "accepted_spans": ["把贷前查询、贷后行为拼起来，真相就变了"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "药物相互作用、策略研发失误和跨防线风险信号都会因组合效应放大，必须评估完整链条而非孤立局部。",
+      "evidence_chain": ["v3_q026_c1", "v3_q026_c2", "v3_q026_c3"]
+    },
+    {
+      "id": "v3_q027",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["cross_doc", "three_doc", "low_lexical_overlap", "version_and_trend"],
+      "question": "面对一条旧规范、一个单年样本和一个已经失败的冲突方案，如何识别它们不能继续代表当前决策？",
+      "claims": [
+        {"id": "v3_q027_c1", "kind": "text", "source_document": "01_急性冠脉综合征院内诊疗路径.md", "section": "文档说明", "accepted_spans": ["V2.8 中关于溶栓时间窗的表述已作废"]},
+        {"id": "v3_q027_c2", "kind": "text", "source_document": "07_上市公司财报分析实务.md", "section": "六、时间维度", "accepted_spans": ["单看 2025 一年不够，得拉长看趋势"]},
+        {"id": "v3_q027_c3", "kind": "text", "source_document": "10_协同文档SaaS云笺多人实时协作功能PRD.md", "section": "5. 冲突处理", "accepted_spans": ["V1.x 旧方案（已废弃）：采用\"最后写入者获胜\""]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "应检查版本替代声明、拉长时间序列，并依据灰度失败证据弃用旧方案。",
+      "evidence_chain": ["v3_q027_c1", "v3_q027_c2", "v3_q027_c3"]
+    },
+    {
+      "id": "v3_q028",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["cross_doc", "three_doc", "low_lexical_overlap", "adaptive_service"],
+      "question": "三个面向人的系统如何在保持规则稳定的同时，为具体使用者保留可达性或成长空间？",
+      "claims": [
+        {"id": "v3_q028_c1", "kind": "text", "source_document": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md", "section": "七、注射的门道", "accepted_spans": ["同一时间段固定打同一大区域"]},
+        {"id": "v3_q028_c2", "kind": "text", "source_document": "08_一网通办政务服务平台业务办理指南.md", "section": "第八章 适老化与无障碍服务", "accepted_spans": ["保留线下\"综合窗口\""]},
+        {"id": "v3_q028_c3", "kind": "text", "source_document": "09_在线教育平台自适应学习系统技术白皮书.md", "section": "9. 数据隐私与算法伦理", "accepted_spans": ["定期推送略高于当前水平的内容"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "注射区域按时段稳定、政务保留线下兜底、教育推荐加入适度挑战，分别控制变量、保障可达和避免固化。",
+      "evidence_chain": ["v3_q028_c1", "v3_q028_c2", "v3_q028_c3"]
+    },
+    {
+      "id": "v3_q029",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["cross_doc", "three_doc", "low_lexical_overlap", "release_gate"],
+      "question": "影像检查、抗凝用药和风控建模在放行前，各有哪一道不能因表面便利或效果好而跳过的安全门？",
+      "claims": [
+        {"id": "v3_q029_c1", "kind": "text", "source_document": "03_颅脑MRI检查在Chiari畸形诊断中的应用.md", "section": "6. 安全禁忌与风险提示", "accepted_spans": ["检查前的金属筛查表必须逐项核对"]},
+        {"id": "v3_q029_c2", "kind": "text", "source_document": "04_口服抗凝药物用药安全警戒简报.md", "section": "四、NOAC", "accepted_spans": ["肾功能不全的患者用 NOAC，要么减量、要么换药"]},
+        {"id": "v3_q029_c3", "kind": "text", "source_document": "06_消费信贷智能风控体系设计说明书.md", "section": "9. 数据合规与用户隐私红线", "accepted_spans": ["所有进入模型的变量都必须来源合法、用户授权"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "MRI 要逐项金属筛查，NOAC 要按肾功能减量或换药，模型变量必须合法且获授权。",
+      "evidence_chain": ["v3_q029_c1", "v3_q029_c2", "v3_q029_c3"]
+    },
+    {
+      "id": "v3_q030",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["cross_doc", "three_doc", "low_lexical_overlap", "structural_signal"],
+      "question": "为什么三个系统都不能只盯一个表面信号，而要保留关系结构、依赖方向或独立通道？",
+      "claims": [
+        {"id": "v3_q030_c1", "kind": "text", "source_document": "05_量化交易策略研发内部笔记.md", "section": "3. 用成交量给信号验真", "accepted_spans": ["多个弱相关信号叠加来提高胜率"]},
+        {"id": "v3_q030_c2", "kind": "text", "source_document": "09_在线教育平台自适应学习系统技术白皮书.md", "section": "5. 推荐算法", "accepted_spans": ["顺着知识依赖往前追到真正的薄弱根源"]},
+        {"id": "v3_q030_c3", "kind": "text", "source_document": "10_协同文档SaaS云笺多人实时协作功能PRD.md", "section": "8. 权限与协作边界", "accepted_spans": ["评论是挂在文档某个锚点上的独立数据层"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "交易要组合弱相关信号，教育要沿先修依赖追根因，协作系统要把评论维持为独立数据层。",
+      "evidence_chain": ["v3_q030_c1", "v3_q030_c2", "v3_q030_c3"]
+    },
+    {
+      "id": "v3_q031",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": ["cross_doc", "hard_negative", "headline_number"],
+      "question": "某科室 D2B 年均 71 分钟、某公司净利润 5.6 亿，看起来都很好；分别补上哪条证据后不能再按表面优秀下结论？",
+      "claims": [
+        {"id": "v3_q031_c1", "kind": "text", "source_document": "01_急性冠脉综合征院内诊疗路径.md", "section": "1. 背景与适用场景", "accepted_spans": ["71 这个数字是全年均值"]},
+        {"id": "v3_q031_c2", "kind": "text", "source_document": "07_上市公司财报分析实务.md", "section": "四、现金流量表", "accepted_spans": ["经营活动现金流净额只有 0.8 亿"]}
+      ],
+      "negative_evidence": [
+        {"id": "v3_q031_n1", "source_document": "01_急性冠脉综合征院内诊疗路径.md", "section": "3. 诊断流程", "accepted_spans": ["目标 D2B < 90 分钟"]},
+        {"id": "v3_q031_n2", "source_document": "07_上市公司财报分析实务.md", "section": "二、利润表", "accepted_spans": ["净利润 5.6 亿，增 35%"]}
+      ],
+      "reference_answer": "71 分钟只是全年均值，夜班更慢；5.6 亿净利润对应的经营现金流仅 0.8 亿。",
+      "evidence_chain": ["v3_q031_c1", "v3_q031_c2"]
+    },
+    {
+      "id": "v3_q032",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": ["cross_doc", "hard_negative", "lookalike"],
+      "question": "外观相似的注射笔和看起来像证照的手机照片，分别应依靠什么信息避免把相似外观当成等价身份？",
+      "claims": [
+        {"id": "v3_q032_c1", "kind": "text", "source_document": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md", "section": "三、胰岛素的种类", "accepted_spans": ["认准笔身颜色和名字，别凭手感"]},
+        {"id": "v3_q032_c2", "kind": "text", "source_document": "08_一网通办政务服务平台业务办理指南.md", "section": "第七章 电子证照", "accepted_spans": ["电子证照是由签发机关加盖电子印章、具备法律效力的官方数据"]}
+      ],
+      "negative_evidence": [
+        {"id": "v3_q032_n1", "source_document": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md", "section": "三、胰岛素的种类", "accepted_spans": ["速效和长效长得像、名字也像"]},
+        {"id": "v3_q032_n2", "source_document": "08_一网通办政务服务平台业务办理指南.md", "section": "第七章 电子证照", "accepted_spans": ["你手机里拍的照片只是图像"]}
+      ],
+      "reference_answer": "胰岛素要核对笔身颜色和名称，电子证照要核验签发机关电子印章和法律效力。",
+      "evidence_chain": ["v3_q032_c1", "v3_q032_c2"]
+    },
+    {
+      "id": "v3_q033",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": ["cross_doc", "hard_negative", "terminology"],
+      "question": "病历里的核磁和医嘱里的 DOAC 是否分别代表另一种检查或另一类抗凝药？请给出同义关系及规范提醒。",
+      "claims": [
+        {"id": "v3_q033_c1", "kind": "text", "source_document": "03_颅脑MRI检查在Chiari畸形诊断中的应用.md", "section": "9. 附录：术语对照", "accepted_spans": ["MRI = 磁共振 = 核磁（旧称，不推荐）"]},
+        {"id": "v3_q033_c2", "kind": "text", "source_document": "04_口服抗凝药物用药安全警戒简报.md", "section": "附：本期缩写表", "accepted_spans": ["NOAC=DOAC=新型/直接口服抗凝药"]}
+      ],
+      "negative_evidence": [
+        {"id": "v3_q033_n1", "source_document": "03_颅脑MRI检查在Chiari畸形诊断中的应用.md", "section": "2. MRI 与 CT 的选择逻辑", "accepted_spans": ["\"头颅 CT\"来排查 Chiari"]},
+        {"id": "v3_q033_n2", "source_document": "04_口服抗凝药物用药安全警戒简报.md", "section": "二、抗凝药物的两大阵营", "accepted_spans": ["2023 年的院内 PPT 把它们并列成两栏"]}
+      ],
+      "reference_answer": "核磁是 MRI/磁共振的旧称；NOAC 与 DOAC 是同一类口服抗凝药。",
+      "evidence_chain": ["v3_q033_c1", "v3_q033_c2"]
+    },
+    {
+      "id": "v3_q034",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "asset_reference_retrieval",
+      "tags": ["cross_doc", "asset_reference", "shared_url"],
+      "question": "同一个 12 导联心电图图片 URL 被哪两份不同领域材料引用？必须分别召回两个来源。",
+      "claims": [
+        {"id": "v3_q034_c1", "kind": "asset", "source_document": "01_急性冠脉综合征院内诊疗路径.md", "section": "1. 背景与适用场景", "accepted_spans": ["https://upload.wikimedia.org/wikipedia/commons/d/df/12_lead_ECG.jpg"]},
+        {"id": "v3_q034_c2", "kind": "asset", "source_document": "05_量化交易策略研发内部笔记.md", "section": "3. 用成交量给信号验真", "accepted_spans": ["https://upload.wikimedia.org/wikipedia/commons/d/df/12_lead_ECG.jpg"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "来源是 ACS 院内路径和量化交易策略笔记。",
+      "evidence_chain": ["v3_q034_c1", "v3_q034_c2"]
+    },
+    {
+      "id": "v3_q035",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "asset_reference_retrieval",
+      "tags": ["cross_doc", "asset_reference", "shared_url", "three_doc"],
+      "question": "BalanceSheet.jpg 这个共享资产分别出现在哪三份材料中？必须按来源文档完整覆盖。",
+      "claims": [
+        {"id": "v3_q035_c1", "kind": "asset", "source_document": "04_口服抗凝药物用药安全警戒简报.md", "section": "六、数据解读的陷阱", "accepted_spans": ["https://upload.wikimedia.org/wikipedia/commons/a/a5/BalanceSheet.jpg"]},
+        {"id": "v3_q035_c2", "kind": "asset", "source_document": "06_消费信贷智能风控体系设计说明书.md", "section": "4. 机器学习模型", "accepted_spans": ["https://upload.wikimedia.org/wikipedia/commons/a/a5/BalanceSheet.jpg"]},
+        {"id": "v3_q035_c3", "kind": "asset", "source_document": "07_上市公司财报分析实务.md", "section": "一、开篇", "accepted_spans": ["https://upload.wikimedia.org/wikipedia/commons/a/a5/BalanceSheet.jpg"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "分别是口服抗凝药警戒简报、消费信贷风控说明书和上市公司财报分析实务。",
+      "evidence_chain": ["v3_q035_c1", "v3_q035_c2", "v3_q035_c3"]
+    },
+    {
+      "id": "v3_q036",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "asset_reference_retrieval",
+      "tags": ["cross_doc", "asset_reference", "shared_url"],
+      "question": "Network_architecture_2levels.png 这一架构图被政务平台和协作文档分别怎样引用？检索必须返回两个来源。",
+      "claims": [
+        {"id": "v3_q036_c1", "kind": "asset", "source_document": "08_一网通办政务服务平台业务办理指南.md", "section": "第四章 数据共享的底层逻辑", "accepted_spans": ["https://upload.wikimedia.org/wikipedia/commons/1/13/Network_architecture_2levels.png"]},
+        {"id": "v3_q036_c2", "kind": "asset", "source_document": "10_协同文档SaaS云笺多人实时协作功能PRD.md", "section": "1. 背景与目标", "accepted_spans": ["https://upload.wikimedia.org/wikipedia/commons/1/13/Network_architecture_2levels.png"]}
+      ],
+      "negative_evidence": [],
+      "reference_answer": "来源是企业开办一网通办指南与云笺实时协作 PRD。",
+      "evidence_chain": ["v3_q036_c1", "v3_q036_c2"]
+    },
+    {
+      "id": "v3_q037",
+      "scored": false,
+      "difficulty": "diagnostic",
+      "primary_type": "unanswerable_diagnostic",
+      "tags": ["no_answer", "realtime_market"],
+      "question": "请给出今天收盘时晨光精密的真实股票价格、成交额和市值。",
+      "claims": [],
+      "negative_evidence": [],
+      "expected_behavior": "no_relevant_evidence",
+      "diagnostic_reason": "语料中的晨光精密是虚构公司，且知识库不含实时行情。"
+    },
+    {
+      "id": "v3_q038",
+      "scored": false,
+      "difficulty": "diagnostic",
+      "primary_type": "unanswerable_diagnostic",
+      "tags": ["no_answer", "realtime_weather"],
+      "question": "明天本市上午八点的逐小时降雨概率和风速是多少？",
+      "claims": [],
+      "negative_evidence": [],
+      "expected_behavior": "no_relevant_evidence",
+      "diagnostic_reason": "语料没有城市天气、日期或实时气象数据。"
+    },
+    {
+      "id": "v3_q039",
+      "scored": false,
+      "difficulty": "diagnostic",
+      "primary_type": "unanswerable_diagnostic",
+      "tags": ["no_answer", "personalized_medical_decision"],
+      "question": "根据我今天每小时的血糖记录，直接告诉我今晚应注射多少单位胰岛素。",
+      "claims": [],
+      "negative_evidence": [],
+      "expected_behavior": "no_relevant_evidence",
+      "diagnostic_reason": "知识库只有通用教育材料，没有用户血糖记录，也不能据此生成个体处方。"
+    },
+    {
+      "id": "v3_q040",
+      "scored": false,
+      "difficulty": "diagnostic",
+      "primary_type": "unanswerable_diagnostic",
+      "tags": ["no_answer", "future_product_data"],
+      "question": "云笺在 2027 年第二季度的真实多人协作周活占比和付费转化率分别是多少？",
+      "claims": [],
+      "negative_evidence": [],
+      "expected_behavior": "no_relevant_evidence",
+      "diagnostic_reason": "PRD 只给出目标值，不包含未来实际经营数据或付费转化率。"
+    }
+  ]
+}
