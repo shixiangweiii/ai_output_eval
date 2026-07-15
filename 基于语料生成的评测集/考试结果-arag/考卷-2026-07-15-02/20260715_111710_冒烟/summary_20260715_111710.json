@@ -1,0 +1,59 @@
+{
+  "metrics_version": "2.0",
+  "run_status": "completed",
+  "rank_source": "response",
+  "overall": {
+    "num_questions": 1,
+    "num_attempted": 1,
+    "num_scored": 1,
+    "num_errors": 0,
+    "request_success_rate": 1.0,
+    "end_to_end_score": 0.6667,
+    "quality_score_on_success": 0.6667,
+    "evidence_recall@k": 0.6667,
+    "evidence_precision@k": 0.4,
+    "doc_recall@k": 0.6667,
+    "unique_doc_precision@k": 1.0,
+    "evidence_mrr@k": 0.25,
+    "all_evidence_hit@k": 0.0,
+    "ranking_anomaly_count": 1,
+    "image_source_coverage": null
+  },
+  "by_difficulty": {
+    "simple": {
+      "count": 0,
+      "num_scored": 0,
+      "request_success_rate": 0.0,
+      "mean_score": 0.0,
+      "evidence_recall@k": 0.0,
+      "doc_recall@k": 0.0
+    },
+    "medium": {
+      "count": 0,
+      "num_scored": 0,
+      "request_success_rate": 0.0,
+      "mean_score": 0.0,
+      "evidence_recall@k": 0.0,
+      "doc_recall@k": 0.0
+    },
+    "hard": {
+      "count": 1,
+      "num_scored": 1,
+      "request_success_rate": 1.0,
+      "mean_score": 0.6667,
+      "evidence_recall@k": 0.6667,
+      "doc_recall@k": 0.6667
+    }
+  },
+  "by_type": {
+    "cross_document_multihop": {
+      "count": 1,
+      "num_scored": 1,
+      "request_success_rate": 1.0,
+      "mean_score": 0.6667,
+      "evidence_recall@k": 0.6667,
+      "doc_recall@k": 0.6667
+    }
+  },
+  "retrieval_capability_score": 66.67
+}
