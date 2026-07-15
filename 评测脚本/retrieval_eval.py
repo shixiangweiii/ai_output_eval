@@ -34,8 +34,8 @@ except ImportError:
 
 METRICS_VERSION = "2.0"
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_EXAM_DIR = PROJECT_ROOT / "基于语料生成的评测集" / "考卷"
-RESULTS_ROOT = PROJECT_ROOT / "基于语料生成的评测集"
+DEFAULT_EXAM_DIR = PROJECT_ROOT / "评测考试" / "考卷"
+RESULTS_ROOT = PROJECT_ROOT / "评测考试"
 # 评测结果按检索后端分目录归档：考试结果-<backend>。只有列入 ONLINE_BACKENDS 的
 # 后端才有已实现的在线检索客户端；其余后端仅支持离线校验或手动归档。
 SUPPORTED_BACKENDS = ("arag", "dify")

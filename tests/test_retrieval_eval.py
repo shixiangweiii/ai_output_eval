@@ -397,10 +397,10 @@ def test_exam_validation_defaults_report_and_output_schema(tmp_path):
     loaded = evaluator.load_and_validate_exam(exam_file)
     args = evaluator.parse_args([])
 
-    assert Path(args.exam_dir) == ROOT / "基于语料生成的评测集" / "考卷"
+    assert Path(args.exam_dir) == ROOT / "评测考试" / "考卷"
     assert args.out_dir is None
     assert args.backend == "arag"
-    assert evaluator.resolve_out_dir(args) == ROOT / "基于语料生成的评测集" / "考试结果-arag"
+    assert evaluator.resolve_out_dir(args) == ROOT / "评测考试" / "考试结果-arag"
     assert args.rank_by == "response"
 
     result_metrics = metrics(gt(("A.md", "章节", "必需证据")), [retrieved(1, "A.md", "必需证据")])
@@ -524,10 +524,10 @@ def test_backend_selects_output_dir_and_dataset_id(tmp_path, monkeypatch):
 
     # default backend -> 考试结果-arag; dify -> 考试结果-dify; --out-dir overrides both
     assert evaluator.resolve_out_dir(evaluator.parse_args([])) == (
-        ROOT / "基于语料生成的评测集" / "考试结果-arag"
+        ROOT / "评测考试" / "考试结果-arag"
     )
     assert evaluator.resolve_out_dir(evaluator.parse_args(["--backend", "dify"])) == (
-        ROOT / "基于语料生成的评测集" / "考试结果-dify"
+        ROOT / "评测考试" / "考试结果-dify"
     )
     assert evaluator.resolve_out_dir(
         evaluator.parse_args(["--backend", "dify", "--out-dir", str(tmp_path / "x")])
