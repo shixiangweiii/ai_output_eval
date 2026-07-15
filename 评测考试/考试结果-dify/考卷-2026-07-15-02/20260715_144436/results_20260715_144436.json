@@ -1,0 +1,412 @@
+{
+  "metrics_version": "2.0",
+  "run_status": "completed",
+  "exam_meta": {
+    "exam_id": "考卷-2026-07-15-02",
+    "title": "RAG 检索召回超高难度专项考卷（25 题全困难）",
+    "generated_date": "2026-07-15",
+    "corpus_dir": "/Users/shixiangweii/run_proj/ai_output_eval/生成的原始文档语料/2026-07-14-01",
+    "corpus_documents": [
+      "01_急性冠脉综合征院内诊疗路径.md",
+      "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+      "03_颅脑MRI检查在Chiari畸形诊断中的应用.md",
+      "04_口服抗凝药物用药安全警戒简报.md",
+      "05_量化交易策略研发内部笔记.md",
+      "06_消费信贷智能风控体系设计说明书.md",
+      "07_上市公司财报分析实务.md",
+      "08_一网通办政务服务平台业务办理指南.md",
+      "09_在线教育平台自适应学习系统技术白皮书.md",
+      "10_协同文档SaaS云笺多人实时协作功能PRD.md"
+    ],
+    "total_questions": 25,
+    "difficulty_distribution": {
+      "simple": 0,
+      "medium": 0,
+      "hard": 25,
+      "ratio": "0% / 0% / 100%",
+      "note": "全部为困难题；本卷不设简单/中等题，用于压测检索系统在多文档、多模态、版本冲突与对抗场景下的召回上限。"
+    },
+    "design_intent": {
+      "why_this_is_hard": "参考上两次考试结果：检索系统在单文档/双文档题几乎满分，但一旦必需证据跨 3 篇及以上文档、或同一图片需在每篇来源文档都被召回时，Top-5 会被 1~2 篇高词面相似文档挤满，稳定丢掉第 3 篇（见 07-15-01 报告 q_019/020/025/026/028/030）。本卷刻意把 18 道题设为 3 文档、1 道设为 4 文档，并让 query 与 GT 片段词面尽量低重合，专门打这个弱点。",
+      "spread_stat": "GT 文档数分布：1 文档 2 题、2 文档 5 题、3 文档 17 题、4 文档 1 题。",
+      "capability_coverage": {
+        "cross_document_multihop_3doc": "跨 3 篇文档多跳综合（主力，压 Top-K 召回上限）",
+        "cross_document_multihop_4doc": "跨 4 篇文档综合（肾功能枢纽题，极限召回）",
+        "multimodal_cross_doc_image": "同一图片在每篇来源文档的图片来源覆盖",
+        "multimodal_hard_negative": "同图异境导致的错误领域推断",
+        "version_conflict_cross_doc": "跨文档旧版本口径识别与现行替代",
+        "concept_disambiguation": "相似命名/相似类别/相似卖点的消歧",
+        "adversarial_no_answer_and_scope": "虚构/无实时数据/超业务范围的边界识别",
+        "low_lexical_overlap": "问题措辞与 GT 片段词面低重合，考语义检索"
+      }
+    },
+    "corpus_expansion_note": [
+      "本卷为『评测初始阶段』扩充了语料，涉及 3 个文件，均保持原文件名不变：",
+      "1) 05_量化…：在第 4 节新增『精确率/召回率评估纪律』段落；在第 6 节新增一段并复用 The_Risk_Management_Process.png（使该图从 04/06 两篇扩展为 04/05/06 三篇复用，支撑 q_005 的三文档图片题）。",
+      "2) 06_消费信贷…：在第 4 节新增『精确率/召回率 与 KS』评估段落。",
+      "3) 09_在线教育…：在第 6 节新增『精确率/召回率评估口径』段落。",
+      "⚠️ 依赖扩充内容的题目为 q_005（doc05 新增图）、q_012（doc05/06 新增文本）。运行 live 评测前必须把上述扩充后的语料重新入库到检索知识库（dataset_id），否则这两题会因 KB 未更新而假阴性。其余 23 题只依赖既有、已入库并在前两次评测中验证可召回的原文，不受入库进度影响。"
+    ],
+    "field_explanation": {
+      "question": "提交给检索系统的 query",
+      "retrieved_chunks": "必须召回的 Ground Truth：source_document 为语料文件名，snippet 为原文可召回片段（已确保是归一化后的逐字子串）",
+      "answer": "语料内可验证的标准答案（供人工复核，脚本不评分）",
+      "reasoning_path": "从必需 GT 得出答案的依赖链（供人工复核）",
+      "eval_criteria": "关键词（诊断用）、图片 URL、对抗属性与工具边界"
+    }
+  },
+  "results": [
+    {
+      "id": "q_001",
+      "difficulty": "hard",
+      "type": "cross_document_multihop",
+      "question": "肌钙蛋白、华法林 INR、以及均线信号都存在“反馈滞后”，但它们对操作节奏的要求并不一致。请跨三篇材料说明各自滞后多久、以及正确的应对姿态分别是什么。",
+      "has_expected_image": false,
+      "metrics": {
+        "metrics_version": "2.0",
+        "rank_source": "response",
+        "ranking_anomaly": false,
+        "top_k": 5,
+        "gt_docs": [
+          "01_急性冠脉综合征院内诊疗路径.md",
+          "04_口服抗凝药物用药安全警戒简报.md",
+          "05_量化交易策略研发内部笔记.md"
+        ],
+        "gt_evidence_count": 3,
+        "retrieved_docs_topk": [
+          "04_口服抗凝药物用药安全警戒简报.md",
+          "05_量化交易策略研发内部笔记.md",
+          "04_口服抗凝药物用药安全警戒简报.md",
+          "01_急性冠脉综合征院内诊疗路径.md",
+          "04_口服抗凝药物用药安全警戒简报.md"
+        ],
+        "retrieved_docs_all": [
+          "04_口服抗凝药物用药安全警戒简报.md",
+          "05_量化交易策略研发内部笔记.md",
+          "04_口服抗凝药物用药安全警戒简报.md",
+          "01_急性冠脉综合征院内诊疗路径.md",
+          "04_口服抗凝药物用药安全警戒简报.md"
+        ],
+        "retrieved_chunk_detail": [
+          {
+            "rank": 1,
+            "original_index": 1,
+            "server_top": 9,
+            "relevance_score": 0.7082494673366859,
+            "document_name": "04_口服抗凝药物用药安全警戒简报.md",
+            "document_id": "3d543412-fc76-4ca5-bf40-6bee942f9c2f",
+            "chunk_id": "2ac578f6-6300-411a-95c4-0d5cabe5c6d6"
+          },
+          {
+            "rank": 2,
+            "original_index": 2,
+            "server_top": 8,
+            "relevance_score": 0.5614412514255483,
+            "document_name": "05_量化交易策略研发内部笔记.md",
+            "document_id": "91a56b11-2468-4e10-b28f-802ffbf6cdd4",
+            "chunk_id": "f34c0ea4-6052-4915-b3ca-fb32c830004f"
+          },
+          {
+            "rank": 3,
+            "original_index": 3,
+            "server_top": 8,
+            "relevance_score": 0.5381035439281449,
+            "document_name": "04_口服抗凝药物用药安全警戒简报.md",
+            "document_id": "3d543412-fc76-4ca5-bf40-6bee942f9c2f",
+            "chunk_id": "d26255dd-6aa7-4057-b388-8796c82641c7"
+          },
+          {
+            "rank": 4,
+            "original_index": 4,
+            "server_top": 14,
+            "relevance_score": 0.5050578278235948,
+            "document_name": "01_急性冠脉综合征院内诊疗路径.md",
+            "document_id": "50b64152-0c90-47ab-9ced-84a3341527fc",
+            "chunk_id": "e299f6cd-0603-4df9-b2ec-d88e6eb500c1"
+          },
+          {
+            "rank": 5,
+            "original_index": 5,
+            "server_top": 26,
+            "relevance_score": 0.40499536617370524,
+            "document_name": "04_口服抗凝药物用药安全警戒简报.md",
+            "document_id": "3d543412-fc76-4ca5-bf40-6bee942f9c2f",
+            "chunk_id": "ba7161b6-aed2-4943-81ac-c68ec7cb94b7"
+          }
+        ],
+        "doc_recall@k": 1.0,
+        "unique_doc_precision@k": 1.0,
+        "doc_hit@1": true,
+        "doc_hit@k": true,
+        "all_docs_hit@k": true,
+        "doc_mrr@k": 1.0,
+        "duplicate_doc_rate@k": 0.4,
+        "evidence_recall@k": 1.0,
+        "evidence_precision@k": 0.6,
+        "evidence_hit@1": true,
+        "evidence_hit@k": true,
+        "all_evidence_hit@k": true,
+        "evidence_mrr@k": 1.0,
+        "snippet_detail": [
+          {
+            "source_document": "01_急性冠脉综合征院内诊疗路径.md",
+            "section": "4. 生物标志物的时间窗陷阱",
+            "snippet": "急性心肌坏死后，hs-cTnT 通常在 3–4 小时才开始爬升，峰值要到 12–24 小时。",
+            "hit": true,
+            "matched_rank": 4,
+            "matched_chunk_id": "e299f6cd-0603-4df9-b2ec-d88e6eb500c1",
+            "match_type": "normalized_exact"
+          },
+          {
+            "source_document": "04_口服抗凝药物用药安全警戒简报.md",
+            "section": "三、华法林：为什么它这么“难伺候”",
+            "snippet": "华法林起效慢，加量后要好几天 INR 才反映出来",
+            "hit": true,
+            "matched_rank": 1,
+            "matched_chunk_id": "2ac578f6-6300-411a-95c4-0d5cabe5c6d6",
+            "match_type": "normalized_exact"
+          },
+          {
+            "source_document": "05_量化交易策略研发内部笔记.md",
+            "section": "2. 均线系统：最朴素也最容易过拟合",
+            "snippet": "均线是滞后指标。它反映的是过去，等金叉出现，行情往往已经走了一大段。",
+            "hit": true,
+            "matched_rank": 2,
+            "matched_chunk_id": "f34c0ea4-6052-4915-b3ca-fb32c830004f",
+            "match_type": "normalized_exact"
+          }
+        ],
+        "keyword_coverage": 1.0,
+        "keyword_detail": [
+          {
+            "keyword": "3–4小时/3-4 小时",
+            "hit": true
+          },
+          {
+            "keyword": "12–24小时/12-24 小时",
+            "hit": true
+          },
+          {
+            "keyword": "加量后要好几天",
+            "hit": true
+          },
+          {
+            "keyword": "INR",
+            "hit": true
+          },
+          {
+            "keyword": "滞后指标",
+            "hit": true
+          },
+          {
+            "keyword": "金叉",
+            "hit": true
+          }
+        ],
+        "expected_image_url": null,
+        "image_source_coverage": null,
+        "image_source_detail": [],
+        "image_hit": null,
+        "is_adversarial": false,
+        "requires_tool": false,
+        "score": 1.0
+      },
+      "raw_response": {
+        "query": "肌钙蛋白、华法林 INR、以及均线信号都存在“反馈滞后”，但它们对操作节奏的要求并不一致。请跨三篇材料说明各自滞后多久、以及正确的应对姿态分别是什么。",
+        "records": [
+          {
+            "segment": {
+              "id": "2ac578f6-6300-411a-95c4-0d5cabe5c6d6",
+              "position": 9,
+              "document_id": "3d543412-fc76-4ca5-bf40-6bee942f9c2f",
+              "content": "关键点（第五节的推理会用到）：华法林起效慢，**加量后要好几天 INR 才反映出来**。这就意味着，如果医生今天看 INR 偏低就猛加量，等几天后药效叠加上来，INR 可能冲到 5 以上，出血风险骤增。这种\"延迟反馈导致的过量\"，和第五节要讲的一个真实案例直接相关。",
+              "sign_content": null,
+              "answer": null,
+              "word_count": 133,
+              "tokens": 256,
+              "keywords": [],
+              "index_node_id": "ce6219da-0b0f-4da8-9749-f6aeca41a810",
+              "index_node_hash": "04e87c28e9acc7bbdadbfdfedc1c3bb09f07a8f2ff4bafac57f88a13dc3ff70f",
+              "hit_count": 0,
+              "enabled": true,
+              "disabled_at": null,
+              "disabled_by": null,
+              "status": "completed",
+              "created_by": "9875927b-7435-4b77-9461-a0f45e3e470e",
+              "created_at": null,
+              "indexing_at": 1784096333,
+              "completed_at": 1784096337,
+              "error": null,
+              "stopped_at": null,
+              "document": {
+                "id": "3d543412-fc76-4ca5-bf40-6bee942f9c2f",
+                "data_source_type": "upload_file",
+                "name": "04_口服抗凝药物用药安全警戒简报.md",
+                "doc_type": null,
+                "doc_metadata": null
+              }
+            },
+            "child_chunks": [],
+            "score": 0.7082494673366859,
+            "tsne_position": null,
+            "files": [],
+            "summary": null
+          },
+          {
+            "segment": {
+              "id": "f34c0ea4-6052-4915-b3ca-fb32c830004f",
+              "position": 8,
+              "document_id": "91a56b11-2468-4e10-b28f-802ffbf6cdd4",
+              "content": "但这里有个巨大的陷阱（Hard Case）**：均线是**滞后指标**。它反映的是过去，等金叉出现，行情往往已经走了一大段。我们 2025 年 Q3 用纯 MA5/MA20 金叉死叉策略跑单边震荡市，被反复\"打脸\"（频繁假信号来回止损），一个月手续费就吃掉本金的 4%。这个教训直接引出第三节要引入的过滤条件。",
+              "sign_content": null,
+              "answer": null,
+              "word_count": 155,
+              "tokens": 275,
+              "keywords": [],
+              "index_node_id": "832005d9-fd9c-4be0-b70e-855b37c6c71d",
+              "index_node_hash": "347888c8804705474357b1a431bad055472cd1c11a2c4a3c9f35c100b67f4e92",
+              "hit_count": 0,
+              "enabled": true,
+              "disabled_at": null,
+              "disabled_by": null,
+              "status": "completed",
+              "created_by": "9875927b-7435-4b77-9461-a0f45e3e470e",
+              "created_at": null,
+              "indexing_at": 1784096249,
+              "completed_at": 1784096253,
+              "error": null,
+              "stopped_at": null,
+              "document": {
+                "id": "91a56b11-2468-4e10-b28f-802ffbf6cdd4",
+                "data_source_type": "upload_file",
+                "name": "05_量化交易策略研发内部笔记.md",
+                "doc_type": null,
+                "doc_metadata": null
+              }
+            },
+            "child_chunks": [],
+            "score": 0.5614412514255483,
+            "tsne_position": null,
+            "files": [],
+            "summary": null
+          },
+          {
+            "segment": {
+              "id": "d26255dd-6aa7-4057-b388-8796c82641c7",
+              "position": 8,
+              "document_id": "3d543412-fc76-4ca5-bf40-6bee942f9c2f",
+              "content": "三、华法林：为什么它这么\"难伺候\"\n华法林的治疗窗极窄——剂量少一点血栓，多一点出血。所以它靠 INR 这个指标来导航，目标区间通常是 2.0–3.0。",
+              "sign_content": null,
+              "answer": null,
+              "word_count": 76,
+              "tokens": 137,
+              "keywords": [],
+              "index_node_id": "40d4118d-2765-4454-bf6e-256ccf5cb17b",
+              "index_node_hash": "9a8a1b82d3b6df899e066070e080db9656722595d506f1d14126850bacf66b02",
+              "hit_count": 0,
+              "enabled": true,
+              "disabled_at": null,
+              "disabled_by": null,
+              "status": "completed",
+              "created_by": "9875927b-7435-4b77-9461-a0f45e3e470e",
+              "created_at": null,
+              "indexing_at": 1784096333,
+              "completed_at": 1784096336,
+              "error": null,
+              "stopped_at": null,
+              "document": {
+                "id": "3d543412-fc76-4ca5-bf40-6bee942f9c2f",
+                "data_source_type": "upload_file",
+                "name": "04_口服抗凝药物用药安全警戒简报.md",
+                "doc_type": null,
+                "doc_metadata": null
+              }
+            },
+            "child_chunks": [],
+            "score": 0.5381035439281449,
+            "tsne_position": null,
+            "files": [],
+            "summary": null
+          },
+          {
+            "segment": {
+              "id": "e299f6cd-0603-4df9-b2ec-d88e6eb500c1",
+              "position": 14,
+              "document_id": "50b64152-0c90-47ab-9ced-84a3341527fc",
+              "content": "4. 生物标志物的时间窗陷阱\n第 3 节里提到 STEMI\"不必等肌钙蛋白\"，原因就在这里：**肌钙蛋白升高有延迟**。急性心肌坏死后，hs-cTnT 通常在 3–4 小时才开始爬升，峰值要到 12–24 小时。也就是说，一个发病 1 小时的 STEMI 患者，头一次抽血肌钙蛋白**很可能是正常的**。",
+              "sign_content": null,
+              "answer": null,
+              "word_count": 152,
+              "tokens": 250,
+              "keywords": [],
+              "index_node_id": "0398c797-24ff-4381-a651-c68599432128",
+              "index_node_hash": "f5e9a9d360cc07cb8e3630663ef0eac92491dab1f21b222b5fd8faf15441dfc8",
+              "hit_count": 0,
+              "enabled": true,
+              "disabled_at": null,
+              "disabled_by": null,
+              "status": "completed",
+              "created_by": "9875927b-7435-4b77-9461-a0f45e3e470e",
+              "created_at": null,
+              "indexing_at": 1784096317,
+              "completed_at": 1784096320,
+              "error": null,
+              "stopped_at": null,
+              "document": {
+                "id": "50b64152-0c90-47ab-9ced-84a3341527fc",
+                "data_source_type": "upload_file",
+                "name": "01_急性冠脉综合征院内诊疗路径.md",
+                "doc_type": null,
+                "doc_metadata": null
+              }
+            },
+            "child_chunks": [],
+            "score": 0.5050578278235948,
+            "tsne_position": null,
+            "files": [],
+            "summary": null
+          },
+          {
+            "segment": {
+              "id": "ba7161b6-aed2-4943-81ac-c68ec7cb94b7",
+              "position": 26,
+              "document_id": "3d543412-fc76-4ca5-bf40-6bee942f9c2f",
+              "content": "附：本期缩写表\nADE=药品不良事件；INR=国际标准化比值；VKA=维生素K拮抗剂=华法林类；NOAC=DOAC=新型/直接口服抗凝药；NSAID=非甾体抗炎药；polypharmacy=多重用药。",
+              "sign_content": null,
+              "answer": null,
+              "word_count": 100,
+              "tokens": 161,
+              "keywords": [],
+              "index_node_id": "f1ecd0bb-d47e-47c1-a9b0-fd5e6c57cd9d",
+              "index_node_hash": "afc916d2cf345a18ec820742d37e090e1afb3d9fc726995a5d4e3991a2b0738c",
+              "hit_count": 0,
+              "enabled": true,
+              "disabled_at": null,
+              "disabled_by": null,
+              "status": "completed",
+              "created_by": "9875927b-7435-4b77-9461-a0f45e3e470e",
+              "created_at": null,
+              "indexing_at": 1784096333,
+              "completed_at": 1784096337,
+              "error": null,
+              "stopped_at": null,
+              "document": {
+                "id": "3d543412-fc76-4ca5-bf40-6bee942f9c2f",
+                "data_source_type": "upload_file",
+                "name": "04_口服抗凝药物用药安全警戒简报.md",
+                "doc_type": null,
+                "doc_metadata": null
+              }
+            },
+            "child_chunks": [],
+            "score": 0.40499536617370524,
+            "tsne_position": null,
+            "files": [],
+            "summary": null
+          }
+        ]
+      },
+      "status": "ok"
+    }
+  ]
+}

@@ -518,7 +518,7 @@ def test_formal_run_requires_both_credentials(tmp_path, monkeypatch):
     assert evaluator.main(["--exam-dir", str(tmp_path), "--exam", exam_file.name]) == 3
 
 
-def test_backend_selects_output_dir_and_blocks_unimplemented_live_run(tmp_path, monkeypatch):
+def test_backend_selects_output_dir_and_dataset_id(tmp_path, monkeypatch):
     exam_file = tmp_path / "exam.json"
     exam_file.write_text(json.dumps(exam_payload(), ensure_ascii=False), encoding="utf-8")
 
@@ -533,18 +533,105 @@ def test_backend_selects_output_dir_and_blocks_unimplemented_live_run(tmp_path, 
         evaluator.parse_args(["--backend", "dify", "--out-dir", str(tmp_path / "x")])
     ) == (tmp_path / "x")
 
+    # dataset id defaults per backend; --dataset-id overrides
+    assert evaluator.resolve_dataset_id(evaluator.parse_args([])) == evaluator.DATASET_ID
+    assert evaluator.resolve_dataset_id(
+        evaluator.parse_args(["--backend", "dify"])
+    ) == evaluator.DIFY_DATASET_ID
+    assert evaluator.resolve_dataset_id(
+        evaluator.parse_args(["--backend", "dify", "--dataset-id", "custom-kb"])
+    ) == "custom-kb"
+
     # validate-only works for any backend (no creds, no network)
     assert evaluator.main(
         ["--validate-only", "--backend", "dify", "--exam-dir", str(tmp_path), "--exam", exam_file.name]
     ) == 0
 
-    # a live run against a backend with no retrieval client fails fast, before creds
+    # dify is an implemented backend: a live run without creds fails on missing creds (exit 3)
     monkeypatch.delenv("RETRIEVAL_COOKIE", raising=False)
     monkeypatch.delenv("RETRIEVAL_XSRF_TOKEN", raising=False)
     assert evaluator.main(
         ["--backend", "dify", "--exam-dir", str(tmp_path), "--exam", exam_file.name]
-    ) == 4
+    ) == 3
 
     # an unsupported backend value is rejected by argparse
     with pytest.raises(SystemExit):
         evaluator.parse_args(["--backend", "milvus"])
+
+
+def test_call_dify_api_injects_graph_search_only_when_flagged():
+    captured = {}
+
+    class CapturingSession:
+        def post(self, url, json=None, timeout=None):
+            captured["url"] = url
+            captured["payload"] = json
+            return FakeResponse(200, {"query": "q", "records": []})
+
+    evaluator.call_dify_api(CapturingSession(), "低血糖", "kb-123", 1.0, 1)
+    assert "kb-123/hit-testing" in captured["url"]
+    assert captured["payload"]["retrieval_model"]["graph_search"] is None
+
+    evaluator.call_dify_api(CapturingSession(), "低血糖", "kb-123", 1.0, 1, graph_search=True)
+    assert captured["payload"]["retrieval_model"]["graph_search"] == {
+        "enabled": True,
+        "top_k": None,
+        "weight": 0.5,
+        "mode": "mix",
+    }
+    # the module-level default body must not be mutated by the injection
+    assert evaluator.DIFY_RETRIEVAL_MODEL["graph_search"] is None
+
+
+def test_parse_dify_response_maps_records_to_chunks():
+    response = {
+        "query": "q",
+        "records": [
+            {
+                "segment": {
+                    "id": "seg-a",
+                    "position": 2,
+                    "document_id": "doc-1",
+                    "content": "甲证据片段",
+                    "document": {"id": "doc-1", "name": "01_急性冠脉综合征院内诊疗路径.md"},
+                },
+                "score": 0.9,
+            },
+            {
+                "segment": {
+                    "id": "seg-b",
+                    "position": 7,
+                    "document_id": "doc-2",
+                    "content": "乙证据片段",
+                    "document": {"id": "doc-2", "name": "05_量化交易策略研发内部笔记.md"},
+                },
+                "score": 0.4,
+            },
+        ],
+    }
+
+    chunks, anomaly = evaluator.parse_dify_response(response, "response")
+    assert anomaly is False
+    assert [c["document_name"] for c in chunks] == [
+        "01_急性冠脉综合征院内诊疗路径.md",
+        "05_量化交易策略研发内部笔记.md",
+    ]
+    assert [c["rank"] for c in chunks] == [1, 2]
+    assert chunks[0]["chunk_id"] == "seg-a" and chunks[0]["content"] == "甲证据片段"
+    assert chunks[0]["relevance_score"] == 0.9
+
+    # a Dify record parsed through the shared scorer hits when the snippet is present
+    result = metrics(
+        gt(("01_急性冠脉综合征院内诊疗路径.md", "章节", "甲证据片段")),
+        chunks,
+    )
+    assert result["evidence_recall@k"] == 1.0
+
+    # response order that disagrees with score is flagged as a ranking anomaly
+    bumped = json.loads(json.dumps(response))
+    bumped["records"][1]["score"] = 0.95
+    _, anomaly2 = evaluator.parse_dify_response(bumped, "response")
+    assert anomaly2 is True
+
+    with pytest.raises(evaluator.ResponseSchemaError, match="records"):
+        evaluator.parse_dify_response({"query": "q"})

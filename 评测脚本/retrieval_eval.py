@@ -40,7 +40,7 @@ RESULTS_ROOT = PROJECT_ROOT / "基于语料生成的评测集"
 # 后端才有已实现的在线检索客户端；其余后端仅支持离线校验或手动归档。
 SUPPORTED_BACKENDS = ("arag", "dify")
 DEFAULT_BACKEND = "arag"
-ONLINE_BACKENDS = frozenset({"arag"})
+ONLINE_BACKENDS = frozenset({"arag", "dify"})
 
 BASE_URL = (
     "https://deap.dingtalk.com/deapHttpProxy/studio2/proxy/dataset/fe/api/v2/"
@@ -57,6 +57,48 @@ BASE_HEADERS = {
     "content-type": "application/json",
     "origin": "https://deap.dingtalk.com",
     "referer": "https://deap.dingtalk.com/fe/index",
+    "user-agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+    ),
+}
+
+# ---- Dify 后端（console hit-testing 接口）----
+DIFY_HIT_TESTING_URL = (
+    "http://localhost:5001/console/api/datasets/{dataset_id}/hit-testing"
+)
+DIFY_DATASET_ID = "fc0250d7-5bd0-4625-b373-830c1c83dc18"
+# 与示例请求体保持一致；评测时仅替换 query，其余 retrieval_model 参数不变。
+DIFY_RETRIEVAL_MODEL = {
+    "search_method": "hybrid_search",
+    "reranking_enable": True,
+    "reranking_mode": "reranking_model",
+    "reranking_model": {
+        "reranking_provider_name": "langgenius/tongyi/tongyi",
+        "reranking_model_name": "qwen3-rerank",
+    },
+    "weights": {
+        "weight_type": "customized",
+        "keyword_setting": {"keyword_weight": 0.3},
+        "vector_setting": {
+            "vector_weight": 0.7,
+            "embedding_model_name": "",
+            "embedding_provider_name": "",
+        },
+    },
+    "top_k": 5,
+    "score_threshold_enabled": False,
+    "score_threshold": 0.5,
+    "graph_search": None,
+}
+# 开启 GraphRAG 混合检索时注入的 graph_search 配置（与示例一致）。
+DIFY_GRAPH_SEARCH = {"enabled": True, "top_k": None, "weight": 0.5, "mode": "mix"}
+DIFY_BASE_HEADERS = {
+    "accept": "*/*",
+    "accept-language": "zh-CN,zh;q=0.9",
+    "content-type": "application/json",
+    "origin": "http://localhost:3000",
+    "referer": "http://localhost:3000/",
     "user-agent": (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
         "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
@@ -94,8 +136,8 @@ class EvaluationAborted(AuthenticationError):
         self.total_questions = total_questions
 
 
-def build_headers() -> Dict[str, str]:
-    """从环境变量构造请求头；缺少凭证时拒绝正式评测。"""
+def _require_credentials() -> Tuple[str, str]:
+    """从环境变量读取 Cookie 与 CSRF/XSRF token；缺失即拒绝正式评测。"""
     cookie = os.environ.get("RETRIEVAL_COOKIE", "").strip()
     xsrf = os.environ.get("RETRIEVAL_XSRF_TOKEN", "").strip()
     missing = []
@@ -107,30 +149,51 @@ def build_headers() -> Dict[str, str]:
         raise AuthenticationError(
             "缺少检索接口凭证环境变量: " + ", ".join(missing)
         )
+    return cookie, xsrf
+
+
+def build_headers() -> Dict[str, str]:
+    """aRAG（钉钉）请求头：Cookie + x-xsrf-token。"""
+    cookie, xsrf = _require_credentials()
     headers = dict(BASE_HEADERS)
     headers["Cookie"] = cookie
     headers["x-xsrf-token"] = xsrf
     return headers
 
 
+def build_dify_headers() -> Dict[str, str]:
+    """Dify（console）请求头：Cookie + x-csrf-token（复用同一对凭证环境变量）。"""
+    cookie, xsrf = _require_credentials()
+    headers = dict(DIFY_BASE_HEADERS)
+    headers["Cookie"] = cookie
+    headers["x-csrf-token"] = xsrf
+    return headers
+
+
+def build_backend_headers(backend: str) -> Dict[str, str]:
+    return build_dify_headers() if backend == "dify" else build_headers()
+
+
 def _backoff(attempt: int) -> float:
     return 0.5 * (2 ** (attempt - 1))
 
 
-def call_retrieval_api(
+def _post_json_with_retries(
     session: "requests.Session",
-    query: str,
-    dataset_id: str,
+    url: str,
+    payload: Dict[str, Any],
     timeout: float,
     retries: int,
 ) -> Dict[str, Any]:
-    """调用检索接口，仅重试网络异常、408、429 和 5xx。"""
-    payload = {"datasetId": dataset_id, "query": query}
-    last_error = "未知错误"
+    """POST 并解析 JSON 对象；仅重试网络异常、408、429 和 5xx。
 
+    401/403 抛 AuthenticationError（终止全场）；非 JSON / 非对象抛
+    ResponseSchemaError。后端各自的语义校验（success / records）在调用处做。
+    """
+    last_error = "未知错误"
     for attempt in range(1, retries + 1):
         try:
-            response = session.post(BASE_URL, json=payload, timeout=timeout)
+            response = session.post(url, json=payload, timeout=timeout)
         except requests.RequestException as exc:
             last_error = f"网络异常: {exc}"
             retryable = True
@@ -157,8 +220,6 @@ def call_retrieval_api(
                     ) from exc
                 if not isinstance(data, dict):
                     raise ResponseSchemaError("接口响应根节点必须是 JSON object")
-                if not isinstance(data.get("success"), bool):
-                    raise ResponseSchemaError("接口响应缺少布尔字段 success")
                 return data
 
         if attempt < retries and retryable:
@@ -167,6 +228,42 @@ def call_retrieval_api(
             break
 
     raise RetrievalError(last_error)
+
+
+def call_retrieval_api(
+    session: "requests.Session",
+    query: str,
+    dataset_id: str,
+    timeout: float,
+    retries: int,
+) -> Dict[str, Any]:
+    """aRAG 检索接口，返回带布尔 success 字段的响应。"""
+    payload = {"datasetId": dataset_id, "query": query}
+    data = _post_json_with_retries(session, BASE_URL, payload, timeout, retries)
+    if not isinstance(data.get("success"), bool):
+        raise ResponseSchemaError("接口响应缺少布尔字段 success")
+    return data
+
+
+def call_dify_api(
+    session: "requests.Session",
+    query: str,
+    dataset_id: str,
+    timeout: float,
+    retries: int,
+    graph_search: bool = False,
+) -> Dict[str, Any]:
+    """Dify console hit-testing 接口；请求体除 query / graph_search 外与示例一致。"""
+    url = DIFY_HIT_TESTING_URL.format(dataset_id=dataset_id)
+    retrieval_model = dict(DIFY_RETRIEVAL_MODEL)
+    if graph_search:
+        retrieval_model["graph_search"] = DIFY_GRAPH_SEARCH
+    payload = {
+        "query": query,
+        "attachment_ids": [],
+        "retrieval_model": retrieval_model,
+    }
+    return _post_json_with_retries(session, url, payload, timeout, retries)
 
 
 def _numeric_score(value: Any) -> Optional[float]:
@@ -179,33 +276,10 @@ def _numeric_score(value: Any) -> Optional[float]:
         return None
 
 
-def parse_retrieved_chunks(
-    response: Dict[str, Any],
-    rank_by: str = "response",
+def _finalize_chunks(
+    chunks: List[Dict[str, Any]], rank_by: str
 ) -> Tuple[List[Dict[str, Any]], bool]:
-    """解析 Chunk，返回排序后列表及响应顺序相关度异常标记。"""
-    if "content" not in response:
-        raise ResponseSchemaError("接口响应缺少 content 字段")
-    content = response["content"]
-    if not isinstance(content, list):
-        raise ResponseSchemaError("接口响应 content 必须是数组")
-
-    chunks: List[Dict[str, Any]] = []
-    for index, item in enumerate(content, 1):
-        if not isinstance(item, dict):
-            raise ResponseSchemaError(f"content[{index - 1}] 必须是 object")
-        chunks.append(
-            {
-                "original_index": index,
-                "server_top": item.get("top"),
-                "relevance_score": _numeric_score(item.get("relevanceScore")),
-                "document_name": str(item.get("documentName") or ""),
-                "document_id": str(item.get("documentId") or ""),
-                "chunk_id": str(item.get("chunkId") or ""),
-                "content": str(item.get("content") or ""),
-            }
-        )
-
+    """标记响应顺序相关度异常，按 rank_by 排序，并赋 rank。后端无关。"""
     response_scores = [
         chunk["relevance_score"]
         for chunk in chunks
@@ -230,6 +304,78 @@ def parse_retrieved_chunks(
     for rank, chunk in enumerate(chunks, 1):
         chunk["rank"] = rank
     return chunks, ranking_anomaly
+
+
+def parse_retrieved_chunks(
+    response: Dict[str, Any],
+    rank_by: str = "response",
+) -> Tuple[List[Dict[str, Any]], bool]:
+    """解析 aRAG Chunk，返回排序后列表及响应顺序相关度异常标记。"""
+    if "content" not in response:
+        raise ResponseSchemaError("接口响应缺少 content 字段")
+    content = response["content"]
+    if not isinstance(content, list):
+        raise ResponseSchemaError("接口响应 content 必须是数组")
+
+    chunks: List[Dict[str, Any]] = []
+    for index, item in enumerate(content, 1):
+        if not isinstance(item, dict):
+            raise ResponseSchemaError(f"content[{index - 1}] 必须是 object")
+        chunks.append(
+            {
+                "original_index": index,
+                "server_top": item.get("top"),
+                "relevance_score": _numeric_score(item.get("relevanceScore")),
+                "document_name": str(item.get("documentName") or ""),
+                "document_id": str(item.get("documentId") or ""),
+                "chunk_id": str(item.get("chunkId") or ""),
+                "content": str(item.get("content") or ""),
+            }
+        )
+    return _finalize_chunks(chunks, rank_by)
+
+
+def parse_dify_response(
+    response: Dict[str, Any],
+    rank_by: str = "response",
+) -> Tuple[List[Dict[str, Any]], bool]:
+    """解析 Dify hit-testing 的 records[]，映射为统一的 Chunk 形态。"""
+    if "records" not in response:
+        raise ResponseSchemaError("Dify 响应缺少 records 字段")
+    records = response["records"]
+    if not isinstance(records, list):
+        raise ResponseSchemaError("Dify 响应 records 必须是数组")
+
+    chunks: List[Dict[str, Any]] = []
+    for index, record in enumerate(records, 1):
+        if not isinstance(record, dict):
+            raise ResponseSchemaError(f"records[{index - 1}] 必须是 object")
+        segment = record.get("segment")
+        if not isinstance(segment, dict):
+            raise ResponseSchemaError(f"records[{index - 1}].segment 必须是 object")
+        document = segment.get("document") if isinstance(segment.get("document"), dict) else {}
+        chunks.append(
+            {
+                "original_index": index,
+                "server_top": segment.get("position"),
+                "relevance_score": _numeric_score(record.get("score")),
+                "document_name": str(document.get("name") or ""),
+                "document_id": str(
+                    segment.get("document_id") or document.get("id") or ""
+                ),
+                "chunk_id": str(segment.get("id") or ""),
+                "content": str(segment.get("content") or ""),
+            }
+        )
+    return _finalize_chunks(chunks, rank_by)
+
+
+def parse_backend_response(
+    backend: str, response: Dict[str, Any], rank_by: str
+) -> Tuple[List[Dict[str, Any]], bool]:
+    if backend == "dify":
+        return parse_dify_response(response, rank_by)
+    return parse_retrieved_chunks(response, rank_by)
 
 
 _DASH_TRANSLATION = str.maketrans(
@@ -892,12 +1038,22 @@ def load_and_validate_exam(path: Path) -> Dict[str, Any]:
     return exam
 
 
+def _truncate_str(value: Any) -> Any:
+    if isinstance(value, str) and len(value) > CONTENT_TRUNCATE:
+        return value[:CONTENT_TRUNCATE] + "...<truncated>"
+    return value
+
+
 def truncate_content(response: Dict[str, Any]) -> Dict[str, Any]:
+    """截断存档用原始响应的长文本，兼容 aRAG(content[]) 与 Dify(records[].segment)。"""
     output = copy.deepcopy(response)
     for item in output.get("content", []) or []:
-        content = item.get("content")
-        if isinstance(content, str) and len(content) > CONTENT_TRUNCATE:
-            item["content"] = content[:CONTENT_TRUNCATE] + "...<truncated>"
+        if isinstance(item, dict):
+            item["content"] = _truncate_str(item.get("content"))
+    for record in output.get("records", []) or []:
+        segment = record.get("segment") if isinstance(record, dict) else None
+        if isinstance(segment, dict):
+            segment["content"] = _truncate_str(segment.get("content"))
     return output
 
 
@@ -911,6 +1067,8 @@ def evaluate_exam(
     if args.limit:
         questions = questions[: args.limit]
 
+    backend = getattr(args, "backend", DEFAULT_BACKEND)
+    dataset_id = resolve_dataset_id(args)
     results: List[Dict[str, Any]] = []
     total = len(questions)
     for index, question in enumerate(questions, 1):
@@ -924,22 +1082,33 @@ def evaluate_exam(
         }
         print(f"  ({index}/{total}) {question['id']} 调用检索接口...", flush=True)
         try:
-            response = call_retrieval_api(
-                session,
-                question["question"],
-                args.dataset_id,
-                args.timeout,
-                args.retries,
-            )
-            if not response["success"]:
-                record["status"] = "api_error"
-                record["error"] = (
-                    "接口返回 success=false: "
+            if backend == "dify":
+                response = call_dify_api(
+                    session,
+                    question["question"],
+                    dataset_id,
+                    args.timeout,
+                    args.retries,
+                    graph_search=getattr(args, "graph_search", False),
+                )
+                api_ok, api_error = True, None
+            else:
+                response = call_retrieval_api(
+                    session, question["question"], dataset_id, args.timeout, args.retries
+                )
+                api_ok = bool(response["success"])
+                api_error = (
+                    None
+                    if api_ok
+                    else "接口返回 success=false: "
                     f"{response.get('responseMessage') or response.get('responseCode')}"
                 )
+            if not api_ok:
+                record["status"] = "api_error"
+                record["error"] = api_error
             else:
-                retrieved, ranking_anomaly = parse_retrieved_chunks(
-                    response, args.rank_by
+                retrieved, ranking_anomaly = parse_backend_response(
+                    backend, response, args.rank_by
                 )
                 record["metrics"] = compute_metrics(
                     extract_gt(question),
@@ -1031,11 +1200,22 @@ def resolve_out_dir(args: argparse.Namespace) -> Path:
     return RESULTS_ROOT / f"考试结果-{args.backend}"
 
 
+def resolve_dataset_id(args: argparse.Namespace) -> str:
+    """知识库 ID：显式 --dataset-id 优先，否则按后端取内置默认值。"""
+    if args.dataset_id:
+        return args.dataset_id
+    return DIFY_DATASET_ID if args.backend == "dify" else DATASET_ID
+
+
 def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="单知识库检索召回评测脚本 v2.0")
     parser.add_argument("--exam-dir", default=str(DEFAULT_EXAM_DIR), help="考卷目录")
     parser.add_argument("--exam", default=None, help="指定单份考卷文件")
-    parser.add_argument("--dataset-id", default=DATASET_ID, help="知识库 ID")
+    parser.add_argument(
+        "--dataset-id",
+        default=None,
+        help="知识库 ID（默认按 --backend 取：arag→内置钉钉库，dify→内置 Dify 库）",
+    )
     parser.add_argument(
         "--backend",
         choices=SUPPORTED_BACKENDS,
@@ -1044,6 +1224,11 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
         "（arag=钉钉在线检索；dify 在线检索暂未实现，仅支持离线校验/手动归档）",
     )
     parser.add_argument("--top-k", type=positive_int, default=5, help="评测 Top-K")
+    parser.add_argument(
+        "--graph-search",
+        action="store_true",
+        help="(dify) 开启 GraphRAG 混合检索，在请求体注入 retrieval_model.graph_search",
+    )
     parser.add_argument("--limit", type=nonnegative_int, default=0, help="只跑前 N 题")
     parser.add_argument(
         "--out-dir",
@@ -1092,7 +1277,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     out_root = resolve_out_dir(args)
 
     try:
-        headers = build_headers()
+        headers = build_backend_headers(args.backend)
     except AuthenticationError as exc:
         sys.stderr.write(f"[错误] {exc}\n")
         return 3
