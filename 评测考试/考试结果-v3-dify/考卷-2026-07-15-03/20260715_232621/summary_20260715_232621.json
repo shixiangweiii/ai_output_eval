@@ -1,0 +1,799 @@
+{
+  "schema_version": "3.0",
+  "metrics_version": "3.0",
+  "run_status": "completed",
+  "run_scope": "full",
+  "comparison_eligible": true,
+  "headline": {
+    "primary_k": 5,
+    "query_macro_claim_recall": 0.7222,
+    "query_macro_claim_recall_ci95": [
+      0.6065,
+      0.8287
+    ],
+    "complete_evidence_chain_rate": 0.5556,
+    "complete_evidence_chain_rate_ci95": [
+      0.3889,
+      0.7222
+    ],
+    "novel_claim_rank_score": 0.6351,
+    "novel_claim_rank_score_ci95": [
+      0.5194,
+      0.7468
+    ]
+  },
+  "diagnostics": {
+    "num_questions": 40,
+    "num_scored_questions": 36,
+    "num_diagnostic_questions": 4,
+    "num_successful_requests": 40,
+    "request_success_rate": 1.0,
+    "error_counts": {},
+    "claim_micro_recall": 0.6575,
+    "mean_document_recall": 0.8519,
+    "mean_duplicate_document_rate": 0.5833,
+    "hard_negative_intrusion_rate": 0.3636,
+    "hard_negative_questions_evaluated": 11,
+    "asset_source_coverage": 1.0,
+    "response_depth_insufficient_rate": 0.0,
+    "response_depth": {
+      "min": 10,
+      "median": 10.0,
+      "max": 10
+    },
+    "ranking_anomaly_count": 0,
+    "document_hit_claim_miss_review_queue": [
+      {
+        "question_id": "v3_q011",
+        "claim_id": "v3_q011_c2",
+        "source_document": "01_急性冠脉综合征院内诊疗路径.md"
+      },
+      {
+        "question_id": "v3_q016",
+        "claim_id": "v3_q016_c2",
+        "source_document": "08_一网通办政务服务平台业务办理指南.md"
+      },
+      {
+        "question_id": "v3_q017",
+        "claim_id": "v3_q017_c1",
+        "source_document": "09_在线教育平台自适应学习系统技术白皮书.md"
+      },
+      {
+        "question_id": "v3_q017",
+        "claim_id": "v3_q017_c2",
+        "source_document": "10_协同文档SaaS云笺多人实时协作功能PRD.md"
+      },
+      {
+        "question_id": "v3_q018",
+        "claim_id": "v3_q018_c1",
+        "source_document": "01_急性冠脉综合征院内诊疗路径.md"
+      },
+      {
+        "question_id": "v3_q018",
+        "claim_id": "v3_q018_c2",
+        "source_document": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md"
+      },
+      {
+        "question_id": "v3_q025",
+        "claim_id": "v3_q025_c1",
+        "source_document": "03_颅脑MRI检查在Chiari畸形诊断中的应用.md"
+      },
+      {
+        "question_id": "v3_q025",
+        "claim_id": "v3_q025_c2",
+        "source_document": "07_上市公司财报分析实务.md"
+      },
+      {
+        "question_id": "v3_q026",
+        "claim_id": "v3_q026_c1",
+        "source_document": "04_口服抗凝药物用药安全警戒简报.md"
+      },
+      {
+        "question_id": "v3_q029",
+        "claim_id": "v3_q029_c2",
+        "source_document": "04_口服抗凝药物用药安全警戒简报.md"
+      },
+      {
+        "question_id": "v3_q030",
+        "claim_id": "v3_q030_c2",
+        "source_document": "09_在线教育平台自适应学习系统技术白皮书.md"
+      }
+    ],
+    "latency_ms": {
+      "p50": 2601.41,
+      "p95": 3629.45
+    },
+    "k_curves": {
+      "1": {
+        "query_macro_claim_recall": 0.5324,
+        "complete_evidence_chain_rate": 0.3333,
+        "novel_claim_rank_score": 0.5324
+      },
+      "3": {
+        "query_macro_claim_recall": 0.6713,
+        "complete_evidence_chain_rate": 0.5278,
+        "novel_claim_rank_score": 0.614
+      },
+      "5": {
+        "query_macro_claim_recall": 0.7222,
+        "complete_evidence_chain_rate": 0.5556,
+        "novel_claim_rank_score": 0.6351
+      },
+      "10": {
+        "query_macro_claim_recall": 0.8056,
+        "complete_evidence_chain_rate": 0.6389,
+        "novel_claim_rank_score": 0.661
+      }
+    },
+    "char_budget_curves": {
+      "1000": {
+        "query_macro_claim_recall": 0.7963
+      },
+      "2000": {
+        "query_macro_claim_recall": 0.8056
+      },
+      "4000": {
+        "query_macro_claim_recall": 0.8056
+      }
+    },
+    "relevance_counterfactual": {
+      "query_macro_claim_recall": 0.7222,
+      "complete_evidence_chain_rate": 0.5556,
+      "novel_claim_rank_score": 0.6351
+    },
+    "by_type": {
+      "asset_reference_retrieval": {
+        "count": 3,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 0.7804
+      },
+      "cross_doc_chain": {
+        "count": 8,
+        "claim_recall": 0.375,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.2556
+      },
+      "cross_doc_compare": {
+        "count": 8,
+        "claim_recall": 0.5,
+        "complete_evidence_chain_rate": 0.25,
+        "novel_claim_rank_score": 0.4414
+      },
+      "disambiguation_hard_negative": {
+        "count": 3,
+        "claim_recall": 0.8333,
+        "complete_evidence_chain_rate": 0.6667,
+        "novel_claim_rank_score": 0.6052
+      },
+      "single_doc_fact": {
+        "count": 8,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 1.0
+      },
+      "single_doc_multi_claim": {
+        "count": 6,
+        "claim_recall": 0.9167,
+        "complete_evidence_chain_rate": 0.8333,
+        "novel_claim_rank_score": 0.8552
+      }
+    },
+    "by_difficulty": {
+      "simple": {
+        "count": 8,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 1.0
+      },
+      "medium": {
+        "count": 14,
+        "claim_recall": 0.6786,
+        "complete_evidence_chain_rate": 0.5,
+        "novel_claim_rank_score": 0.6187
+      },
+      "hard": {
+        "count": 14,
+        "claim_recall": 0.6071,
+        "complete_evidence_chain_rate": 0.3571,
+        "novel_claim_rank_score": 0.443
+      }
+    },
+    "by_tag": {
+      "acceptance_criteria": {
+        "count": 1,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 1.0
+      },
+      "adaptive_service": {
+        "count": 1,
+        "claim_recall": 0.6667,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.4769
+      },
+      "asset_reference": {
+        "count": 3,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 0.7804
+      },
+      "cold_start": {
+        "count": 1,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 1.0
+      },
+      "compound_risk": {
+        "count": 1,
+        "claim_recall": 0.3333,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.3333
+      },
+      "concurrency": {
+        "count": 1,
+        "claim_recall": 0.5,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.5
+      },
+      "context_completeness": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "context_specificity": {
+        "count": 1,
+        "claim_recall": 0.6667,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.4769
+      },
+      "cross_doc": {
+        "count": 22,
+        "claim_recall": 0.5682,
+        "complete_evidence_chain_rate": 0.3182,
+        "novel_claim_rank_score": 0.4424
+      },
+      "dose_titration": {
+        "count": 1,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 0.8155
+      },
+      "drug_monitoring": {
+        "count": 1,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 1.0
+      },
+      "financial_ratio": {
+        "count": 1,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 1.0
+      },
+      "formula": {
+        "count": 1,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 1.0
+      },
+      "hard_negative": {
+        "count": 3,
+        "claim_recall": 0.8333,
+        "complete_evidence_chain_rate": 0.6667,
+        "novel_claim_rank_score": 0.6052
+      },
+      "headline_number": {
+        "count": 2,
+        "claim_recall": 0.75,
+        "complete_evidence_chain_rate": 0.5,
+        "novel_claim_rank_score": 0.625
+      },
+      "imaging_protocol": {
+        "count": 1,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 1.0
+      },
+      "independent_validation": {
+        "count": 1,
+        "claim_recall": 0.5,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.5
+      },
+      "longitudinal_evidence": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "lookalike": {
+        "count": 1,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 0.8155
+      },
+      "low_lexical_overlap": {
+        "count": 16,
+        "claim_recall": 0.4375,
+        "complete_evidence_chain_rate": 0.125,
+        "novel_claim_rank_score": 0.3485
+      },
+      "medication_safety": {
+        "count": 1,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 1.0
+      },
+      "metric_tradeoff": {
+        "count": 1,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 0.8155
+      },
+      "model_governance": {
+        "count": 1,
+        "claim_recall": 0.5,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.5
+      },
+      "multi_claim": {
+        "count": 6,
+        "claim_recall": 0.9167,
+        "complete_evidence_chain_rate": 0.8333,
+        "novel_claim_rank_score": 0.8552
+      },
+      "personalization": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "release_gate": {
+        "count": 1,
+        "claim_recall": 0.3333,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.129
+      },
+      "risk_limit": {
+        "count": 1,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 1.0
+      },
+      "safety_boundary": {
+        "count": 1,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 0.7153
+      },
+      "service_sla": {
+        "count": 1,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 1.0
+      },
+      "shared_url": {
+        "count": 3,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 0.7804
+      },
+      "single_doc": {
+        "count": 14,
+        "claim_recall": 0.9643,
+        "complete_evidence_chain_rate": 0.9286,
+        "novel_claim_rank_score": 0.9379
+      },
+      "storage": {
+        "count": 1,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 1.0
+      },
+      "structural_signal": {
+        "count": 1,
+        "claim_recall": 0.3333,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.3333
+      },
+      "temporal_shift": {
+        "count": 1,
+        "claim_recall": 0.3333,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.129
+      },
+      "terminology": {
+        "count": 1,
+        "claim_recall": 0.5,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.25
+      },
+      "three_doc": {
+        "count": 9,
+        "claim_recall": 0.4444,
+        "complete_evidence_chain_rate": 0.1111,
+        "novel_claim_rank_score": 0.3062
+      },
+      "threshold": {
+        "count": 1,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 1.0
+      },
+      "time_requirement": {
+        "count": 1,
+        "claim_recall": 1.0,
+        "complete_evidence_chain_rate": 1.0,
+        "novel_claim_rank_score": 1.0
+      },
+      "version_and_trend": {
+        "count": 1,
+        "claim_recall": 0.3333,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.1667
+      },
+      "version_current": {
+        "count": 1,
+        "claim_recall": 0.5,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.3155
+      }
+    },
+    "by_gt_document_count": {
+      "1": {
+        "count": 14,
+        "claim_recall": 0.9643,
+        "complete_evidence_chain_rate": 0.9286,
+        "novel_claim_rank_score": 0.9379
+      },
+      "2": {
+        "count": 13,
+        "claim_recall": 0.6538,
+        "complete_evidence_chain_rate": 0.4615,
+        "novel_claim_rank_score": 0.5367
+      },
+      "3": {
+        "count": 9,
+        "claim_recall": 0.4444,
+        "complete_evidence_chain_rate": 0.1111,
+        "novel_claim_rank_score": 0.3062
+      }
+    },
+    "diagnostic_questions": [
+      {
+        "id": "v3_q037",
+        "status": "ok",
+        "metrics": {
+          "returned_count": 10,
+          "highest_relevance_score": 0.5474990739332057,
+          "retrieved_documents": [
+            "07_上市公司财报分析实务.md",
+            "07_上市公司财报分析实务.md",
+            "07_上市公司财报分析实务.md",
+            "07_上市公司财报分析实务.md",
+            "07_上市公司财报分析实务.md",
+            "07_上市公司财报分析实务.md",
+            "07_上市公司财报分析实务.md",
+            "07_上市公司财报分析实务.md",
+            "07_上市公司财报分析实务.md",
+            "07_上市公司财报分析实务.md"
+          ],
+          "duplicate_document_rate": 0.9,
+          "top_chunks": [
+            {
+              "rank": 1,
+              "document_name": "07_上市公司财报分析实务.md",
+              "chunk_id": "a890a733-a314-4852-b821-a88936bdd261",
+              "relevance_score": 0.5474990739332057
+            },
+            {
+              "rank": 2,
+              "document_name": "07_上市公司财报分析实务.md",
+              "chunk_id": "f6abe134-190b-4838-9530-b9b28e2e5431",
+              "relevance_score": 0.5051598228938156
+            },
+            {
+              "rank": 3,
+              "document_name": "07_上市公司财报分析实务.md",
+              "chunk_id": "654ef26a-a8a3-47e3-9e19-75428a232594",
+              "relevance_score": 0.5026505909094969
+            },
+            {
+              "rank": 4,
+              "document_name": "07_上市公司财报分析实务.md",
+              "chunk_id": "4b031a21-0cc8-4251-b11c-d10b1255c714",
+              "relevance_score": 0.43258778004175025
+            },
+            {
+              "rank": 5,
+              "document_name": "07_上市公司财报分析实务.md",
+              "chunk_id": "62c8b0b7-8020-45b2-a8d6-58ca45796013",
+              "relevance_score": 0.4174162722085057
+            },
+            {
+              "rank": 6,
+              "document_name": "07_上市公司财报分析实务.md",
+              "chunk_id": "65321199-33ae-44f8-9814-a4032f776165",
+              "relevance_score": 0.41739706266789045
+            },
+            {
+              "rank": 7,
+              "document_name": "07_上市公司财报分析实务.md",
+              "chunk_id": "ea305296-2480-4dcc-a7e5-d2683388e8c0",
+              "relevance_score": 0.4152281476587876
+            },
+            {
+              "rank": 8,
+              "document_name": "07_上市公司财报分析实务.md",
+              "chunk_id": "05274258-4c0c-468e-a71b-6ce43fbe0834",
+              "relevance_score": 0.39645505380677504
+            },
+            {
+              "rank": 9,
+              "document_name": "07_上市公司财报分析实务.md",
+              "chunk_id": "b4830a05-9ee1-49d1-b4dd-c155dd298ca4",
+              "relevance_score": 0.3943446188969771
+            },
+            {
+              "rank": 10,
+              "document_name": "07_上市公司财报分析实务.md",
+              "chunk_id": "67c3e803-2556-4d20-b975-1cb641f60036",
+              "relevance_score": 0.3933757806025725
+            }
+          ]
+        }
+      },
+      {
+        "id": "v3_q038",
+        "status": "ok",
+        "metrics": {
+          "returned_count": 10,
+          "highest_relevance_score": 0.4144783068349185,
+          "retrieved_documents": [
+            "07_上市公司财报分析实务.md",
+            "06_消费信贷智能风控体系设计说明书.md",
+            "05_量化交易策略研发内部笔记.md",
+            "05_量化交易策略研发内部笔记.md",
+            "06_消费信贷智能风控体系设计说明书.md",
+            "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+            "08_一网通办政务服务平台业务办理指南.md",
+            "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+            "01_急性冠脉综合征院内诊疗路径.md",
+            "06_消费信贷智能风控体系设计说明书.md"
+          ],
+          "duplicate_document_rate": 0.3,
+          "top_chunks": [
+            {
+              "rank": 1,
+              "document_name": "07_上市公司财报分析实务.md",
+              "chunk_id": "f6abe134-190b-4838-9530-b9b28e2e5431",
+              "relevance_score": 0.4144783068349185
+            },
+            {
+              "rank": 2,
+              "document_name": "06_消费信贷智能风控体系设计说明书.md",
+              "chunk_id": "f521df49-be40-4955-b2cf-6bf232f9a9ec",
+              "relevance_score": 0.3112530194495752
+            },
+            {
+              "rank": 3,
+              "document_name": "05_量化交易策略研发内部笔记.md",
+              "chunk_id": "e95fbee4-ba94-4548-b4f5-1749ef3535f9",
+              "relevance_score": 0.2935957840868586
+            },
+            {
+              "rank": 4,
+              "document_name": "05_量化交易策略研发内部笔记.md",
+              "chunk_id": "a897794f-683d-4660-9502-468025103ed1",
+              "relevance_score": 0.28173287498641253
+            },
+            {
+              "rank": 5,
+              "document_name": "06_消费信贷智能风控体系设计说明书.md",
+              "chunk_id": "4b482ec6-bb33-4006-aeee-6b1f82de398b",
+              "relevance_score": 0.25963073808667914
+            },
+            {
+              "rank": 6,
+              "document_name": "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+              "chunk_id": "26be4c70-f263-4c61-919c-20acb39132b8",
+              "relevance_score": 0.2554065693480131
+            },
+            {
+              "rank": 7,
+              "document_name": "08_一网通办政务服务平台业务办理指南.md",
+              "chunk_id": "a28299b5-e6ad-49f2-9baf-ad1b34fbcb2a",
+              "relevance_score": 0.234671480981744
+            },
+            {
+              "rank": 8,
+              "document_name": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+              "chunk_id": "5638ceb2-f114-4d3f-9e1f-92dac6c59e43",
+              "relevance_score": 0.23211724189744892
+            },
+            {
+              "rank": 9,
+              "document_name": "01_急性冠脉综合征院内诊疗路径.md",
+              "chunk_id": "daa4696d-c63f-463b-b1b3-23292ee1c76d",
+              "relevance_score": 0.21540790482103495
+            },
+            {
+              "rank": 10,
+              "document_name": "06_消费信贷智能风控体系设计说明书.md",
+              "chunk_id": "b17ef3e9-cbf0-4bb9-b7e1-3e82a30f8a45",
+              "relevance_score": 0.20153904877379608
+            }
+          ]
+        }
+      },
+      {
+        "id": "v3_q039",
+        "status": "ok",
+        "metrics": {
+          "returned_count": 10,
+          "highest_relevance_score": 0.6311371322802426,
+          "retrieved_documents": [
+            "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+            "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+            "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+            "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+            "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+            "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+            "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+            "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+            "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+            "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md"
+          ],
+          "duplicate_document_rate": 0.9,
+          "top_chunks": [
+            {
+              "rank": 1,
+              "document_name": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+              "chunk_id": "1a7b6bde-611b-4fec-9f29-bc2abf0ccb1f",
+              "relevance_score": 0.6311371322802426
+            },
+            {
+              "rank": 2,
+              "document_name": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+              "chunk_id": "5147d031-f543-451b-ae2c-4669f0977790",
+              "relevance_score": 0.549450782628451
+            },
+            {
+              "rank": 3,
+              "document_name": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+              "chunk_id": "2a5687fa-4708-4aca-a840-91a785fbd75f",
+              "relevance_score": 0.5128162458627167
+            },
+            {
+              "rank": 4,
+              "document_name": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+              "chunk_id": "5638ceb2-f114-4d3f-9e1f-92dac6c59e43",
+              "relevance_score": 0.49982742031776484
+            },
+            {
+              "rank": 5,
+              "document_name": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+              "chunk_id": "7f7ab9a7-7488-4b7e-af0f-17054f76e294",
+              "relevance_score": 0.4562991043112578
+            },
+            {
+              "rank": 6,
+              "document_name": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+              "chunk_id": "c1fcf743-d5f6-46a7-b1ce-2d3af709452c",
+              "relevance_score": 0.4334294539575315
+            },
+            {
+              "rank": 7,
+              "document_name": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+              "chunk_id": "837f0843-a890-42e1-9647-3f6bd8a425b8",
+              "relevance_score": 0.43292391518138634
+            },
+            {
+              "rank": 8,
+              "document_name": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+              "chunk_id": "c704e181-bcfe-4134-b405-30781436384c",
+              "relevance_score": 0.42048414095439696
+            },
+            {
+              "rank": 9,
+              "document_name": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+              "chunk_id": "d31dd757-0434-4dc5-9ea3-443ce6cb78f0",
+              "relevance_score": 0.4191861006994492
+            },
+            {
+              "rank": 10,
+              "document_name": "02_2型糖尿病胰岛素治疗与血糖管理科普手册.md",
+              "chunk_id": "48766c40-6e25-43b8-b858-08b2049d5a8a",
+              "relevance_score": 0.408095808431621
+            }
+          ]
+        }
+      },
+      {
+        "id": "v3_q040",
+        "status": "ok",
+        "metrics": {
+          "returned_count": 10,
+          "highest_relevance_score": 0.4859795721460023,
+          "retrieved_documents": [
+            "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+            "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+            "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+            "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+            "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+            "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+            "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+            "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+            "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+            "10_协同文档SaaS云笺多人实时协作功能PRD.md"
+          ],
+          "duplicate_document_rate": 0.9,
+          "top_chunks": [
+            {
+              "rank": 1,
+              "document_name": "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+              "chunk_id": "495c632f-f6d0-4ae8-aa68-91f93be1877a",
+              "relevance_score": 0.4859795721460023
+            },
+            {
+              "rank": 2,
+              "document_name": "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+              "chunk_id": "26be4c70-f263-4c61-919c-20acb39132b8",
+              "relevance_score": 0.46596714645704784
+            },
+            {
+              "rank": 3,
+              "document_name": "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+              "chunk_id": "37e26c5d-f337-450b-8004-824a63522ddc",
+              "relevance_score": 0.40441243357934925
+            },
+            {
+              "rank": 4,
+              "document_name": "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+              "chunk_id": "269b2c4a-ec74-473f-84dc-d13e0a00d69e",
+              "relevance_score": 0.35495379907043867
+            },
+            {
+              "rank": 5,
+              "document_name": "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+              "chunk_id": "cc61a61c-2eb6-4e4e-b86d-cc7b69aee143",
+              "relevance_score": 0.34952179665923433
+            },
+            {
+              "rank": 6,
+              "document_name": "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+              "chunk_id": "280cdfdb-c4b2-45ce-9318-abbd4d4767e3",
+              "relevance_score": 0.30499000773044094
+            },
+            {
+              "rank": 7,
+              "document_name": "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+              "chunk_id": "d6a3edb2-2fbb-45c1-b418-5ab82aaa58c7",
+              "relevance_score": 0.3011729221092283
+            },
+            {
+              "rank": 8,
+              "document_name": "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+              "chunk_id": "b1459907-45d9-473a-8326-b64827c2df56",
+              "relevance_score": 0.2906807978271982
+            },
+            {
+              "rank": 9,
+              "document_name": "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+              "chunk_id": "b417fa63-2ae2-4034-aa58-e94adb09b355",
+              "relevance_score": 0.2846660787357036
+            },
+            {
+              "rank": 10,
+              "document_name": "10_协同文档SaaS云笺多人实时协作功能PRD.md",
+              "chunk_id": "8afc4833-6111-4e74-aa93-4f8cbed6c637",
+              "relevance_score": 0.2781755754391326
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

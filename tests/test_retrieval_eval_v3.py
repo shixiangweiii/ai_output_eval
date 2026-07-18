@@ -251,10 +251,35 @@ def test_hard_negative_intrusion_is_explicit():
 
 
 def test_dify_request_k_is_applied_without_mutating_constant():
-    payload = MODULE.build_dify_request("query", 17, True)
+    payload = MODULE.build_dify_request(
+        "query", 17, True, score_threshold_enabled=True, score_threshold=None
+    )
     assert payload["retrieval_model"]["top_k"] == 17
     assert payload["retrieval_model"]["graph_search"]["enabled"] is True
+    assert payload["retrieval_model"]["score_threshold_enabled"] is True
+    assert payload["retrieval_model"]["score_threshold"] is None
     assert MODULE.DIFY_RETRIEVAL_MODEL["top_k"] == 10
+
+
+def test_dify_coverage_search_request_matches_reference_shape():
+    payload = MODULE.build_dify_request(
+        "query",
+        10,
+        False,
+        score_threshold_enabled=True,
+        score_threshold=None,
+        search_method="coverage_search",
+    )
+    model = payload["retrieval_model"]
+    assert model["search_method"] == "coverage_search"
+    assert model["reranking_enable"] is True
+    assert model["reranking_mode"] is None
+    assert model["weights"] is None
+    assert model["top_k"] == 10
+    assert model["score_threshold_enabled"] is True
+    assert model["score_threshold"] is None
+    assert model["graph_search"] is None
+    assert MODULE.DIFY_RETRIEVAL_MODEL["search_method"] == "hybrid_search"
 
 
 def test_arag_manifest_marks_request_k_unsupported_and_contains_no_credentials(monkeypatch):
@@ -269,6 +294,7 @@ def test_arag_manifest_marks_request_k_unsupported_and_contains_no_credentials(m
     }
     args = argparse.Namespace(
         backend="arag", dataset_id="dataset", dataset_revision=None, graph_search=False,
+        score_threshold_enabled=False, score_threshold=None,
         request_k=10, eval_k=[1, 5, 10], primary_k=5, char_budgets=[1000],
         raw_content_limit=800,
     )
@@ -293,7 +319,8 @@ def test_authentication_error_aborts_with_partial_result():
 
     args = argparse.Namespace(
         backend="arag", dataset_id="dataset", timeout=1, retries=1, request_k=10,
-        graph_search=False, eval_k=[5], char_budgets=[100], raw_content_limit=100,
+        graph_search=False, score_threshold_enabled=False, score_threshold=None,
+        eval_k=[5], char_budgets=[100], raw_content_limit=100,
         limit=0, sleep=0,
     )
     exam = {"questions": [scored_question([claim("c1", "doc", "有效证据片段")])]}

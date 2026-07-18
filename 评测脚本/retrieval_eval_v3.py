@@ -96,6 +96,7 @@ DIFY_RETRIEVAL_MODEL = {
     "graph_search": None,
 }
 DIFY_GRAPH_SEARCH = {"enabled": True, "top_k": None, "weight": 0.5, "mode": "mix"}
+DIFY_SEARCH_METHODS = ("hybrid_search", "coverage_search")
 
 
 class RetrievalError(Exception):
@@ -550,10 +551,26 @@ def call_arag_api(
     return data
 
 
-def build_dify_request(query: str, request_k: int, graph_search: bool) -> Dict[str, Any]:
+def build_dify_request(
+    query: str,
+    request_k: int,
+    graph_search: bool,
+    score_threshold_enabled: bool = False,
+    score_threshold: Optional[float] = None,
+    search_method: str = "hybrid_search",
+) -> Dict[str, Any]:
+    if search_method not in DIFY_SEARCH_METHODS:
+        raise ValueError(f"不支持的 Dify 检索策略: {search_method}")
     model = copy.deepcopy(DIFY_RETRIEVAL_MODEL)
     model["top_k"] = request_k
-    if graph_search:
+    model["score_threshold_enabled"] = score_threshold_enabled
+    model["score_threshold"] = score_threshold
+    if search_method == "coverage_search":
+        model["search_method"] = "coverage_search"
+        model["reranking_mode"] = None
+        model["weights"] = None
+        model["graph_search"] = None
+    elif graph_search:
         model["graph_search"] = copy.deepcopy(DIFY_GRAPH_SEARCH)
     return {"query": query, "attachment_ids": [], "retrieval_model": model}
 
@@ -566,11 +583,21 @@ def call_dify_api(
     retries: int,
     request_k: int,
     graph_search: bool,
+    score_threshold_enabled: bool = False,
+    score_threshold: Optional[float] = None,
+    search_method: str = "hybrid_search",
 ) -> Dict[str, Any]:
     return _post_json(
         session,
         DIFY_URL.format(dataset_id=dataset_id),
-        build_dify_request(query, request_k, graph_search),
+        build_dify_request(
+            query,
+            request_k,
+            graph_search,
+            score_threshold_enabled,
+            score_threshold,
+            search_method,
+        ),
         timeout,
         retries,
     )
@@ -1110,6 +1137,9 @@ def evaluate_exam(
                     args.retries,
                     args.request_k,
                     args.graph_search,
+                    args.score_threshold_enabled,
+                    args.score_threshold,
+                    getattr(args, "dify_search_method", "hybrid_search"),
                 )
                 chunks, anomaly = parse_dify_response(response)
             else:
@@ -1176,7 +1206,14 @@ def build_manifest(
     dataset_id = args.dataset_id or (DIFY_DATASET_ID if args.backend == "dify" else ARAG_DATASET_ID)
     request_config: Dict[str, Any]
     if args.backend == "dify":
-        request_config = build_dify_request("<query>", args.request_k, args.graph_search)["retrieval_model"]
+        request_config = build_dify_request(
+            "<query>",
+            args.request_k,
+            args.graph_search,
+            args.score_threshold_enabled,
+            args.score_threshold,
+            getattr(args, "dify_search_method", "hybrid_search"),
+        )["retrieval_model"]
         request_k_support = "applied"
     else:
         request_config = {"payload_fields": ["datasetId", "query"]}
@@ -1194,6 +1231,7 @@ def build_manifest(
         "dataset_id": dataset_id,
         "dataset_revision": args.dataset_revision or "unverified",
         "graph_search": args.graph_search,
+        "dify_search_method": getattr(args, "dify_search_method", "hybrid_search"),
         "request_k": args.request_k,
         "request_k_support": request_k_support,
         "request_config": request_config,
@@ -1502,6 +1540,23 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     parser.add_argument("--primary-k", type=positive_int, default=5)
     parser.add_argument("--char-budgets", type=int_list, default=[1000, 2000, 4000])
     parser.add_argument("--graph-search", action="store_true")
+    parser.add_argument(
+        "--dify-search-method",
+        choices=DIFY_SEARCH_METHODS,
+        default="hybrid_search",
+        help="(Dify) 检索策略；coverage_search 会按覆盖索引接口发送 null weights/graph_search",
+    )
+    parser.add_argument(
+        "--score-threshold-enabled",
+        action="store_true",
+        help="(Dify) 启用请求体 score_threshold_enabled；未提供阈值时发送 null",
+    )
+    parser.add_argument(
+        "--score-threshold",
+        type=float,
+        default=None,
+        help="(Dify) 分数阈值；提供该值时自动启用阈值",
+    )
     parser.add_argument("--limit", type=nonnegative_int, default=0)
     parser.add_argument("--out-dir", default=None)
     parser.add_argument("--sleep", type=nonnegative_float, default=0.5)
@@ -1518,6 +1573,16 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
         parser.error("Dify 的 --request-k 不能小于 --eval-k 最大值")
     if args.graph_search and args.backend != "dify":
         parser.error("--graph-search 仅支持 Dify")
+    if args.dify_search_method != "hybrid_search" and args.backend != "dify":
+        parser.error("--dify-search-method 仅支持 Dify")
+    if args.dify_search_method == "coverage_search" and args.graph_search:
+        parser.error("coverage_search 不能与 --graph-search 同时使用")
+    if args.score_threshold is not None:
+        if args.backend != "dify":
+            parser.error("--score-threshold 仅支持 Dify")
+        args.score_threshold_enabled = True
+    if args.score_threshold_enabled and args.backend != "dify":
+        parser.error("--score-threshold-enabled 仅支持 Dify")
     return args
 
 

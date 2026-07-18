@@ -1,0 +1,451 @@
+{
+  "schema_version": "3.0",
+  "metrics_version": "3.0",
+  "run_status": "completed",
+  "run_scope": "full",
+  "comparison_eligible": true,
+  "headline": {
+    "primary_k": 5,
+    "query_macro_claim_recall": 0.0,
+    "query_macro_claim_recall_ci95": [
+      0.0,
+      0.0
+    ],
+    "complete_evidence_chain_rate": 0.0,
+    "complete_evidence_chain_rate_ci95": [
+      0.0,
+      0.0
+    ],
+    "novel_claim_rank_score": 0.0,
+    "novel_claim_rank_score_ci95": [
+      0.0,
+      0.0
+    ]
+  },
+  "diagnostics": {
+    "num_questions": 40,
+    "num_scored_questions": 36,
+    "num_diagnostic_questions": 4,
+    "num_successful_requests": 40,
+    "request_success_rate": 1.0,
+    "error_counts": {},
+    "claim_micro_recall": 0.0,
+    "mean_document_recall": 0.0,
+    "mean_duplicate_document_rate": 0.0,
+    "hard_negative_intrusion_rate": 0.0,
+    "hard_negative_questions_evaluated": 11,
+    "asset_source_coverage": 0.0,
+    "response_depth_insufficient_rate": 1.0,
+    "response_depth": {
+      "min": 0,
+      "median": 0.0,
+      "max": 0
+    },
+    "ranking_anomaly_count": 0,
+    "document_hit_claim_miss_review_queue": [],
+    "latency_ms": {
+      "p50": 2779.13,
+      "p95": 3474.97
+    },
+    "k_curves": {
+      "1": {
+        "query_macro_claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "3": {
+        "query_macro_claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "5": {
+        "query_macro_claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "10": {
+        "query_macro_claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      }
+    },
+    "char_budget_curves": {
+      "1000": {
+        "query_macro_claim_recall": 0.0
+      },
+      "2000": {
+        "query_macro_claim_recall": 0.0
+      },
+      "4000": {
+        "query_macro_claim_recall": 0.0
+      }
+    },
+    "relevance_counterfactual": null,
+    "by_type": {
+      "asset_reference_retrieval": {
+        "count": 3,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "cross_doc_chain": {
+        "count": 8,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "cross_doc_compare": {
+        "count": 8,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "disambiguation_hard_negative": {
+        "count": 3,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "single_doc_fact": {
+        "count": 8,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "single_doc_multi_claim": {
+        "count": 6,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      }
+    },
+    "by_difficulty": {
+      "simple": {
+        "count": 8,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "medium": {
+        "count": 14,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "hard": {
+        "count": 14,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      }
+    },
+    "by_tag": {
+      "acceptance_criteria": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "adaptive_service": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "asset_reference": {
+        "count": 3,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "cold_start": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "compound_risk": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "concurrency": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "context_completeness": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "context_specificity": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "cross_doc": {
+        "count": 22,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "dose_titration": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "drug_monitoring": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "financial_ratio": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "formula": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "hard_negative": {
+        "count": 3,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "headline_number": {
+        "count": 2,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "imaging_protocol": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "independent_validation": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "longitudinal_evidence": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "lookalike": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "low_lexical_overlap": {
+        "count": 16,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "medication_safety": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "metric_tradeoff": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "model_governance": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "multi_claim": {
+        "count": 6,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "personalization": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "release_gate": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "risk_limit": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "safety_boundary": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "service_sla": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "shared_url": {
+        "count": 3,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "single_doc": {
+        "count": 14,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "storage": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "structural_signal": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "temporal_shift": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "terminology": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "three_doc": {
+        "count": 9,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "threshold": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "time_requirement": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "version_and_trend": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "version_current": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      }
+    },
+    "by_gt_document_count": {
+      "1": {
+        "count": 14,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "2": {
+        "count": 13,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "3": {
+        "count": 9,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0
+      }
+    },
+    "diagnostic_questions": [
+      {
+        "id": "v3_q037",
+        "status": "ok",
+        "metrics": {
+          "returned_count": 0,
+          "highest_relevance_score": null,
+          "retrieved_documents": [],
+          "duplicate_document_rate": 0.0,
+          "top_chunks": []
+        }
+      },
+      {
+        "id": "v3_q038",
+        "status": "ok",
+        "metrics": {
+          "returned_count": 0,
+          "highest_relevance_score": null,
+          "retrieved_documents": [],
+          "duplicate_document_rate": 0.0,
+          "top_chunks": []
+        }
+      },
+      {
+        "id": "v3_q039",
+        "status": "ok",
+        "metrics": {
+          "returned_count": 0,
+          "highest_relevance_score": null,
+          "retrieved_documents": [],
+          "duplicate_document_rate": 0.0,
+          "top_chunks": []
+        }
+      },
+      {
+        "id": "v3_q040",
+        "status": "ok",
+        "metrics": {
+          "returned_count": 0,
+          "highest_relevance_score": null,
+          "retrieved_documents": [],
+          "duplicate_document_rate": 0.0,
+          "top_chunks": []
+        }
+      }
+    ]
+  }
+}

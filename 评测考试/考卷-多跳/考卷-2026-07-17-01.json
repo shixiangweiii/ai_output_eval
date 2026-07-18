@@ -1,0 +1,1286 @@
+{
+  "schema_version": "3.0",
+  "exam_meta": {
+    "exam_id": "考卷-2026-07-17-01",
+    "title": "实体桥接型跨文档多跳专项考卷：低词面重合、关系辨析与图片链",
+    "generated_date": "2026-07-17",
+    "purpose": "专项评测仅凭端点实体发问时，检索系统能否召回人物端点、无端点人名的机构关系桥和必要图片引用路径。",
+    "primary_k": 5,
+    "eval_ks": [1, 3, 5, 10],
+    "char_budgets": [1000, 2000, 4000],
+    "corpus": {
+      "snapshot_id": "corpus-2026-07-17-entity-bridge-v2",
+      "relative_dir": "生成的原始文档语料/2026-07-17-多跳-无词面重合",
+      "documents": [
+        {
+          "name": "01_林澈声学工程任职纪要.md",
+          "sha256": "8b2b4475aead84eeac7a4041538e024ccb11d25569a5ce1ac464d11e54f062c7"
+        },
+        {
+          "name": "02_澄湾仪器控股权交割公告.md",
+          "sha256": "1995185b00f71c24abe39d2678f746f8e8eb53a8a6567f047c32f9cd4414a42b"
+        },
+        {
+          "name": "03_苏芮船队技术岗位说明.md",
+          "sha256": "51c17785d42ed2238f19956593ce5bca8884d3eb07a36f6c670a274184df6f4a"
+        },
+        {
+          "name": "04_跨行业机构关系核验周报.md",
+          "sha256": "e865793ec93bd95f8fed021843defcabaa95a0aaae24c98e1103cc3f7e27daac"
+        },
+        {
+          "name": "05_许棠修复工作履历.md",
+          "sha256": "50c00a95fc342d89eec5eecebe6e2877c626c5e4e08cb7d30daf87fbbc9ee703"
+        },
+        {
+          "name": "06_迭翠博物馆修复服务定标公告.md",
+          "sha256": "961c3cdde5ebaf445150902b5683b25c0fe3353a6778588c6a636e668452fff4"
+        },
+        {
+          "name": "07_贺川馆藏管理岗位档案.md",
+          "sha256": "28ab012137607f27927290b45e5c32a13980cadfeae9ad9a00ad23cc75046c4e"
+        },
+        {
+          "name": "08_唐栩育种岗位记录.md",
+          "sha256": "b6a645e4bca39d49ef686b71461a352f7d151db2a308cfd8683d377753bb49f8"
+        },
+        {
+          "name": "09_芒原种业股权变更说明.md",
+          "sha256": "e47ce2f107801b5c0faca4d8bcd0ea5cc538f313f0efa2a9d2b921fb866e525e"
+        },
+        {
+          "name": "10_孟遥冷链运营任命书.md",
+          "sha256": "c3608f0697c2bf54d93b83e4f54b276797e7f1692f4c135086410231778f6f1d"
+        }
+      ],
+      "image_assets": [
+        {
+          "name": "assets/01_深海声学校准台.png",
+          "sha256": "fa504ba1b3470e51cc12a7b5cfccb7ba0485e361f7186d080291b439c9a80f43",
+          "media_type": "image/png",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "assets/02_海事股权交割物证.png",
+          "sha256": "46340c67f1257235d8e01baee7c499b8ba9783a2e6fc1f2eb77ed49567225cf1",
+          "media_type": "image/png",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "assets/03_船队航行控制室.png",
+          "sha256": "5f450cfd07e92dda4a7ff135790503e96a9ba7058056463825dd6137b0e6681e",
+          "media_type": "image/png",
+          "width": 1644,
+          "height": 957
+        },
+        {
+          "name": "assets/04_机构关系核验资料台.png",
+          "sha256": "8987c692cc08ecb2e4d10444bfa7588c1f3a0c23b53622891d74e5ebf12dab30",
+          "media_type": "image/png",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "assets/05_矿物颜料修复台.png",
+          "sha256": "219a6cfa016ad71b6e672c2874082bb9853d1743051199251890b633628f7600",
+          "media_type": "image/png",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "assets/06_馆藏修复交接物证.png",
+          "sha256": "1545752ad2cb3ff9536fde84b1e31e1510528e79aa14a9de359fa507e9f6250d",
+          "media_type": "image/png",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "assets/07_纺织品恒湿库房.png",
+          "sha256": "c374ae9f6480a2aea30857635d74bb422a3584ec4862ccd752686b7f06e62e83",
+          "media_type": "image/png",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "assets/08_温室种苗试验区.png",
+          "sha256": "076f2a113b6f084b110070489f88c7fd81747f79aae701b7e5b604713b082438",
+          "media_type": "image/png",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "assets/09_种业冷链交割物证.png",
+          "sha256": "0042850b387e5697c69f8f4c40ecdc1a390f70408b9f4555f9ebd1a6da98fab6",
+          "media_type": "image/png",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "assets/10_冷链调度中心.png",
+          "sha256": "9bcc437d371116d081e08864780cf976cacb825ed0a8e7d1ad27257b17cc021a",
+          "media_type": "image/png",
+          "width": 1536,
+          "height": 1024
+        }
+      ]
+    },
+    "question_counts": {
+      "total": 24,
+      "scored": 24,
+      "diagnostic": 0,
+      "by_primary_type": {
+        "asset_reference_retrieval": 3,
+        "cross_doc_chain": 18,
+        "disambiguation_hard_negative": 3
+      },
+      "by_difficulty": {
+        "hard": 18,
+        "medium": 6
+      }
+    },
+    "design_constraints": {
+      "min_claims_per_document": 3,
+      "max_claim_share_per_document": 0.12,
+      "min_low_lexical_overlap_questions": 18,
+      "min_hard_negative_questions": 3,
+      "claim_reuse_policy": "同一 source_document + normalized accepted_span 不得在正式题中复用",
+      "hard_negative_policy": "每条实体链至少包含一条共享核心机构实体但关系类型、时间或证据分支错误的同实体负例"
+    },
+    "entity_bridge_design": {
+      "benchmark_kind": "entity_bridge_multihop",
+      "questions_per_chain": 8,
+      "min_image_reference_questions": 3,
+      "query_policy": "问题显式给出两端人名，但桥接文档不得出现任一端点人名；相邻文档仅通过机构实体连接。",
+      "scoring_boundary": "评测检索证据闭环，不直接评分最终答案和自然语言推理正确性。",
+      "chains": [
+        {
+          "id": "marine_equity",
+          "theme": "深海装备与航运",
+          "path": "林澈→澄湾仪器→远沫航运←苏芮",
+          "relation_type": "equity_control",
+          "bridge_entities": ["澄湾仪器", "远沫航运"]
+        },
+        {
+          "id": "museum_service",
+          "theme": "文物修复与馆藏管理",
+          "path": "许棠→斑驳工坊→迭翠博物馆←贺川",
+          "relation_type": "service_contract",
+          "bridge_entities": ["斑驳工坊", "迭翠博物馆"]
+        },
+        {
+          "id": "agri_equity",
+          "theme": "育种与冷链",
+          "path": "唐栩→芒原种业→鹤汀冷链←孟遥",
+          "relation_type": "equity_control",
+          "bridge_entities": ["芒原种业", "鹤汀冷链"]
+        }
+      ]
+    },
+    "scoring_note": "基础 v3 指标之外，专项脚本区分核心桥接链与包含 supporting 的完整声明链；图片指标仅评分 Markdown 图片路径字符串，并单独校验本地 PNG 哈希与尺寸；统计同时报告题目宏平均和 chain_id 链级宏平均。"
+  },
+  "questions": [
+    {
+      "id": "bridge_q001",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["entity_bridge", "cross_doc", "three_doc", "low_lexical_overlap", "occupational_relation"],
+      "chain_id": "marine_equity",
+      "relation_type": "equity_control",
+      "evaluation_focus": "relation_path",
+      "endpoint_entities": ["林澈", "苏芮"],
+      "endpoint_documents": ["01_林澈声学工程任职纪要.md", "03_苏芮船队技术岗位说明.md"],
+      "bridge_documents": ["02_澄湾仪器控股权交割公告.md"],
+      "supporting_documents": [],
+      "question": "林澈和苏芮之间存在什么职业关联？只说明材料能够证明的间接关系。",
+      "claims": [
+        {
+          "id": "bridge_q001_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "01_林澈声学工程任职纪要.md",
+          "section": "一、任职信息",
+          "accepted_spans": ["林澈于2022年3月加入澄湾仪器，最初负责水下换能器的一致性测试。"]
+        },
+        {
+          "id": "bridge_q001_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "02_澄湾仪器控股权交割公告.md",
+          "section": "一、交易结果",
+          "accepted_spans": ["远沫航运已完成对澄湾仪器70%股权的收购。"]
+        },
+        {
+          "id": "bridge_q001_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "03_苏芮船队技术岗位说明.md",
+          "section": "一、岗位任命",
+          "accepted_spans": ["苏芮现任远沫航运船队技术副总裁，负责远洋船舶的导航设备更新、能效改造和岸基运维协调。"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "林澈任职于澄湾仪器，苏芮任职于远沫航运，而远沫航运控股澄湾仪器，因此两人处于母公司与控股子公司的间接组织链中。",
+      "evidence_chain": ["bridge_q001_c1", "bridge_q001_c2", "bridge_q001_c3"]
+    },
+    {
+      "id": "bridge_q002",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["entity_bridge", "cross_doc", "three_doc", "low_lexical_overlap", "relation_boundary"],
+      "chain_id": "marine_equity",
+      "relation_type": "equity_control",
+      "evaluation_focus": "boundary_path",
+      "endpoint_entities": ["林澈", "苏芮"],
+      "endpoint_documents": ["01_林澈声学工程任职纪要.md", "03_苏芮船队技术岗位说明.md"],
+      "bridge_documents": ["02_澄湾仪器控股权交割公告.md"],
+      "supporting_documents": [],
+      "question": "能否仅凭现有材料把林澈和苏芮称为直接同事、上下级或共同项目成员？为什么？",
+      "claims": [
+        {
+          "id": "bridge_q002_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "01_林澈声学工程任职纪要.md",
+          "section": "三、归档范围",
+          "accepted_spans": ["投资者名册、客户合同与机构交易由法务档案库另卷保存，不随人事纪要归档"]
+        },
+        {
+          "id": "bridge_q002_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "02_澄湾仪器控股权交割公告.md",
+          "section": "二、交割后的治理安排",
+          "accepted_spans": ["控股公司与子公司的人员可以因预算、项目或汇报制度发生间接组织联系，但若没有单独的人事文件，不能把双方任意两名员工直接表述为同事、上下级或共同项目成员。"]
+        },
+        {
+          "id": "bridge_q002_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "03_苏芮船队技术岗位说明.md",
+          "section": "三、附件范围",
+          "accepted_spans": ["集团投资名录、供应商合同和子公司台账由董事会办公室与采购部门分别保管，不并入岗位档案"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "不能。材料只建立母公司与控股子公司之间的间接组织联系，没有单独的人事、汇报或共同项目文件。",
+      "evidence_chain": ["bridge_q002_c1", "bridge_q002_c2", "bridge_q002_c3"]
+    },
+    {
+      "id": "bridge_q003",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "cross_doc_chain",
+      "tags": ["entity_bridge", "cross_doc", "three_doc", "low_lexical_overlap", "temporal_overlap"],
+      "chain_id": "marine_equity",
+      "relation_type": "equity_control",
+      "evaluation_focus": "temporal_path",
+      "endpoint_entities": ["林澈", "苏芮"],
+      "endpoint_documents": ["01_林澈声学工程任职纪要.md", "03_苏芮船队技术岗位说明.md"],
+      "bridge_documents": ["02_澄湾仪器控股权交割公告.md"],
+      "supporting_documents": [],
+      "question": "从什么时候开始，林澈在岗、苏芮担任现职以及两家公司存在控股关系这三项条件能够同时成立？",
+      "claims": [
+        {
+          "id": "bridge_q003_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "01_林澈声学工程任职纪要.md",
+          "section": "一、任职信息",
+          "accepted_spans": ["2024年1月，他被任命为首席声学工程师，任期覆盖至2027年12月。"]
+        },
+        {
+          "id": "bridge_q003_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "02_澄湾仪器控股权交割公告.md",
+          "section": "一、交易结果",
+          "accepted_spans": ["全部交割条件于2025年9月30日满足，自该日起，澄湾仪器纳入远沫航运合并报表范围，成为其控股子公司。"]
+        },
+        {
+          "id": "bridge_q003_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "03_苏芮船队技术岗位说明.md",
+          "section": "一、岗位任命",
+          "accepted_spans": ["她于2021年进入该公司，先后担任航线数据平台主管和船队数字化总监，2026年2月起承担现职。"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "从2026年2月苏芮承担现职起三项条件同时成立；林澈任期至2027年12月，控股交割已于2025年9月完成。",
+      "evidence_chain": ["bridge_q003_c1", "bridge_q003_c2", "bridge_q003_c3"]
+    },
+    {
+      "id": "bridge_q004",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["entity_bridge", "cross_doc", "three_doc", "low_lexical_overlap", "authority_boundary"],
+      "chain_id": "marine_equity",
+      "relation_type": "equity_control",
+      "evaluation_focus": "governance_path",
+      "endpoint_entities": ["林澈", "苏芮"],
+      "endpoint_documents": ["01_林澈声学工程任职纪要.md", "03_苏芮船队技术岗位说明.md"],
+      "bridge_documents": ["02_澄湾仪器控股权交割公告.md"],
+      "supporting_documents": [],
+      "question": "林澈和苏芮的岗位权限能否单独决定两家公司之间的资本控制事项？需要结合哪一层治理证据判断？",
+      "claims": [
+        {
+          "id": "bridge_q004_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "01_林澈声学工程任职纪要.md",
+          "section": "一、任职信息",
+          "accepted_spans": ["首席声学工程师负责测量方法、校准基准和异常复核，但不负责销售合同审批，也不代表公司签署资本或股权文件。"]
+        },
+        {
+          "id": "bridge_q004_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "02_澄湾仪器控股权交割公告.md",
+          "section": "一、交易结果",
+          "accepted_spans": ["股权交割和设备采购是两个独立条款：前者决定控制关系，后者规定未来的产品验收数量。"]
+        },
+        {
+          "id": "bridge_q004_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "03_苏芮船队技术岗位说明.md",
+          "section": "一、岗位任命",
+          "accepted_spans": ["苏芮可以批准单船预算内的技术改造和紧急备件调拨，但无权单独批准公司并购、股权转让或长期融资。涉及集团控制权的事项必须以董事会文件为准。"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "不能。林澈没有资本签署权，苏芮无权单独批准并购或股权转让；控制关系应由交割和董事会文件确认。",
+      "evidence_chain": ["bridge_q004_c1", "bridge_q004_c2", "bridge_q004_c3"]
+    },
+    {
+      "id": "bridge_q005",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "cross_doc_chain",
+      "tags": ["entity_bridge", "cross_doc", "four_doc", "low_lexical_overlap", "relation_type_differential"],
+      "chain_id": "marine_equity",
+      "relation_type": "equity_control",
+      "evaluation_focus": "evidence_path",
+      "endpoint_entities": ["林澈", "苏芮"],
+      "endpoint_documents": ["01_林澈声学工程任职纪要.md", "03_苏芮船队技术岗位说明.md"],
+      "bridge_documents": ["02_澄湾仪器控股权交割公告.md"],
+      "supporting_documents": ["04_跨行业机构关系核验周报.md"],
+      "question": "检索林澈与苏芮的关系时，为什么必须区分股权交割、设备采购和气象数据合作，哪一项才能建立组织控制链？",
+      "claims": [
+        {
+          "id": "bridge_q005_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "01_林澈声学工程任职纪要.md",
+          "section": "三、归档范围",
+          "accepted_spans": ["调阅公司层面的交易或合作材料，需要使用对应业务卷宗。"]
+        },
+        {
+          "id": "bridge_q005_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "02_澄湾仪器控股权交割公告.md",
+          "section": "一、交易结果",
+          "accepted_spans": ["仅凭采购合同不能推出控股关系，判断组织归属应以本公告的股权比例和交割日期为准。"]
+        },
+        {
+          "id": "bridge_q005_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "03_苏芮船队技术岗位说明.md",
+          "section": "三、附件范围",
+          "accepted_spans": ["涉及公司关系的核验以相应业务卷宗为准。"]
+        },
+        {
+          "id": "bridge_q005_c4",
+          "kind": "text",
+          "hop_role": "supporting",
+          "source_document": "04_跨行业机构关系核验周报.md",
+          "section": "一、航运企业的数据合作",
+          "accepted_spans": ["双方没有发生股权交易，也没有设立合资公司。"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "只有已完成的70%股权交割能够建立远沫航运对澄湾仪器的控制链；采购和气象数据合作都不能推出控股。",
+      "evidence_chain": ["bridge_q005_c1", "bridge_q005_c2", "bridge_q005_c3", "bridge_q005_c4"]
+    },
+    {
+      "id": "bridge_q006",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["entity_bridge", "cross_doc", "four_doc", "low_lexical_overlap", "operational_distractor"],
+      "chain_id": "marine_equity",
+      "relation_type": "equity_control",
+      "evaluation_focus": "workflow_path",
+      "endpoint_entities": ["林澈", "苏芮"],
+      "endpoint_documents": ["01_林澈声学工程任职纪要.md", "03_苏芮船队技术岗位说明.md"],
+      "bridge_documents": ["02_澄湾仪器控股权交割公告.md"],
+      "supporting_documents": ["04_跨行业机构关系核验周报.md"],
+      "question": "林澈主持设备校准、苏芮推动航迹复盘，另有联合值守；这些业务动作为什么都不能替代两人关系所需的组织证据？",
+      "claims": [
+        {
+          "id": "bridge_q006_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "01_林澈声学工程任职纪要.md",
+          "section": "二、工作边界",
+          "accepted_spans": ["林澈主持的“静默环”校准方案把十六只水听器布置成圆形阵列，通过相位差识别单只元件的漂移。"]
+        },
+        {
+          "id": "bridge_q006_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "02_澄湾仪器控股权交割公告.md",
+          "section": "二、交割后的治理安排",
+          "accepted_spans": ["交易完成不等于两个机构的全部岗位自动合并。"]
+        },
+        {
+          "id": "bridge_q006_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "03_苏芮船队技术岗位说明.md",
+          "section": "二、职责内容",
+          "accepted_spans": ["苏芮推动的“晨线复盘”要求岸基人员在船舶靠港后二十四小时内回看航迹、报警和人工接管片段。"]
+        },
+        {
+          "id": "bridge_q006_c4",
+          "kind": "text",
+          "hop_role": "supporting",
+          "source_document": "04_跨行业机构关系核验周报.md",
+          "section": "一、航运企业的数据合作",
+          "accepted_spans": ["协议中的“联合值守”仅指暴风雪期间建立临时通信窗口，不涉及劳动合同、行政汇报线或人员并入。"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "设备校准、航迹复盘和联合值守分别是技术或合作活动，均不能证明两人直接共事；组织联系仍要依赖控股交割证据。",
+      "evidence_chain": ["bridge_q006_c1", "bridge_q006_c2", "bridge_q006_c3", "bridge_q006_c4"]
+    },
+    {
+      "id": "bridge_q007",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": ["entity_bridge", "cross_doc", "hard_negative", "low_lexical_overlap", "wrong_branch"],
+      "chain_id": "marine_equity",
+      "relation_type": "equity_control",
+      "evaluation_focus": "hard_negative_path",
+      "endpoint_entities": ["林澈", "苏芮"],
+      "endpoint_documents": ["01_林澈声学工程任职纪要.md", "03_苏芮船队技术岗位说明.md"],
+      "bridge_documents": ["02_澄湾仪器控股权交割公告.md"],
+      "supporting_documents": [],
+      "question": "林澈与苏芮之间的组织联系由哪一种机构关系建立？请给出能够连接两端任职材料的决定性文件。",
+      "claims": [
+        {
+          "id": "bridge_q007_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "01_林澈声学工程任职纪要.md",
+          "section": "一、任职信息",
+          "accepted_spans": ["因此，外部材料若只写“技术负责人”，不能据此推断其拥有公司经营控制权。"]
+        },
+        {
+          "id": "bridge_q007_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "02_澄湾仪器控股权交割公告.md",
+          "section": "三、对外口径",
+          "accepted_spans": ["对外引用本交易时，应使用“远沫航运控股澄湾仪器”或“澄湾仪器成为远沫航运控股子公司”。"]
+        },
+        {
+          "id": "bridge_q007_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "03_苏芮船队技术岗位说明.md",
+          "section": "一、岗位任命",
+          "accepted_spans": ["涉及集团控制权的事项必须以董事会文件为准。"]
+        }
+      ],
+      "negative_evidence": [
+        {
+          "id": "bridge_q007_n1",
+          "source_document": "04_跨行业机构关系核验周报.md",
+          "section": "一、航运企业的数据合作",
+          "accepted_spans": ["远沫航运与极昼气象站签署了三年期海况数据合作协议。"]
+        }
+      ],
+      "reference_answer": "决定性文件是远沫航运完成收购澄湾仪器70%股权的交割公告；它建立母公司与控股子公司的间接组织链。",
+      "evidence_chain": ["bridge_q007_c1", "bridge_q007_c2", "bridge_q007_c3"]
+    },
+    {
+      "id": "bridge_q008",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "asset_reference_retrieval",
+      "tags": ["entity_bridge", "cross_doc", "four_doc", "asset_reference", "wrong_branch"],
+      "chain_id": "marine_equity",
+      "relation_type": "equity_control",
+      "evaluation_focus": "asset_path",
+      "endpoint_entities": ["林澈", "苏芮"],
+      "endpoint_documents": ["01_林澈声学工程任职纪要.md", "03_苏芮船队技术岗位说明.md"],
+      "bridge_documents": ["02_澄湾仪器控股权交割公告.md"],
+      "supporting_documents": ["04_跨行业机构关系核验周报.md"],
+      "question": "要用图片引用核验林澈与苏芮的正确组织链，并同时识别关系核验周报中的错误分支，需要完整召回哪四个图片路径？",
+      "claims": [
+        {
+          "id": "bridge_q008_c1",
+          "kind": "asset",
+          "hop_role": "endpoint",
+          "source_document": "01_林澈声学工程任职纪要.md",
+          "section": "四、设备图像",
+          "accepted_spans": ["assets/01_深海声学校准台.png"]
+        },
+        {
+          "id": "bridge_q008_c2",
+          "kind": "asset",
+          "hop_role": "bridge",
+          "source_document": "02_澄湾仪器控股权交割公告.md",
+          "section": "四、交割图像",
+          "accepted_spans": ["assets/02_海事股权交割物证.png"]
+        },
+        {
+          "id": "bridge_q008_c3",
+          "kind": "asset",
+          "hop_role": "endpoint",
+          "source_document": "03_苏芮船队技术岗位说明.md",
+          "section": "四、工作环境图像",
+          "accepted_spans": ["assets/03_船队航行控制室.png"]
+        },
+        {
+          "id": "bridge_q008_c4",
+          "kind": "asset",
+          "hop_role": "supporting",
+          "source_document": "04_跨行业机构关系核验周报.md",
+          "section": "四、核验资料图像",
+          "accepted_spans": ["assets/04_机构关系核验资料台.png"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "应召回深海声学校准台、海事股权交割物证、船队航行控制室和机构关系核验资料台四个图片路径。",
+      "evidence_chain": ["bridge_q008_c1", "bridge_q008_c2", "bridge_q008_c3", "bridge_q008_c4"]
+    },
+    {
+      "id": "bridge_q009",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["entity_bridge", "cross_doc", "three_doc", "low_lexical_overlap", "occupational_relation"],
+      "chain_id": "museum_service",
+      "relation_type": "service_contract",
+      "evaluation_focus": "relation_path",
+      "endpoint_entities": ["许棠", "贺川"],
+      "endpoint_documents": ["05_许棠修复工作履历.md", "07_贺川馆藏管理岗位档案.md"],
+      "bridge_documents": ["06_迭翠博物馆修复服务定标公告.md"],
+      "supporting_documents": [],
+      "question": "许棠和贺川之间有什么职业关联？请指出两人各自机构以及机构间的准确关系。",
+      "claims": [
+        {
+          "id": "bridge_q009_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "05_许棠修复工作履历.md",
+          "section": "一、专业身份",
+          "accepted_spans": ["许棠是斑驳工坊的创办人兼首席修复师。"]
+        },
+        {
+          "id": "bridge_q009_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "06_迭翠博物馆修复服务定标公告.md",
+          "section": "一、定标结果",
+          "accepted_spans": ["迭翠博物馆已完成“素纱计划”馆藏纺织品修复服务采购，斑驳工坊被确定为唯一成交供应商。"]
+        },
+        {
+          "id": "bridge_q009_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "07_贺川馆藏管理岗位档案.md",
+          "section": "一、岗位信息",
+          "accepted_spans": ["贺川现任迭翠博物馆馆藏管理部主任"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "许棠是斑驳工坊的创办人兼首席修复师，贺川任职于迭翠博物馆；两家机构是素纱计划的修复服务商与采购方。",
+      "evidence_chain": ["bridge_q009_c1", "bridge_q009_c2", "bridge_q009_c3"]
+    },
+    {
+      "id": "bridge_q010",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["entity_bridge", "cross_doc", "three_doc", "low_lexical_overlap", "relation_boundary"],
+      "chain_id": "museum_service",
+      "relation_type": "service_contract",
+      "evaluation_focus": "boundary_path",
+      "endpoint_entities": ["许棠", "贺川"],
+      "endpoint_documents": ["05_许棠修复工作履历.md", "07_贺川馆藏管理岗位档案.md"],
+      "bridge_documents": ["06_迭翠博物馆修复服务定标公告.md"],
+      "supporting_documents": [],
+      "question": "许棠和贺川能否被描述为同一单位的上下级？现有材料允许确认到什么程度？",
+      "claims": [
+        {
+          "id": "bridge_q010_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "05_许棠修复工作履历.md",
+          "section": "三、履历附件",
+          "accepted_spans": ["本履历附件只收录职业资格、在岗证明和技术操作记录。"]
+        },
+        {
+          "id": "bridge_q010_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "06_迭翠博物馆修复服务定标公告.md",
+          "section": "一、定标结果",
+          "accepted_spans": ["双方人员在合同任务内形成委托与协作关系，但劳动合同、行政汇报线和职称体系互不转移。"]
+        },
+        {
+          "id": "bridge_q010_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "07_贺川馆藏管理岗位档案.md",
+          "section": "三、档案附件",
+          "accepted_spans": ["本岗位档案只附任命书、聘期确认和库房职责清单。"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "不能描述为同一单位上下级，只能确认两人分别属于采购方与独立服务商，并在合同任务内存在委托协作联系。",
+      "evidence_chain": ["bridge_q010_c1", "bridge_q010_c2", "bridge_q010_c3"]
+    },
+    {
+      "id": "bridge_q011",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "cross_doc_chain",
+      "tags": ["entity_bridge", "cross_doc", "three_doc", "low_lexical_overlap", "temporal_overlap"],
+      "chain_id": "museum_service",
+      "relation_type": "service_contract",
+      "evaluation_focus": "temporal_path",
+      "endpoint_entities": ["许棠", "贺川"],
+      "endpoint_documents": ["05_许棠修复工作履历.md", "07_贺川馆藏管理岗位档案.md"],
+      "bridge_documents": ["06_迭翠博物馆修复服务定标公告.md"],
+      "supporting_documents": [],
+      "question": "截至2026年4月，许棠与贺川通过素纱计划形成的机构间联系是否处于有效期内？",
+      "claims": [
+        {
+          "id": "bridge_q011_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "05_许棠修复工作履历.md",
+          "section": "一、专业身份",
+          "accepted_spans": ["截至2026年4月，她仍负责修复方案终审和高风险样本的首轮操作。"]
+        },
+        {
+          "id": "bridge_q011_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "06_迭翠博物馆修复服务定标公告.md",
+          "section": "文档头",
+          "accepted_spans": ["服务期：2025年8月1日至2028年7月31日"]
+        },
+        {
+          "id": "bridge_q011_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "07_贺川馆藏管理岗位档案.md",
+          "section": "一、岗位信息",
+          "accepted_spans": ["聘期自2024年10月1日至2027年9月30日"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "处于有效期内。许棠在岗，贺川聘期覆盖2026年4月，素纱计划服务期也覆盖该时间点。",
+      "evidence_chain": ["bridge_q011_c1", "bridge_q011_c2", "bridge_q011_c3"]
+    },
+    {
+      "id": "bridge_q012",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["entity_bridge", "cross_doc", "three_doc", "low_lexical_overlap", "authority_boundary"],
+      "chain_id": "museum_service",
+      "relation_type": "service_contract",
+      "evaluation_focus": "governance_path",
+      "endpoint_entities": ["许棠", "贺川"],
+      "endpoint_documents": ["05_许棠修复工作履历.md", "07_贺川馆藏管理岗位档案.md"],
+      "bridge_documents": ["06_迭翠博物馆修复服务定标公告.md"],
+      "supporting_documents": [],
+      "question": "在许棠执行修复、贺川负责馆藏管理的链条中，谁能决定修复技术，谁保留藏品处置与复核权，哪些事项仍需更高层批准？",
+      "claims": [
+        {
+          "id": "bridge_q012_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "05_许棠修复工作履历.md",
+          "section": "一、专业身份",
+          "accepted_spans": ["许棠可以否决可能遮盖历史痕迹的处理方案，但不能代替藏品所有者决定展陈、借展或保险估值。"]
+        },
+        {
+          "id": "bridge_q012_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "06_迭翠博物馆修复服务定标公告.md",
+          "section": "一、定标结果",
+          "accepted_spans": ["斑驳工坊保持独立法人和用工关系，迭翠博物馆保留藏品处置、出库和验收权。"]
+        },
+        {
+          "id": "bridge_q012_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "07_贺川馆藏管理岗位档案.md",
+          "section": "一、岗位信息",
+          "accepted_spans": ["馆藏管理部主任对藏品状态记录拥有最终复核责任，但不能单独决定所有权转让。"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "许棠可否决不当技术方案，博物馆保留处置、出库和验收权，贺川负责状态复核但不能单独决定所有权转让。",
+      "evidence_chain": ["bridge_q012_c1", "bridge_q012_c2", "bridge_q012_c3"]
+    },
+    {
+      "id": "bridge_q013",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "cross_doc_chain",
+      "tags": ["entity_bridge", "cross_doc", "three_doc", "low_lexical_overlap", "workflow_dependency"],
+      "chain_id": "museum_service",
+      "relation_type": "service_contract",
+      "evaluation_focus": "workflow_path",
+      "endpoint_entities": ["许棠", "贺川"],
+      "endpoint_documents": ["05_许棠修复工作履历.md", "07_贺川馆藏管理岗位档案.md"],
+      "bridge_documents": ["06_迭翠博物馆修复服务定标公告.md"],
+      "supporting_documents": [],
+      "question": "许棠和贺川所在机构如何把修复前试验、书面确认与归还复核串成一条完整工作链？",
+      "claims": [
+        {
+          "id": "bridge_q013_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "05_许棠修复工作履历.md",
+          "section": "一、专业身份",
+          "accepted_spans": ["任何清洗、加固或补色步骤都必须先记录原始状态，再在边缘试验区进行可逆性测试。"]
+        },
+        {
+          "id": "bridge_q013_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "06_迭翠博物馆修复服务定标公告.md",
+          "section": "二、交付与验收",
+          "accepted_spans": ["供应商提交处理建议后，必须等待书面确认才能操作。"]
+        },
+        {
+          "id": "bridge_q013_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "07_贺川馆藏管理岗位档案.md",
+          "section": "二、库房制度",
+          "accepted_spans": ["借展归还时，新记录要与出库前基线逐项比对。"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "服务商先记录并做可逆性测试，取得博物馆书面确认后操作，归还或验收时再与基线逐项比对。",
+      "evidence_chain": ["bridge_q013_c1", "bridge_q013_c2", "bridge_q013_c3"]
+    },
+    {
+      "id": "bridge_q014",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["entity_bridge", "cross_doc", "three_doc", "low_lexical_overlap", "evidence_governance"],
+      "chain_id": "museum_service",
+      "relation_type": "service_contract",
+      "evaluation_focus": "evidence_path",
+      "endpoint_entities": ["许棠", "贺川"],
+      "endpoint_documents": ["05_许棠修复工作履历.md", "07_贺川馆藏管理岗位档案.md"],
+      "bridge_documents": ["06_迭翠博物馆修复服务定标公告.md"],
+      "supporting_documents": [],
+      "question": "若许棠处理起翘颜料层，贺川代表馆方验收，三份材料分别要求保留哪些可核验依据？",
+      "claims": [
+        {
+          "id": "bridge_q014_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "05_许棠修复工作履历.md",
+          "section": "二、技术方法",
+          "accepted_spans": ["对于已经起翘的颜料层，她要求先在显微镜下确定裂缝走向，再选择低浓度加固液分次渗入。"]
+        },
+        {
+          "id": "bridge_q014_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "06_迭翠博物馆修复服务定标公告.md",
+          "section": "二、交付与验收",
+          "accepted_spans": ["修复完成后，博物馆从材料可逆性、色差和支撑稳定性三个方面验收。"]
+        },
+        {
+          "id": "bridge_q014_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "07_贺川馆藏管理岗位档案.md",
+          "section": "二、库房制度",
+          "accepted_spans": ["每次状态检查还必须记录支撑材料、折痕和虫害迹象，不能只拍摄藏品正面。"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "服务商应记录裂缝和低浓度分次处理；馆方按可逆性、色差和支撑稳定性验收，并持续记录支撑、折痕和虫害。",
+      "evidence_chain": ["bridge_q014_c1", "bridge_q014_c2", "bridge_q014_c3"]
+    },
+    {
+      "id": "bridge_q015",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": ["entity_bridge", "cross_doc", "hard_negative", "low_lexical_overlap", "wrong_relation_type"],
+      "chain_id": "museum_service",
+      "relation_type": "service_contract",
+      "evaluation_focus": "hard_negative_path",
+      "endpoint_entities": ["许棠", "贺川"],
+      "endpoint_documents": ["05_许棠修复工作履历.md", "07_贺川馆藏管理岗位档案.md"],
+      "bridge_documents": ["06_迭翠博物馆修复服务定标公告.md"],
+      "supporting_documents": [],
+      "question": "截至2026年4月，哪份仍有效的机构文件能够连接许棠与贺川，并确定双方不是同一单位的上下级？",
+      "claims": [
+        {
+          "id": "bridge_q015_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "05_许棠修复工作履历.md",
+          "section": "三、履历附件",
+          "accepted_spans": ["客户名册、采购合同与外部项目验收单由工坊经营档案另行保存，不随个人履历归档。"]
+        },
+        {
+          "id": "bridge_q015_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "06_迭翠博物馆修复服务定标公告.md",
+          "section": "三、关系口径",
+          "accepted_spans": ["在服务期内，可以将迭翠博物馆与斑驳工坊描述为采购方与修复服务商，或“素纱计划”的委托方与承接方。"]
+        },
+        {
+          "id": "bridge_q015_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "07_贺川馆藏管理岗位档案.md",
+          "section": "三、档案附件",
+          "accepted_spans": ["项目核验以采购卷宗记载的有效期和标的为准。"]
+        }
+      ],
+      "negative_evidence": [
+        {
+          "id": "bridge_q015_n1",
+          "source_document": "04_跨行业机构关系核验周报.md",
+          "section": "二、修复机构的历史顾问单",
+          "accepted_spans": ["迭翠博物馆与斑驳工坊曾签署一份临展装裱顾问服务单，工作内容是为短期展览检查装裱边缘、悬挂受力点和撤展包装。"]
+        }
+      ],
+      "reference_answer": "应命中服务期为2025年8月1日至2028年7月31日的素纱计划定标公告；它只建立委托方与独立修复服务商的合同协作。",
+      "evidence_chain": ["bridge_q015_c1", "bridge_q015_c2", "bridge_q015_c3"]
+    },
+    {
+      "id": "bridge_q016",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "asset_reference_retrieval",
+      "tags": ["entity_bridge", "cross_doc", "three_doc", "asset_reference"],
+      "chain_id": "museum_service",
+      "relation_type": "service_contract",
+      "evaluation_focus": "asset_path",
+      "endpoint_entities": ["许棠", "贺川"],
+      "endpoint_documents": ["05_许棠修复工作履历.md", "07_贺川馆藏管理岗位档案.md"],
+      "bridge_documents": ["06_迭翠博物馆修复服务定标公告.md"],
+      "supporting_documents": [],
+      "question": "要用图片引用路径完整呈现许棠、服务交接和贺川所在库房这条链，应召回哪三个路径？",
+      "claims": [
+        {
+          "id": "bridge_q016_c1",
+          "kind": "asset",
+          "hop_role": "endpoint",
+          "source_document": "05_许棠修复工作履历.md",
+          "section": "四、修复台图像",
+          "accepted_spans": ["assets/05_矿物颜料修复台.png"]
+        },
+        {
+          "id": "bridge_q016_c2",
+          "kind": "asset",
+          "hop_role": "bridge",
+          "source_document": "06_迭翠博物馆修复服务定标公告.md",
+          "section": "四、交接图像",
+          "accepted_spans": ["assets/06_馆藏修复交接物证.png"]
+        },
+        {
+          "id": "bridge_q016_c3",
+          "kind": "asset",
+          "hop_role": "endpoint",
+          "source_document": "07_贺川馆藏管理岗位档案.md",
+          "section": "四、库房图像",
+          "accepted_spans": ["assets/07_纺织品恒湿库房.png"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "应召回矿物颜料修复台、馆藏修复交接物证和纺织品恒湿库房三个图片路径。",
+      "evidence_chain": ["bridge_q016_c1", "bridge_q016_c2", "bridge_q016_c3"]
+    },
+    {
+      "id": "bridge_q017",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["entity_bridge", "cross_doc", "three_doc", "low_lexical_overlap", "occupational_relation"],
+      "chain_id": "agri_equity",
+      "relation_type": "equity_control",
+      "evaluation_focus": "relation_path",
+      "endpoint_entities": ["唐栩", "孟遥"],
+      "endpoint_documents": ["08_唐栩育种岗位记录.md", "10_孟遥冷链运营任命书.md"],
+      "bridge_documents": ["09_芒原种业股权变更说明.md"],
+      "supporting_documents": [],
+      "question": "唐栩和孟遥之间存在什么职业关联？请还原两个人到各自机构再到控制关系的路径。",
+      "claims": [
+        {
+          "id": "bridge_q017_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "08_唐栩育种岗位记录.md",
+          "section": "一、岗位沿革",
+          "accepted_spans": ["唐栩于2018年创办芒原种业，现任首席育种师，负责旱作谷物的亲本选择、温室筛选和区域试验设计。"]
+        },
+        {
+          "id": "bridge_q017_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "09_芒原种业股权变更说明.md",
+          "section": "一、股权变化",
+          "accepted_spans": ["鹤汀冷链于2025年12月15日完成对芒原种业60%股权的受让。"]
+        },
+        {
+          "id": "bridge_q017_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "10_孟遥冷链运营任命书.md",
+          "section": "一、任命事项",
+          "accepted_spans": ["孟遥被任命为鹤汀冷链运营总裁，负责区域仓网、干线运输、温控异常处置和承运商考核。"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "唐栩是芒原种业的创办人兼首席育种师，孟遥任鹤汀冷链运营总裁；鹤汀冷链持有芒原种业60%股权，因此两人处于母子公司的间接组织链。",
+      "evidence_chain": ["bridge_q017_c1", "bridge_q017_c2", "bridge_q017_c3"]
+    },
+    {
+      "id": "bridge_q018",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["entity_bridge", "cross_doc", "three_doc", "low_lexical_overlap", "relation_boundary"],
+      "chain_id": "agri_equity",
+      "relation_type": "equity_control",
+      "evaluation_focus": "boundary_path",
+      "endpoint_entities": ["唐栩", "孟遥"],
+      "endpoint_documents": ["08_唐栩育种岗位记录.md", "10_孟遥冷链运营任命书.md"],
+      "bridge_documents": ["09_芒原种业股权变更说明.md"],
+      "supporting_documents": [],
+      "question": "现有材料是否足以证明唐栩与孟遥直接共事或存在上下级关系？控股关系的边界是什么？",
+      "claims": [
+        {
+          "id": "bridge_q018_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "08_唐栩育种岗位记录.md",
+          "section": "三、记录附件",
+          "accepted_spans": ["股东名册、物流安排及外部人员材料由公司治理与供应链卷宗分别保存，不并入研发岗位记录"]
+        },
+        {
+          "id": "bridge_q018_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "09_芒原种业股权变更说明.md",
+          "section": "二、管理安排",
+          "accepted_spans": ["判断两名分别任职于母公司与子公司的人员时，可以确认间接组织联系，但若无项目、人事或汇报文件，不能声称二人直接共事或存在上下级关系。"]
+        },
+        {
+          "id": "bridge_q018_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "10_孟遥冷链运营任命书.md",
+          "section": "三、任命材料边界",
+          "accepted_spans": ["投资清单、子公司台账及外部技术人员材料由董事会办公室另卷保存"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "不足以证明直接共事或上下级，只能确认孟遥所在母公司与唐栩所在子公司之间的控制链和间接组织联系。",
+      "evidence_chain": ["bridge_q018_c1", "bridge_q018_c2", "bridge_q018_c3"]
+    },
+    {
+      "id": "bridge_q019",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "cross_doc_chain",
+      "tags": ["entity_bridge", "cross_doc", "three_doc", "low_lexical_overlap", "temporal_overlap"],
+      "chain_id": "agri_equity",
+      "relation_type": "equity_control",
+      "evaluation_focus": "temporal_path",
+      "endpoint_entities": ["唐栩", "孟遥"],
+      "endpoint_documents": ["08_唐栩育种岗位记录.md", "10_孟遥冷链运营任命书.md"],
+      "bridge_documents": ["09_芒原种业股权变更说明.md"],
+      "supporting_documents": [],
+      "question": "从哪一天起，可以同时确认唐栩仍承担技术岗位、孟遥担任现职且两家公司已进入控股链？",
+      "claims": [
+        {
+          "id": "bridge_q019_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "08_唐栩育种岗位记录.md",
+          "section": "一、岗位沿革",
+          "accepted_spans": ["公司章程确认其技术岗位至少持续至2028年末"]
+        },
+        {
+          "id": "bridge_q019_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "09_芒原种业股权变更说明.md",
+          "section": "一、股权变化",
+          "accepted_spans": ["交易完成后，芒原种业成为鹤汀冷链的控股子公司，并自2026会计年度起纳入其合并财务报表。"]
+        },
+        {
+          "id": "bridge_q019_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "10_孟遥冷链运营任命书.md",
+          "section": "一、任命事项",
+          "accepted_spans": ["本次任命自2026年1月15日起生效，目前处于有效期内。"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "从2026年1月15日起三项条件同时成立：控股交易已完成并自2026年并表，孟遥任命生效，唐栩技术岗位持续至至少2028年末。",
+      "evidence_chain": ["bridge_q019_c1", "bridge_q019_c2", "bridge_q019_c3"]
+    },
+    {
+      "id": "bridge_q020",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["entity_bridge", "cross_doc", "three_doc", "low_lexical_overlap", "authority_boundary"],
+      "chain_id": "agri_equity",
+      "relation_type": "equity_control",
+      "evaluation_focus": "governance_path",
+      "endpoint_entities": ["唐栩", "孟遥"],
+      "endpoint_documents": ["08_唐栩育种岗位记录.md", "10_孟遥冷链运营任命书.md"],
+      "bridge_documents": ["09_芒原种业股权变更说明.md"],
+      "supporting_documents": [],
+      "question": "唐栩与孟遥分别能决定哪些事项，谁有权处理预算和重大采购，为什么两人的岗位都不能单独证明控制权？",
+      "claims": [
+        {
+          "id": "bridge_q020_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "08_唐栩育种岗位记录.md",
+          "section": "一、岗位沿革",
+          "accepted_spans": ["经营预算和对外投资则由经营管理团队依授权审批"]
+        },
+        {
+          "id": "bridge_q020_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "09_芒原种业股权变更说明.md",
+          "section": "二、管理安排",
+          "accepted_spans": ["鹤汀冷链对年度预算、重大采购和对外担保行使控股股东权利；芒原种业保留原有名称、研究基地及技术岗位。"]
+        },
+        {
+          "id": "bridge_q020_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "10_孟遥冷链运营任命书.md",
+          "section": "一、任命事项",
+          "accepted_spans": ["运营总裁可以在批准预算内调整线路与仓位，但不能单独决定股权投资、子公司设立或资产出售。"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "唐栩负责育种技术而预算和投资由管理团队审批；孟遥可调线路仓位但不能决定股权事项；控股权由鹤汀冷链依交割文件行使。",
+      "evidence_chain": ["bridge_q020_c1", "bridge_q020_c2", "bridge_q020_c3"]
+    },
+    {
+      "id": "bridge_q021",
+      "scored": true,
+      "difficulty": "medium",
+      "primary_type": "cross_doc_chain",
+      "tags": ["entity_bridge", "cross_doc", "three_doc", "low_lexical_overlap", "metric_boundary"],
+      "chain_id": "agri_equity",
+      "relation_type": "equity_control",
+      "evaluation_focus": "workflow_path",
+      "endpoint_entities": ["唐栩", "孟遥"],
+      "endpoint_documents": ["08_唐栩育种岗位记录.md", "10_孟遥冷链运营任命书.md"],
+      "bridge_documents": ["09_芒原种业股权变更说明.md"],
+      "supporting_documents": [],
+      "question": "即使唐栩与孟遥所在机构进入同一控制链，为什么育种结果、运输时效和温控读数仍不能互相替代？",
+      "claims": [
+        {
+          "id": "bridge_q021_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "08_唐栩育种岗位记录.md",
+          "section": "二、试验方法",
+          "accepted_spans": ["单次温室结果不能直接替代田间表现。"]
+        },
+        {
+          "id": "bridge_q021_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "09_芒原种业股权变更说明.md",
+          "section": "一、股权变化",
+          "accepted_spans": ["交易文件同时约定，芒原种业继续独立开展品种试验，不得用运输时效指标替代育种试验结论。"]
+        },
+        {
+          "id": "bridge_q021_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "10_孟遥冷链运营任命书.md",
+          "section": "二、温控规则",
+          "accepted_spans": ["只看其中一个数值会产生误判：箱内温度短时升高可能来自装卸开门，回风温度稳定也不代表货物中心温度已经恢复。"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "同一控制链不改变不同指标的证据边界：温室不能替代田间，运输时效不能替代育种结论，单个温控读数也不能代表货物完整状态。",
+      "evidence_chain": ["bridge_q021_c1", "bridge_q021_c2", "bridge_q021_c3"]
+    },
+    {
+      "id": "bridge_q022",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": ["entity_bridge", "cross_doc", "three_doc", "low_lexical_overlap", "evidence_path"],
+      "chain_id": "agri_equity",
+      "relation_type": "equity_control",
+      "evaluation_focus": "evidence_path",
+      "endpoint_entities": ["唐栩", "孟遥"],
+      "endpoint_documents": ["08_唐栩育种岗位记录.md", "10_孟遥冷链运营任命书.md"],
+      "bridge_documents": ["09_芒原种业股权变更说明.md"],
+      "supporting_documents": [],
+      "question": "如果只检索到唐栩和孟遥各自的岗位材料，为什么还不能回答两人的关系，缺失的决定性证据是什么？",
+      "claims": [
+        {
+          "id": "bridge_q022_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "08_唐栩育种岗位记录.md",
+          "section": "三、记录附件",
+          "accepted_spans": ["股权文件须按完成日期单独调阅。"]
+        },
+        {
+          "id": "bridge_q022_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "09_芒原种业股权变更说明.md",
+          "section": "三、辨析提示",
+          "accepted_spans": ["只有本说明记载的60%股权受让构成控制权证据。"]
+        },
+        {
+          "id": "bridge_q022_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "10_孟遥冷链运营任命书.md",
+          "section": "三、任命材料边界",
+          "accepted_spans": ["公司治理文件与运营任命材料使用不同的归档编号。"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "两份岗位材料只能确定端点，缺少鹤汀冷链受让芒原种业60%股权这一桥接证据，无法建立机构控制链。",
+      "evidence_chain": ["bridge_q022_c1", "bridge_q022_c2", "bridge_q022_c3"]
+    },
+    {
+      "id": "bridge_q023",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": ["entity_bridge", "cross_doc", "hard_negative", "low_lexical_overlap", "wrong_relation_type"],
+      "chain_id": "agri_equity",
+      "relation_type": "equity_control",
+      "evaluation_focus": "hard_negative_path",
+      "endpoint_entities": ["唐栩", "孟遥"],
+      "endpoint_documents": ["08_唐栩育种岗位记录.md", "10_孟遥冷链运营任命书.md"],
+      "bridge_documents": ["09_芒原种业股权变更说明.md"],
+      "supporting_documents": [],
+      "question": "截至2026年，唐栩与孟遥的间接组织联系应由哪份已生效文件确认？请指出关系类型与比例。",
+      "claims": [
+        {
+          "id": "bridge_q023_c1",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "08_唐栩育种岗位记录.md",
+          "section": "一、岗位沿革",
+          "accepted_spans": ["判断唐栩在某一时间点是否从事育种工作，应使用现行岗位记录，不能只依据机构成立年份。"]
+        },
+        {
+          "id": "bridge_q023_c2",
+          "kind": "text",
+          "hop_role": "bridge",
+          "source_document": "09_芒原种业股权变更说明.md",
+          "section": "三、辨析提示",
+          "accepted_spans": ["冷藏运输服务合同、仓库租赁和股权收购是三种不同关系。"]
+        },
+        {
+          "id": "bridge_q023_c3",
+          "kind": "text",
+          "hop_role": "endpoint",
+          "source_document": "10_孟遥冷链运营任命书.md",
+          "section": "一、任命事项",
+          "accepted_spans": ["公司控制关系应以董事会和交割文件为准，运营岗位文件只用于确认职责和任期。"]
+        }
+      ],
+      "negative_evidence": [
+        {
+          "id": "bridge_q023_n1",
+          "source_document": "04_跨行业机构关系核验周报.md",
+          "section": "三、种业公司的早期运输合同",
+          "accepted_spans": ["鹤汀冷链与芒原种业曾在2024年3月签订种子样本冷藏运输合同。"]
+        }
+      ],
+      "reference_answer": "应命中2025年12月15日完成的股权变更说明；鹤汀冷链受让芒原种业60%股权，形成母公司与控股子公司的间接组织联系。",
+      "evidence_chain": ["bridge_q023_c1", "bridge_q023_c2", "bridge_q023_c3"]
+    },
+    {
+      "id": "bridge_q024",
+      "scored": true,
+      "difficulty": "hard",
+      "primary_type": "asset_reference_retrieval",
+      "tags": ["entity_bridge", "cross_doc", "three_doc", "asset_reference"],
+      "chain_id": "agri_equity",
+      "relation_type": "equity_control",
+      "evaluation_focus": "asset_path",
+      "endpoint_entities": ["唐栩", "孟遥"],
+      "endpoint_documents": ["08_唐栩育种岗位记录.md", "10_孟遥冷链运营任命书.md"],
+      "bridge_documents": ["09_芒原种业股权变更说明.md"],
+      "supporting_documents": [],
+      "question": "要用图片引用路径完整呈现唐栩、股权交割和孟遥所在冷链运营环境，应召回哪三个路径？",
+      "claims": [
+        {
+          "id": "bridge_q024_c1",
+          "kind": "asset",
+          "hop_role": "endpoint",
+          "source_document": "08_唐栩育种岗位记录.md",
+          "section": "四、试验区图像",
+          "accepted_spans": ["assets/08_温室种苗试验区.png"]
+        },
+        {
+          "id": "bridge_q024_c2",
+          "kind": "asset",
+          "hop_role": "bridge",
+          "source_document": "09_芒原种业股权变更说明.md",
+          "section": "四、交易图像",
+          "accepted_spans": ["assets/09_种业冷链交割物证.png"]
+        },
+        {
+          "id": "bridge_q024_c3",
+          "kind": "asset",
+          "hop_role": "endpoint",
+          "source_document": "10_孟遥冷链运营任命书.md",
+          "section": "四、调度中心图像",
+          "accepted_spans": ["assets/10_冷链调度中心.png"]
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "应召回温室种苗试验区、种业冷链交割物证和冷链调度中心三个图片路径。",
+      "evidence_chain": ["bridge_q024_c1", "bridge_q024_c2", "bridge_q024_c3"]
+    }
+  ]
+}
