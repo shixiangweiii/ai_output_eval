@@ -1,0 +1,267 @@
+{
+  "schema_version": "3.0",
+  "metrics_version": "3.0",
+  "exam_id": "考卷-2026-07-15-03",
+  "primary_k": 5,
+  "left": {
+    "path": "评测考试/考试结果-v3-dify-new/考卷-2026-07-15-03/20260718_084543/results_20260718_084543.json",
+    "backend": "dify",
+    "dataset_id": "54bff4fd-7f95-4e1b-844c-d61430f4c9e2"
+  },
+  "right": {
+    "path": "评测考试/考试结果-v3-dify-new/考卷-2026-07-15-03/20260718_092209/results_20260718_092209.json",
+    "backend": "dify",
+    "dataset_id": "a560335f-9355-42b3-a735-9a62dcc9450e"
+  },
+  "num_paired_questions": 36,
+  "metrics": {
+    "claim_recall": {
+      "left_mean": 0.7315,
+      "right_mean": 0.7639,
+      "right_minus_left": 0.0324,
+      "paired_bootstrap_ci95": [
+        -0.0417,
+        0.1111
+      ],
+      "paired_randomization_pvalue": 0.5008
+    },
+    "complete_evidence_chain": {
+      "left_mean": 0.5833,
+      "right_mean": 0.6111,
+      "right_minus_left": 0.0278,
+      "paired_bootstrap_ci95": [
+        -0.0833,
+        0.1389
+      ],
+      "paired_randomization_pvalue": 1.0
+    },
+    "novel_claim_rank_score": {
+      "left_mean": 0.6131,
+      "right_mean": 0.6461,
+      "right_minus_left": 0.0329,
+      "paired_bootstrap_ci95": [
+        -0.0253,
+        0.0964
+      ],
+      "paired_randomization_pvalue": 0.3066
+    }
+  },
+  "paired_question_deltas": [
+    {
+      "question_id": "v3_q001",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.0
+    },
+    {
+      "question_id": "v3_q002",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.0
+    },
+    {
+      "question_id": "v3_q003",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.0
+    },
+    {
+      "question_id": "v3_q004",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.0
+    },
+    {
+      "question_id": "v3_q005",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.0
+    },
+    {
+      "question_id": "v3_q006",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.0
+    },
+    {
+      "question_id": "v3_q007",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.0
+    },
+    {
+      "question_id": "v3_q008",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.0
+    },
+    {
+      "question_id": "v3_q009",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.0
+    },
+    {
+      "question_id": "v3_q010",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.3691
+    },
+    {
+      "question_id": "v3_q011",
+      "claim_recall": 0.5,
+      "complete_evidence_chain": 1.0,
+      "novel_claim_rank_score": 0.2719
+    },
+    {
+      "question_id": "v3_q012",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": -0.1002
+    },
+    {
+      "question_id": "v3_q013",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.0
+    },
+    {
+      "question_id": "v3_q014",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.0
+    },
+    {
+      "question_id": "v3_q015",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": -0.1002
+    },
+    {
+      "question_id": "v3_q016",
+      "claim_recall": -0.5,
+      "complete_evidence_chain": -1.0,
+      "novel_claim_rank_score": -0.3155
+    },
+    {
+      "question_id": "v3_q017",
+      "claim_recall": -0.5,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": -0.2153
+    },
+    {
+      "question_id": "v3_q018",
+      "claim_recall": 0.5,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.5
+    },
+    {
+      "question_id": "v3_q019",
+      "claim_recall": 0.5,
+      "complete_evidence_chain": 1.0,
+      "novel_claim_rank_score": 0.3155
+    },
+    {
+      "question_id": "v3_q020",
+      "claim_recall": 0.5,
+      "complete_evidence_chain": 1.0,
+      "novel_claim_rank_score": 0.5
+    },
+    {
+      "question_id": "v3_q021",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.3066
+    },
+    {
+      "question_id": "v3_q022",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.1221
+    },
+    {
+      "question_id": "v3_q023",
+      "claim_recall": 0.3333,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.1667
+    },
+    {
+      "question_id": "v3_q024",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": -0.1461
+    },
+    {
+      "question_id": "v3_q025",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.0
+    },
+    {
+      "question_id": "v3_q026",
+      "claim_recall": 0.3334,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.2103
+    },
+    {
+      "question_id": "v3_q027",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": -0.0146
+    },
+    {
+      "question_id": "v3_q028",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.0
+    },
+    {
+      "question_id": "v3_q029",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": -0.123
+    },
+    {
+      "question_id": "v3_q030",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": -0.2043
+    },
+    {
+      "question_id": "v3_q031",
+      "claim_recall": -0.5,
+      "complete_evidence_chain": -1.0,
+      "novel_claim_rank_score": -0.0655
+    },
+    {
+      "question_id": "v3_q032",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": -0.0347
+    },
+    {
+      "question_id": "v3_q033",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": -0.0566
+    },
+    {
+      "question_id": "v3_q034",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": -0.1002
+    },
+    {
+      "question_id": "v3_q035",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": 0.0
+    },
+    {
+      "question_id": "v3_q036",
+      "claim_recall": 0.0,
+      "complete_evidence_chain": 0.0,
+      "novel_claim_rank_score": -0.1002
+    }
+  ]
+}
