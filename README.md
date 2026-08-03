@@ -23,8 +23,8 @@ ai_output_eval/
 ├── 评测考试/
 │   ├── 考卷-v3/                          # 通用 Claim 考卷
 │   ├── 考卷-多跳/                        # 实体桥接多跳考卷
-│   ├── 考试结果-v3-arag/                 # 通用 aRAG 结果
-│   └── 考试结果-v3-dify/                 # 通用 Dify 结果
+│   ├── 考试结果-v3-<backend>/            # 运行时自动创建，产物不入库
+│   └── 考试结果-多跳-<backend>/          # 同上，多跳专项产物
 ├── 评测考试所测检索召回接口/
 │   ├── ARAG检索召回/
 │   ├── Dify检索召回测试/
@@ -34,6 +34,8 @@ ai_output_eval/
 ```
 
 旧 metrics-v2 脚本、`评测考试/考卷/` 及对应历史结果已退出当前运行链路。现在 [`评测脚本/retrieval_eval.py`](评测脚本/retrieval_eval.py) 是通用评测行为的事实来源。
+
+结果目录由脚本按 `--backend` 或 `--out-dir` 在首次运行时创建；仓库不携带历史运行档案，需要基线时请自行跑一次整卷。
 
 ## 两个评测入口
 
@@ -122,6 +124,24 @@ RETRIEVAL_COOKIE=... RETRIEVAL_XSRF_TOKEN=... \
   --request-k 10 \
   --primary-k 5
 ```
+
+Dify Dataset API 使用 Bearer Dataset API Key，不需要 Console Cookie/CSRF：
+
+```bash
+DIFY_DATASET_API_KEY=... \
+  .venv/bin/python 评测脚本/retrieval_eval.py \
+  --backend dify \
+  --dify-api-mode dataset-api \
+  --dataset-id <dataset-id> \
+  --dataset-revision <revision> \
+  --dify-search-method hybrid_search \
+  --request-k 5 \
+  --eval-k 1,3,5 \
+  --primary-k 5 \
+  --score-threshold-enabled
+```
+
+父子索引响应中的父块 `segment.content` 是正式计分上下文；`child_chunks` 的 ID、位置和分数作为逐题诊断保存。
 
 ### Dify Coverage Search
 
@@ -226,7 +246,7 @@ RETRIEVAL_COOKIE=... RETRIEVAL_XSRF_TOKEN=... \
 
 ## 安全与维护
 
-- 检索凭证仅通过 `RETRIEVAL_COOKIE`、`RETRIEVAL_XSRF_TOKEN` 传入。
+- aRAG 和 Dify Console 凭证通过 `RETRIEVAL_COOKIE`、`RETRIEVAL_XSRF_TOKEN` 传入；Dify Dataset API Key 通过 `DIFY_DATASET_API_KEY` 传入。
 - 模型示例凭证仅通过 `DASHSCOPE_API_KEY` 传入。
 - 不要提交 Cookie、Token、API Key、私有文档或未脱敏响应。
 - 修改本地语料后，必须重新导入对应后端；否则本地文件变化不会影响检索结果。

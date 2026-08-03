@@ -38,6 +38,14 @@ IMAGE_REFERENCE_METRIC_FIELDS = (
     "image_reference_claim_recall",
     "complete_image_reference_chain",
 )
+EVALUATOR_VERSION_FIELDS = (
+    "specialized_metrics_version",
+    "core_metrics_version",
+)
+EVALUATOR_HASH_FIELDS = (
+    "specialized_script_sha256",
+    "core_script_sha256",
+)
 ALLOWED_FOCUS = {
     "relation_path",
     "boundary_path",
@@ -789,7 +797,7 @@ def build_report(
         f"- 后端: {manifest['backend']}",
         f"- Dataset: {manifest['dataset_id']}",
         f"- Dataset Revision: {manifest['dataset_revision']}",
-        f"- Dify Search Method: {manifest.get('dify_search_method', 'hybrid_search')}",
+        f"- Dify Search Method: {manifest['dify_search_method']}",
         f"- GraphRAG: {manifest['graph_search']}",
         f"- 运行范围: {summary['run_scope']}",
         f"- 运行状态: {summary['run_status']}",
@@ -1011,6 +1019,21 @@ def _values_by_chain(
     return {chain_id: _mean(items) for chain_id, items in grouped.items()}
 
 
+def _evaluator_compatibility(left: Any, right: Any) -> List[str]:
+    """指标语义必须一致；脚本文本哈希差异只作为审计提示，不阻断比较。"""
+    left = left if isinstance(left, dict) else {}
+    right = right if isinstance(right, dict) else {}
+    for field in EVALUATOR_VERSION_FIELDS:
+        if left.get(field) != right.get(field):
+            raise BridgeComparisonError(f"比较字段不一致: evaluator.{field}")
+    return [
+        f"evaluator.{field} 不同（{left.get(field)} vs {right.get(field)}）；"
+        "指标版本一致，仅说明脚本文本发生过变更"
+        for field in EVALUATOR_HASH_FIELDS
+        if left.get(field) != right.get(field)
+    ]
+
+
 def compare_runs(left_path: Path, right_path: Path) -> Dict[str, Any]:
     """按同题、同链比较 aRAG 与 Dify，并以链作为推断单位。"""
     try:
@@ -1034,10 +1057,12 @@ def compare_runs(left_path: Path, right_path: Path) -> Dict[str, Any]:
         "dataset_revision",
         "primary_k",
         "eval_k",
-        "evaluator",
     ):
         if left["manifest"].get(field) != right["manifest"].get(field):
             raise BridgeComparisonError(f"比较字段不一致: {field}")
+    evaluator_notes = _evaluator_compatibility(
+        left["manifest"].get("evaluator"), right["manifest"].get("evaluator")
+    )
 
     left_ids = [item["id"] for item in left["results"] if item["scored"]]
     right_ids = [item["id"] for item in right["results"] if item["scored"]]
@@ -1129,6 +1154,7 @@ def compare_runs(left_path: Path, right_path: Path) -> Dict[str, Any]:
         "metrics": metrics,
         "paired_question_ids": paired_ids,
         "paired_chain_ids": paired_chain_ids,
+        "evaluator_notes": evaluator_notes,
         "inference_unit": "chain_id",
         "inference_warning": (
             "链内题目相关；CI 与随机化检验基于链级差值。独立链较少时仅作探索性解释。"
@@ -1153,6 +1179,11 @@ def write_comparison(comparison: Dict[str, Any], out_root: Path) -> Path:
         f"- 推断单位: {comparison['inference_unit']}",
         f"- 统计提示: {comparison['inference_warning']}",
         "",
+    ]
+    if comparison["evaluator_notes"]:
+        lines += [f"> [审计提示] {note}" for note in comparison["evaluator_notes"]]
+        lines.append("")
+    lines += [
         "| 指标 | 题数 | 链数 | Q Δ | Chain Left | Chain Right | Chain Δ | Cluster CI95 | Cluster p |",
         "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
@@ -1315,11 +1346,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         )
 
     timestamp = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
-    out_root = (
-        Path(args.out_dir).expanduser()
-        if args.out_dir
-        else RESULTS_ROOT / f"考试结果-多跳-{args.backend}"
-    )
+    out_root = core.resolve_output_root(args.out_dir, args.backend, "考试结果-多跳")
     for _, exam, validation in loaded:
         run_scope = "smoke" if args.limit else "full"
         manifest = core.build_manifest(exam, validation, args, timestamp, run_scope)

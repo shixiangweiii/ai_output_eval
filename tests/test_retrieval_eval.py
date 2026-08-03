@@ -105,6 +105,41 @@ def make_exam(tmp_path, *, span="唯一原子证据片段", tags=None):
     return exam_path, document
 
 
+class FakeResponse:
+    def __init__(self, status_code, payload=None, text=""):
+        self.status_code = status_code
+        self.text = text
+        self._payload = payload
+
+    def json(self):
+        if self._payload is None:
+            raise ValueError("响应体不是 JSON")
+        return self._payload
+
+
+class FakeSession:
+    """按顺序返回预设响应；元素是异常时抛出，用于模拟网络故障。"""
+
+    def __init__(self, *responses):
+        self._responses = list(responses)
+        self.calls = []
+
+    def post(self, url, json=None, timeout=None):
+        self.calls.append({"url": url, "payload": json, "timeout": timeout})
+        item = self._responses.pop(0)
+        if isinstance(item, Exception):
+            raise item
+        return item
+
+
+@pytest.fixture
+def no_backoff(monkeypatch):
+    """去掉重试退避，避免单测真实休眠。"""
+    slept = []
+    monkeypatch.setattr(MODULE.time, "sleep", slept.append)
+    return slept
+
+
 def test_validate_exam_checks_corpus_and_spans(tmp_path, monkeypatch):
     exam_path, _ = make_exam(tmp_path, tags=["low_lexical_overlap"])
     monkeypatch.setattr(MODULE, "PROJECT_ROOT", tmp_path)
@@ -424,3 +459,285 @@ def test_compare_runs_is_paired_and_rejects_incompatible_exam(tmp_path):
     right.write_text(json.dumps(incompatible), encoding="utf-8")
     with pytest.raises(MODULE.ComparisonError, match="exam_sha256"):
         MODULE.compare_runs(left, right)
+
+
+def test_normalize_text_folds_markdown_dashes_quotes_and_whitespace():
+    assert MODULE.normalize_text("# 标题 ![示意图](assets/a.png)") == "标题assets/a.png"
+    assert MODULE.normalize_text("详见 [附录 A](docs/a.md)") == "详见附录adocs/a.md"
+    assert MODULE.normalize_text("A—B “C”") == 'a-b"c"'
+    assert MODULE.normalize_text("**关键**\n证据\t１２３") == "关键证据123"
+    assert MODULE.normalize_text("") == ""
+    assert MODULE.normalize_text(None) == ""
+
+
+def test_span_matching_survives_markdown_emphasis_in_corpus():
+    question = scored_question([claim("c1", "doc", "关键结论是十分钟内完成")])
+    metrics = MODULE.compute_metrics_at_k(
+        question, [chunk(1, "doc", "## 结论\n\n**关键结论是十分钟内完成**\n")], 1
+    )
+    assert metrics["claim_recall"] == 1.0
+
+
+def test_parse_arag_response_normalizes_content_and_flags_ranking_anomaly():
+    chunks, anomaly = MODULE.parse_arag_response(
+        {
+            "content": [
+                {
+                    "top": 1, "relevanceScore": 0.4, "documentName": "a.md",
+                    "documentId": "d1", "chunkId": "c1", "content": "文本一",
+                },
+                {
+                    "top": 2, "relevanceScore": 0.9, "documentName": "b.md",
+                    "documentId": "d2", "chunkId": "c2", "content": "文本二",
+                },
+            ]
+        }
+    )
+    assert [item["rank"] for item in chunks] == [1, 2]
+    assert [item["document_name"] for item in chunks] == ["a.md", "b.md"]
+    assert chunks[0]["chunk_id"] == "c1"
+    assert chunks[1]["relevance_score"] == 0.9
+    assert anomaly is True
+
+
+def test_parse_dify_response_maps_records_to_chunks():
+    chunks, anomaly = MODULE.parse_dify_response(
+        {
+            "records": [
+                {
+                    "score": 0.9,
+                    "child_chunks": [
+                        {"id": "child-1", "position": 2, "score": 0.91, "content": "命中子块"}
+                    ],
+                    "segment": {
+                        "id": "s1", "position": 3, "content": "片段一",
+                        "document_id": "d1", "document": {"name": "a.md", "id": "d1"},
+                    },
+                },
+                {
+                    "score": 0.7,
+                    "segment": {
+                        "id": "s2", "position": 4, "content": "片段二",
+                        "document": {"name": "b.md", "id": "d2"},
+                    },
+                },
+            ]
+        }
+    )
+    assert [item["rank"] for item in chunks] == [1, 2]
+    assert [item["document_name"] for item in chunks] == ["a.md", "b.md"]
+    assert chunks[0]["server_top"] == 3
+    assert chunks[0]["chunk_id"] == "s1"
+    assert chunks[0]["child_chunk_count"] == 1
+    assert chunks[0]["child_chunks"] == [
+        {"id": "child-1", "position": 2, "score": 0.91}
+    ]
+    assert chunks[1]["child_chunk_count"] == 0
+    assert chunks[1]["document_id"] == "d2"
+    assert anomaly is False
+
+    diagnostics = MODULE.dify_parent_child_diagnostics(chunks)
+    assert diagnostics["records_with_child_chunks"] == 1
+    assert diagnostics["child_chunk_count"] == 1
+    assert diagnostics["records"][0]["parent_chunk_id"] == "s1"
+    assert diagnostics["scoring_content"] == "parent segment.content returned by Dify"
+
+
+def test_malformed_backend_payloads_raise_response_schema_error():
+    with pytest.raises(MODULE.ResponseSchemaError, match="content"):
+        MODULE.parse_arag_response({"content": "not-a-list"})
+    with pytest.raises(MODULE.ResponseSchemaError, match="content"):
+        MODULE.parse_arag_response({})
+    with pytest.raises(MODULE.ResponseSchemaError, match="records"):
+        MODULE.parse_dify_response({"records": {}})
+    with pytest.raises(MODULE.ResponseSchemaError, match="segment"):
+        MODULE.parse_dify_response({"records": [{"segment": "not-an-object"}]})
+    with pytest.raises(MODULE.ResponseSchemaError, match="child_chunks"):
+        MODULE.parse_dify_response(
+            {"records": [{"segment": {}, "child_chunks": "not-an-array"}]}
+        )
+
+
+def test_transient_failures_are_retried_until_success(no_backoff):
+    session = FakeSession(
+        MODULE.requests.RequestException("connection reset"),
+        FakeResponse(429, text="rate limited"),
+        FakeResponse(503, text="unavailable"),
+        FakeResponse(200, {"ok": True}),
+    )
+    assert MODULE._post_json(session, "http://x", {"q": 1}, 1.0, 4) == {"ok": True}
+    assert len(session.calls) == 4
+    assert no_backoff == [0.5, 1.0, 2.0]
+
+
+def test_ordinary_4xx_is_not_retried_and_401_aborts_immediately(no_backoff):
+    session = FakeSession(FakeResponse(404, text="not found"), FakeResponse(200, {"ok": True}))
+    with pytest.raises(MODULE.RetrievalError, match="HTTP 404"):
+        MODULE._post_json(session, "http://x", {}, 1.0, 3)
+    assert len(session.calls) == 1
+
+    for status in (401, 403):
+        session = FakeSession(FakeResponse(status, text="unauthorized"))
+        with pytest.raises(MODULE.AuthenticationError, match=str(status)):
+            MODULE._post_json(session, "http://x", {}, 1.0, 3)
+        assert len(session.calls) == 1
+    assert no_backoff == []
+
+
+def test_retry_budget_is_exhausted_and_bad_bodies_are_schema_errors(no_backoff):
+    session = FakeSession(FakeResponse(500, text="boom"), FakeResponse(500, text="boom"))
+    with pytest.raises(MODULE.RetrievalError, match="HTTP 500"):
+        MODULE._post_json(session, "http://x", {}, 1.0, 2)
+    assert len(session.calls) == 2
+
+    with pytest.raises(MODULE.ResponseSchemaError, match="非 JSON"):
+        MODULE._post_json(FakeSession(FakeResponse(200, None, "<html>")), "http://x", {}, 1.0, 2)
+    with pytest.raises(MODULE.ResponseSchemaError, match="object"):
+        MODULE._post_json(FakeSession(FakeResponse(200, ["a"])), "http://x", {}, 1.0, 2)
+
+
+def test_arag_success_false_is_retrieval_error_and_missing_flag_is_schema_error(no_backoff):
+    session = FakeSession(FakeResponse(200, {"success": False, "responseMessage": "boom"}))
+    with pytest.raises(MODULE.RetrievalError, match="boom"):
+        MODULE.call_arag_api(session, "query", "dataset", 1.0, 1)
+
+    session = FakeSession(FakeResponse(200, {"content": []}))
+    with pytest.raises(MODULE.ResponseSchemaError, match="success"):
+        MODULE.call_arag_api(session, "query", "dataset", 1.0, 1)
+
+
+def test_call_dify_api_selects_endpoint_and_forwards_search_method(no_backoff):
+    session = FakeSession(FakeResponse(200, {"records": []}))
+    MODULE.call_dify_api(
+        session, "query", "dataset-id", 1.0, 1, 8, False,
+        search_method="coverage_search",
+    )
+    call = session.calls[0]
+    assert call["url"] == MODULE.DIFY_URL.format(dataset_id="dataset-id")
+    assert call["payload"]["retrieval_model"]["search_method"] == "coverage_search"
+    assert call["payload"]["retrieval_model"]["top_k"] == 8
+
+    session = FakeSession(FakeResponse(200, {"records": []}))
+    MODULE.call_dify_api(
+        session, "query", "dataset-id", 1.0, 1, 5, False,
+        dify_api_mode="dataset-api",
+    )
+    assert session.calls[0]["url"] == MODULE.DIFY_DATASET_API_URL.format(
+        dataset_id="dataset-id"
+    )
+
+
+def test_build_headers_requires_both_credentials_and_uses_backend_token_name(monkeypatch):
+    monkeypatch.setenv("RETRIEVAL_COOKIE", "cookie-value")
+    monkeypatch.delenv("RETRIEVAL_XSRF_TOKEN", raising=False)
+    with pytest.raises(MODULE.AuthenticationError, match="RETRIEVAL_XSRF_TOKEN"):
+        MODULE.build_headers("arag")
+
+    monkeypatch.setenv("RETRIEVAL_XSRF_TOKEN", "token-value")
+    arag = MODULE.build_headers("arag")
+    dify = MODULE.build_headers("dify")
+    assert arag["Cookie"] == dify["Cookie"] == "cookie-value"
+    assert arag["x-xsrf-token"] == "token-value" and "x-csrf-token" not in arag
+    assert dify["x-csrf-token"] == "token-value" and "x-xsrf-token" not in dify
+    assert "Cookie" not in MODULE.ARAG_HEADERS and "Cookie" not in MODULE.DIFY_HEADERS
+
+
+def test_dataset_api_headers_require_api_key_and_do_not_use_cookie(monkeypatch):
+    monkeypatch.delenv("DIFY_DATASET_API_KEY", raising=False)
+    with pytest.raises(MODULE.AuthenticationError, match="DIFY_DATASET_API_KEY"):
+        MODULE.build_headers("dify", "dataset-api")
+
+    monkeypatch.setenv("DIFY_DATASET_API_KEY", "dataset-secret")
+    headers = MODULE.build_headers("dify", "dataset-api")
+    assert headers["Authorization"] == "Bearer dataset-secret"
+    assert "Cookie" not in headers
+    assert "x-csrf-token" not in headers
+
+
+def test_dataset_api_manifest_records_transport_without_persisting_key(monkeypatch):
+    monkeypatch.setenv("DIFY_DATASET_API_KEY", "dataset-secret")
+    monkeypatch.setattr(MODULE, "_git_info", lambda: {"commit": "abc", "dirty": False})
+    exam = {
+        "exam_meta": {
+            "exam_id": "exam",
+            "corpus": {"snapshot_id": "s", "relative_dir": "c", "documents": []},
+        }
+    }
+    args = argparse.Namespace(
+        backend="dify", dataset_id="dataset", dataset_revision="revision",
+        dify_api_mode="dataset-api", dify_search_method="hybrid_search",
+        graph_search=False, score_threshold_enabled=True, score_threshold=None,
+        request_k=5, eval_k=[1, 3, 5], primary_k=5, char_budgets=[1000],
+        raw_content_limit=800,
+    )
+    manifest = MODULE.build_manifest(
+        exam, {"exam_sha256": "hash", "corpus_drift": False}, args,
+        "20260804_000000", "full",
+    )
+    serialized = json.dumps(manifest)
+    assert manifest["dify_api_mode"] == "dataset-api"
+    assert manifest["auth_mode"] == "bearer_dataset_api_key"
+    assert manifest["endpoint_type"] == "dataset_retrieve"
+    assert "dataset-secret" not in serialized
+
+
+def test_backend_defaults_resolve_dataset_id_and_output_root(tmp_path):
+    assert MODULE.resolve_dataset_id(
+        argparse.Namespace(backend="arag", dataset_id=None)
+    ) == MODULE.ARAG_DATASET_ID
+    assert MODULE.resolve_dataset_id(
+        argparse.Namespace(backend="dify", dataset_id=None)
+    ) == MODULE.DIFY_DATASET_ID
+    assert MODULE.resolve_dataset_id(
+        argparse.Namespace(backend="dify", dataset_id="custom")
+    ) == "custom"
+    assert MODULE.resolve_output_root(None, "arag") == MODULE.RESULTS_ROOT / "考试结果-v3-arag"
+    assert MODULE.resolve_output_root(None, "dify") == MODULE.RESULTS_ROOT / "考试结果-v3-dify"
+    assert (
+        MODULE.resolve_output_root(None, "dify", "考试结果-多跳")
+        == MODULE.RESULTS_ROOT / "考试结果-多跳-dify"
+    )
+    assert MODULE.resolve_output_root(str(tmp_path), "dify") == tmp_path
+
+
+def test_default_cli_arguments_are_accepted():
+    args = MODULE.parse_args([])
+    assert args.backend == "arag"
+    assert args.primary_k == 5
+    assert args.eval_k == [1, 3, 5, 10]
+    assert args.char_budgets == [1000, 2000, 4000]
+    assert args.dify_search_method == "hybrid_search"
+    assert args.dify_api_mode == "console"
+    assert args.graph_search is False
+
+
+def test_invalid_numeric_cli_arguments_are_rejected():
+    for argv in (
+        ["--primary-k", "0"],
+        ["--primary-k", "7"],
+        ["--retries", "-1"],
+        ["--limit", "-1"],
+        ["--sleep", "-0.5"],
+        ["--timeout", "0"],
+        ["--eval-k", "1,1,3"],
+        ["--eval-k", "0,5"],
+        ["--char-budgets", "-100"],
+    ):
+        with pytest.raises(SystemExit):
+            MODULE.parse_args(argv)
+
+
+def test_dify_only_flags_are_rejected_on_arag_and_coverage_excludes_graph_search():
+    for argv in (
+        ["--backend", "arag", "--graph-search"],
+        ["--backend", "arag", "--dify-api-mode", "dataset-api"],
+        ["--backend", "arag", "--dify-search-method", "coverage_search"],
+        ["--backend", "arag", "--score-threshold", "0.3"],
+        ["--backend", "arag", "--score-threshold-enabled"],
+        ["--backend", "dify", "--dify-search-method", "coverage_search", "--graph-search"],
+        ["--backend", "dify", "--request-k", "5"],
+    ):
+        with pytest.raises(SystemExit):
+            MODULE.parse_args(argv)
+    args = MODULE.parse_args(["--backend", "dify", "--score-threshold", "0.3"])
+    assert args.score_threshold_enabled is True

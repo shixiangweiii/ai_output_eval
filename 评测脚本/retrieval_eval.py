@@ -57,6 +57,7 @@ ARAG_URL = (
 )
 ARAG_DATASET_ID = "844b8ded-9bf4-44b6-bc1a-a5ccee745832"
 DIFY_URL = "http://localhost:5001/console/api/datasets/{dataset_id}/hit-testing"
+DIFY_DATASET_API_URL = "http://localhost:5001/v1/datasets/{dataset_id}/retrieve"
 DIFY_DATASET_ID = "fc0250d7-5bd0-4625-b373-830c1c83dc18"
 
 ARAG_HEADERS = {
@@ -97,6 +98,7 @@ DIFY_RETRIEVAL_MODEL = {
 }
 DIFY_GRAPH_SEARCH = {"enabled": True, "top_k": None, "weight": 0.5, "mode": "mix"}
 DIFY_SEARCH_METHODS = ("hybrid_search", "coverage_search")
+DIFY_API_MODES = ("console", "dataset-api")
 
 
 class RetrievalError(Exception):
@@ -486,12 +488,46 @@ def _credentials() -> Tuple[str, str]:
     return cookie, token
 
 
-def build_headers(backend: str) -> Dict[str, str]:
+def _dify_dataset_api_key() -> str:
+    api_key = os.environ.get("DIFY_DATASET_API_KEY", "").strip()
+    if not api_key:
+        raise AuthenticationError("缺少 Dify Dataset API 凭证环境变量: DIFY_DATASET_API_KEY")
+    return api_key
+
+
+def resolve_dataset_id(args: argparse.Namespace) -> str:
+    """解析实际使用的知识库 ID：显式 --dataset-id 优先，否则用后端内置默认值。"""
+    if args.dataset_id:
+        return args.dataset_id
+    return DIFY_DATASET_ID if args.backend == "dify" else ARAG_DATASET_ID
+
+
+def resolve_output_root(
+    out_dir: Optional[str], backend: str, prefix: str = "考试结果-v3"
+) -> Path:
+    """解析结果根目录：显式 --out-dir 优先，否则按后端自动命名。"""
+    if out_dir:
+        return Path(out_dir).expanduser()
+    return RESULTS_ROOT / f"{prefix}-{backend}"
+
+
+def build_headers(backend: str, dify_api_mode: str = "console") -> Dict[str, str]:
+    if backend == "dify" and dify_api_mode == "dataset-api":
+        headers = dict(DIFY_HEADERS)
+        headers["Authorization"] = f"Bearer {_dify_dataset_api_key()}"
+        return headers
     cookie, token = _credentials()
     headers = dict(DIFY_HEADERS if backend == "dify" else ARAG_HEADERS)
     headers["Cookie"] = cookie
     headers["x-csrf-token" if backend == "dify" else "x-xsrf-token"] = token
     return headers
+
+
+def resolve_dify_url(dataset_id: str, dify_api_mode: str = "console") -> str:
+    if dify_api_mode not in DIFY_API_MODES:
+        raise ValueError(f"不支持的 Dify API 模式: {dify_api_mode}")
+    template = DIFY_DATASET_API_URL if dify_api_mode == "dataset-api" else DIFY_URL
+    return template.format(dataset_id=dataset_id)
 
 
 def _post_json(
@@ -586,10 +622,11 @@ def call_dify_api(
     score_threshold_enabled: bool = False,
     score_threshold: Optional[float] = None,
     search_method: str = "hybrid_search",
+    dify_api_mode: str = "console",
 ) -> Dict[str, Any]:
     return _post_json(
         session,
-        DIFY_URL.format(dataset_id=dataset_id),
+        resolve_dify_url(dataset_id, dify_api_mode),
         build_dify_request(
             query,
             request_k,
@@ -657,6 +694,24 @@ def parse_dify_response(response: Dict[str, Any]) -> Tuple[List[Dict[str, Any]],
             raise ResponseSchemaError(f"Dify records[{index - 1}].segment 必须是 object")
         segment = record["segment"]
         document = segment.get("document") if isinstance(segment.get("document"), dict) else {}
+        child_chunks = record.get("child_chunks", [])
+        if not isinstance(child_chunks, list):
+            raise ResponseSchemaError(
+                f"Dify records[{index - 1}].child_chunks 必须是数组"
+            )
+        child_chunk_details = []
+        for child_index, child in enumerate(child_chunks):
+            if not isinstance(child, dict):
+                raise ResponseSchemaError(
+                    f"Dify records[{index - 1}].child_chunks[{child_index}] 必须是 object"
+                )
+            child_chunk_details.append(
+                {
+                    "id": str(child.get("id") or ""),
+                    "position": child.get("position"),
+                    "score": _numeric(child.get("score")),
+                }
+            )
         chunks.append(
             {
                 "original_index": index,
@@ -666,10 +721,33 @@ def parse_dify_response(response: Dict[str, Any]) -> Tuple[List[Dict[str, Any]],
                 "document_id": str(segment.get("document_id") or document.get("id") or ""),
                 "chunk_id": str(segment.get("id") or ""),
                 "content": str(segment.get("content") or ""),
+                "child_chunk_count": len(child_chunk_details),
+                "child_chunks": child_chunk_details,
             }
         )
     anomaly = _ranking_anomaly(chunks)
     return _finalize_chunks(chunks), anomaly
+
+
+def dify_parent_child_diagnostics(
+    chunks: Sequence[Dict[str, Any]],
+) -> Dict[str, Any]:
+    records = [
+        {
+            "rank": chunk["rank"],
+            "parent_chunk_id": chunk["chunk_id"],
+            "document_name": chunk["document_name"],
+            "child_chunks": chunk.get("child_chunks", []),
+        }
+        for chunk in chunks
+        if chunk.get("child_chunk_count", 0) > 0
+    ]
+    return {
+        "records_with_child_chunks": len(records),
+        "child_chunk_count": sum(len(record["child_chunks"]) for record in records),
+        "records": records,
+        "scoring_content": "parent segment.content returned by Dify",
+    }
 
 
 def relevance_counterfactual(chunks: Sequence[Dict[str, Any]]) -> Optional[List[Dict[str, Any]]]:
@@ -1110,7 +1188,7 @@ def evaluate_exam(
     exam: Dict[str, Any], session: "requests.Session", args: argparse.Namespace
 ) -> List[Dict[str, Any]]:
     questions = exam["questions"][: args.limit or None]
-    dataset_id = args.dataset_id or (DIFY_DATASET_ID if args.backend == "dify" else ARAG_DATASET_ID)
+    dataset_id = resolve_dataset_id(args)
     results = []
     for index, question in enumerate(questions, 1):
         record: Dict[str, Any] = {
@@ -1140,8 +1218,12 @@ def evaluate_exam(
                     args.score_threshold_enabled,
                     args.score_threshold,
                     getattr(args, "dify_search_method", "hybrid_search"),
+                    getattr(args, "dify_api_mode", "console"),
                 )
                 chunks, anomaly = parse_dify_response(response)
+                record["dify_parent_child_diagnostics"] = (
+                    dify_parent_child_diagnostics(chunks)
+                )
             else:
                 response = call_arag_api(
                     session, question["question"], dataset_id, args.timeout, args.retries
@@ -1203,7 +1285,8 @@ def build_manifest(
     exam: Dict[str, Any], validation: Dict[str, Any], args: argparse.Namespace,
     timestamp: str, run_scope: str,
 ) -> Dict[str, Any]:
-    dataset_id = args.dataset_id or (DIFY_DATASET_ID if args.backend == "dify" else ARAG_DATASET_ID)
+    dataset_id = resolve_dataset_id(args)
+    dify_api_mode = getattr(args, "dify_api_mode", "console")
     request_config: Dict[str, Any]
     if args.backend == "dify":
         request_config = build_dify_request(
@@ -1230,6 +1313,17 @@ def build_manifest(
         "backend": args.backend,
         "dataset_id": dataset_id,
         "dataset_revision": args.dataset_revision or "unverified",
+        "dify_api_mode": dify_api_mode if args.backend == "dify" else "not_applicable",
+        "auth_mode": (
+            "bearer_dataset_api_key"
+            if args.backend == "dify" and dify_api_mode == "dataset-api"
+            else "cookie_csrf"
+        ),
+        "endpoint_type": (
+            "dataset_retrieve"
+            if args.backend == "dify" and dify_api_mode == "dataset-api"
+            else "console_hit_testing" if args.backend == "dify" else "arag_proxy"
+        ),
         "graph_search": args.graph_search,
         "dify_search_method": getattr(args, "dify_search_method", "hybrid_search"),
         "request_k": args.request_k,
@@ -1257,6 +1351,10 @@ def build_report(
         f"- 考卷: {exam['exam_meta']['exam_id']}",
         f"- 后端: {manifest['backend']}",
         f"- Dataset: {manifest['dataset_id']}",
+        f"- Dataset Revision: {manifest.get('dataset_revision', 'unverified')}",
+        f"- Dify API Mode: {manifest.get('dify_api_mode', 'legacy')}",
+        f"- Auth Mode: {manifest.get('auth_mode', 'legacy')}",
+        f"- Endpoint Type: {manifest.get('endpoint_type', 'legacy')}",
         f"- 运行范围: {summary['run_scope']}",
         f"- 运行状态: {summary['run_status']}",
         f"- 可配对比较: {summary['comparison_eligible']}",
@@ -1535,6 +1633,12 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     parser.add_argument("--backend", choices=SUPPORTED_BACKENDS, default=DEFAULT_BACKEND)
     parser.add_argument("--dataset-id", default=None)
     parser.add_argument("--dataset-revision", default=None)
+    parser.add_argument(
+        "--dify-api-mode",
+        choices=DIFY_API_MODES,
+        default="console",
+        help="(Dify) console 使用 Cookie/CSRF；dataset-api 使用 Bearer Dataset API Key",
+    )
     parser.add_argument("--request-k", type=positive_int, default=10)
     parser.add_argument("--eval-k", type=int_list, default=[1, 3, 5, 10])
     parser.add_argument("--primary-k", type=positive_int, default=5)
@@ -1573,6 +1677,8 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
         parser.error("Dify 的 --request-k 不能小于 --eval-k 最大值")
     if args.graph_search and args.backend != "dify":
         parser.error("--graph-search 仅支持 Dify")
+    if args.dify_api_mode != "console" and args.backend != "dify":
+        parser.error("--dify-api-mode 仅支持 Dify")
     if args.dify_search_method != "hybrid_search" and args.backend != "dify":
         parser.error("--dify-search-method 仅支持 Dify")
     if args.dify_search_method == "coverage_search" and args.graph_search:
@@ -1619,7 +1725,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         return 0
 
     try:
-        headers = build_headers(args.backend)
+        headers = build_headers(args.backend, getattr(args, "dify_api_mode", "console"))
     except AuthenticationError as exc:
         sys.stderr.write(f"[错误] {exc}\n")
         return 3
@@ -1631,7 +1737,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             "实际以响应返回数量为准。"
         )
     timestamp = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
-    out_root = Path(args.out_dir).expanduser() if args.out_dir else RESULTS_ROOT / f"考试结果-v3-{args.backend}"
+    out_root = resolve_output_root(args.out_dir, args.backend)
 
     for path, exam, validation in loaded:
         run_scope = "smoke" if args.limit else "full"

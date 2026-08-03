@@ -308,11 +308,13 @@ def test_report_names_image_reference_and_chain_level_statistics():
             "dataset_id": "dataset",
             "dataset_revision": "revision",
             "graph_search": False,
+            "dify_search_method": "coverage_search",
             "primary_k": 5,
             "corpus_drift": False,
         },
         results,
     )
+    assert "Dify Search Method: coverage_search" in report
     assert "Complete Declared Text Chain Rate@5" in report
     assert "Image Reference Claim Recall@5" in report
     assert "图片引用路径字符串" in report
@@ -521,7 +523,12 @@ def comparison_payload(items):
             "dataset_revision": "ingestion-v1",
             "primary_k": 5,
             "eval_k": [5],
-            "evaluator": {"version": MODULE.SPECIALIZED_METRICS_VERSION},
+            "evaluator": {
+                "specialized_metrics_version": MODULE.SPECIALIZED_METRICS_VERSION,
+                "specialized_script_sha256": "specialized-hash",
+                "core_metrics_version": MODULE.core.METRICS_VERSION,
+                "core_script_sha256": "core-hash",
+            },
             "backend": "arag",
             "dataset_id": "dataset",
         },
@@ -540,7 +547,7 @@ def test_compare_rejects_missing_or_reordered_questions(tmp_path):
         MODULE.compare_runs(left_path, right_path)
 
 
-def test_compare_rejects_dataset_revision_or_evaluator_drift(tmp_path):
+def test_compare_rejects_dataset_revision_or_metrics_version_drift(tmp_path):
     left = comparison_payload([("q1", "a", 1.0)])
     right = comparison_payload([("q1", "a", 1.0)])
     right["manifest"]["dataset_revision"] = "ingestion-v2"
@@ -552,10 +559,67 @@ def test_compare_rejects_dataset_revision_or_evaluator_drift(tmp_path):
         MODULE.compare_runs(left_path, right_path)
 
     right["manifest"]["dataset_revision"] = "ingestion-v1"
-    right["manifest"]["evaluator"] = {"version": "different"}
+    right["manifest"]["evaluator"]["core_metrics_version"] = "9.9"
+    right_path.write_text(json.dumps(right), encoding="utf-8")
+    with pytest.raises(
+        MODULE.BridgeComparisonError, match="evaluator.core_metrics_version"
+    ):
+        MODULE.compare_runs(left_path, right_path)
+
+    right["manifest"]["evaluator"] = {}
     right_path.write_text(json.dumps(right), encoding="utf-8")
     with pytest.raises(MODULE.BridgeComparisonError, match="evaluator"):
         MODULE.compare_runs(left_path, right_path)
+
+
+def test_script_hash_drift_is_an_audit_note_not_a_comparison_block(tmp_path):
+    left = comparison_payload([("q1", "chain-a", 0.0), ("q2", "chain-b", 0.0)])
+    right = comparison_payload([("q1", "chain-a", 1.0), ("q2", "chain-b", 1.0)])
+    right["manifest"]["backend"] = "dify"
+    right["manifest"]["evaluator"]["core_script_sha256"] = "core-hash-after-rename"
+    left_path = tmp_path / "left.json"
+    right_path = tmp_path / "right.json"
+    left_path.write_text(json.dumps(left), encoding="utf-8")
+    right_path.write_text(json.dumps(right), encoding="utf-8")
+
+    comparison = MODULE.compare_runs(left_path, right_path)
+    assert len(comparison["evaluator_notes"]) == 1
+    assert "core_script_sha256" in comparison["evaluator_notes"][0]
+    assert comparison["metrics"]["endpoint_text_claim_recall"]["chain_macro"][
+        "right_minus_left"
+    ] == 1.0
+
+    target = MODULE.write_comparison(comparison, tmp_path / "out")
+    report = next(target.glob("comparison_*.md")).read_text(encoding="utf-8")
+    assert "审计提示" in report and "core_script_sha256" in report
+
+
+def test_identical_evaluator_blocks_produce_no_audit_note(tmp_path):
+    left = comparison_payload([("q1", "chain-a", 0.0), ("q2", "chain-b", 0.0)])
+    right = comparison_payload([("q1", "chain-a", 1.0), ("q2", "chain-b", 1.0)])
+    left_path = tmp_path / "left.json"
+    right_path = tmp_path / "right.json"
+    left_path.write_text(json.dumps(left), encoding="utf-8")
+    right_path.write_text(json.dumps(right), encoding="utf-8")
+    assert MODULE.compare_runs(left_path, right_path)["evaluator_notes"] == []
+
+
+def test_specialized_cli_rejects_dify_only_flags_and_conflicting_modes():
+    for argv in (
+        ["--backend", "arag", "--dify-search-method", "coverage_search"],
+        ["--backend", "arag", "--graph-search"],
+        ["--backend", "dify", "--dify-search-method", "coverage_search", "--graph-search"],
+    ):
+        with pytest.raises(SystemExit):
+            MODULE.parse_args(argv)
+
+
+def test_specialized_output_root_follows_multihop_naming(tmp_path):
+    assert (
+        MODULE.core.resolve_output_root(None, "dify", "考试结果-多跳")
+        == MODULE.RESULTS_ROOT / "考试结果-多跳-dify"
+    )
+    assert MODULE.core.resolve_output_root(str(tmp_path), "arag", "考试结果-多跳") == tmp_path
 
 
 def test_compare_uses_chain_cluster_for_inference(tmp_path):

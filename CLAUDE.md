@@ -41,7 +41,7 @@ python 评测脚本/entity_bridge_multihop_eval.py --validate-only   # validate 
 
 ## Backends — arag + dify, three Dify retrieval modes
 
-`arag` and `dify` are both live (`SUPPORTED_BACKENDS = ("arag","dify")`). `--backend` sets the header/endpoint style and the built-in dataset id; the actual KB is `--dataset-id` (defaults to the backend's built-in). Dify retrieval *mode* is selected by `--dify-search-method` (`hybrid_search` default | `coverage_search`) plus the `--graph-search` flag. Output dir is auto `考试结果-v3-<backend>` (or `考试结果-多跳-<backend>` for the multihop script) unless steered with `--out-dir`.
+`arag` and `dify` are both live (`SUPPORTED_BACKENDS = ("arag","dify")`). `--backend` selects the response adapter and default dataset. Dify transport is explicit: `--dify-api-mode console` uses Console hit-testing with Cookie/CSRF, while `--dify-api-mode dataset-api` uses `/v1/datasets/<id>/retrieve` with a Bearer key from `DIFY_DATASET_API_KEY`. Retrieval strategy remains `--dify-search-method hybrid_search|coverage_search` plus the optional `--graph-search` flag.
 
 | Config | Command (add creds + `--exam …`) | dataset_id | Dify mode | Output root |
 | --- | --- | --- | --- | --- |
@@ -77,7 +77,7 @@ python 评测脚本/retrieval_eval.py --compare <RUN_A_results.json> <RUN_B_resu
 
 `--dataset-revision` is a free-text label you supply to assert the remote KB was ingested from the same local snapshot; **omitting it marks the run not-comparison-eligible** (the multihop `--compare` rejects `unverified` outright). `--request-k` (default 10) is sent to Dify as `retrieval_model.top_k` (Dify-only; aRAG ignores it — request-side K is unsupported by aRAG, which returns whatever it returns). `--eval-k`/`--primary-k` (defaults `[1,3,5,10]`/`5`) are the **client-side evaluation windows**; `--char-budgets` (default `[1000,2000,4000]`) are normalized-character truncation budgets. Comparing backends fairly means holding `--primary-k`/`--eval-k`/`--char-budgets` constant.
 
-Credentials are **only** ever passed through `RETRIEVAL_COOKIE` / `RETRIEVAL_XSRF_TOKEN` (both backends read the same pair; aRAG sends them as `Cookie` + `x-xsrf-token` to DingTalk, Dify as `Cookie` + `x-csrf-token` to the local console). Never paste live cookies, tokens, or private corpus/API content into code, commits, or reports.
+Credentials are environment-only: aRAG and Dify Console use `RETRIEVAL_COOKIE` / `RETRIEVAL_XSRF_TOKEN`; Dify Dataset API uses `DIFY_DATASET_API_KEY`. Keys and request headers must never be written to manifests, results, logs, commits, or reports.
 
 ## How the v3 evaluator works (retrieval_eval.py)
 
@@ -125,7 +125,7 @@ A thin layer that loads `retrieval_eval.py` as `core` via `importlib` and reuses
 Per-k bridge metrics: `endpoint_text_claim_recall`, `bridge_text_claim_recall`, `supporting_text_claim_recall`, `complete_core_bridge_chain`, `complete_declared_text_chain` (core + supporting), `image_reference_claim_recall`, `complete_image_reference_chain`, `endpoint`/`bridge_document_recall`, `bridge_only_document_miss`, and `path_status` (`complete`/`bridge_missing`/`endpoint_missing`/`supporting_missing`/`multiple_missing`/`image_reference_*`). `aggregate_bridge` reports both a **question macro** and a **chain macro** (mean per chain, then equal-weight over independent chains) with chain-level bootstrap CIs. **`inference_warning`: questions within a `chain_id` are correlated; significance inference must use the chain as the clustering unit — with few independent chains, treat CIs/p-values as exploratory.**
 
 ### Stricter comparison
-`apply_comparison_guards` sets `comparison_eligible = false` if any of: base run not eligible, `dataset_revision == "unverified"`, document corpus drift, or image-asset drift. The multihop `--compare` additionally requires both runs' `dataset_revision` to be verified and matching, plus matching `evaluator`/`chain_id`/`primary_type` shape. Its `compare_runs` reports **clustered** (by chain) bootstrap CI + randomization p-value on chain-level deltas, with `inference_unit: "chain_id"`. Output: `考试结果-多跳-比较`. The multihop script **refuses to run live without `--dataset-id`** (exit 2); point it at a KB that has the multi-hop corpus ingested.
+`apply_comparison_guards` sets `comparison_eligible = false` if any of: base run not eligible, `dataset_revision == "unverified"`, document corpus drift, or image-asset drift. The multihop `--compare` additionally requires both runs' `dataset_revision` to be verified and matching, matching `evaluator` **metrics versions** (`specialized_metrics_version`/`core_metrics_version`), and matching `chain_id`/`primary_type` shape. A difference in `specialized_script_sha256`/`core_script_sha256` alone does **not** block the comparison — it is surfaced as an `evaluator_notes` audit line in the comparison JSON/Markdown, so a cosmetic script edit (rename, docstring, User-Agent) does not invalidate an older archived run. Its `compare_runs` reports **clustered** (by chain) bootstrap CI + randomization p-value on chain-level deltas, with `inference_unit: "chain_id"`. Output: `考试结果-多跳-比较`. The multihop script **refuses to run live without `--dataset-id`** (exit 2); point it at a KB that has the multi-hop corpus ingested.
 
 ## Cross-backend comparison caveat
 
