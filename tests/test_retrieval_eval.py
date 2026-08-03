@@ -1,39 +1,21 @@
-from __future__ import annotations
-
 import argparse
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
-from types import SimpleNamespace
 
 import pytest
-import requests
 
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "评测脚本" / "retrieval_eval.py"
 SPEC = importlib.util.spec_from_file_location("retrieval_eval", SCRIPT)
 assert SPEC and SPEC.loader
-evaluator = importlib.util.module_from_spec(SPEC)
-SPEC.loader.exec_module(evaluator)
+MODULE = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(MODULE)
 
 
-def gt(*evidence, image_url=None, keywords=None):
-    chunks = [
-        {"source_document": document, "section": section, "snippet": snippet}
-        for document, section, snippet in evidence
-    ]
-    return {
-        "gt_docs": list(dict.fromkeys(item[0] for item in evidence)),
-        "gt_chunks": chunks,
-        "keyword_match": keywords or [],
-        "expected_image_url": image_url,
-        "requires_tool": False,
-        "is_adversarial": False,
-    }
-
-
-def retrieved(rank, document, content, *, score=1.0, chunk_id=None):
+def chunk(rank, document, content, score=1.0, chunk_id=None):
     return {
         "rank": rank,
         "original_index": rank,
@@ -46,592 +28,399 @@ def retrieved(rank, document, content, *, score=1.0, chunk_id=None):
     }
 
 
-def metrics(ground_truth, chunks, top_k=5):
-    return evaluator.compute_metrics(
-        ground_truth,
-        chunks,
-        top_k=top_k,
-        rank_source="response",
-        ranking_anomaly=False,
-    )
-
-
-def question(question_id="q_001", *, image_url=None):
-    snippet = f"证据 {image_url}" if image_url else "必需证据"
+def claim(claim_id, document, *spans, kind="text"):
     return {
-        "id": question_id,
-        "difficulty": "hard",
-        "type": "cross_document",
-        "question": "测试问题？",
-        "retrieved_chunks": [
-            {
-                "source_document": "A.md",
-                "section": "章节",
-                "snippet": snippet,
-            }
-        ],
-        "eval_criteria": {"expected_image_url": image_url} if image_url else {},
+        "id": claim_id,
+        "kind": kind,
+        "source_document": document,
+        "section": "section",
+        "accepted_spans": list(spans),
     }
 
 
-def exam_payload(questions=None):
-    items = questions or [question()]
+def scored_question(claims, negatives=None):
     return {
-        "exam_meta": {"exam_id": "exam-test", "title": "测试", "total_questions": len(items)},
-        "questions": items,
+        "id": "q",
+        "scored": True,
+        "difficulty": "medium",
+        "primary_type": "single_doc_multi_claim",
+        "tags": [],
+        "question": "query",
+        "claims": claims,
+        "negative_evidence": negatives or [],
+        "reference_answer": "answer",
+        "evidence_chain": [item["id"] for item in claims],
     }
 
 
-class FakeResponse:
-    def __init__(self, status_code=200, payload=None, text=""):
-        self.status_code = status_code
-        self._payload = payload
-        self.text = text
-
-    def json(self):
-        if isinstance(self._payload, Exception):
-            raise self._payload
-        return self._payload
+def sha256(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-class FakeSession:
-    def __init__(self, responses):
-        self.responses = list(responses)
-        self.calls = 0
+def make_exam(tmp_path, *, span="唯一原子证据片段", tags=None):
+    corpus_dir = tmp_path / "corpus"
+    corpus_dir.mkdir()
+    document = corpus_dir / "doc.md"
+    document.write_text(f"# 标题\n\n这里包含{span}，用于测试。\n", encoding="utf-8")
+    question = {
+        "id": "q1",
+        "scored": True,
+        "difficulty": "simple",
+        "primary_type": "single_doc_fact",
+        "tags": tags or [],
+        "question": "完全不同的查询措辞",
+        "claims": [claim("q1-c1", "doc.md", span)],
+        "negative_evidence": [],
+        "reference_answer": "答案",
+        "evidence_chain": ["q1-c1"],
+    }
+    exam = {
+        "schema_version": "3.0",
+        "exam_meta": {
+            "exam_id": "exam",
+            "title": "test",
+            "corpus": {
+                "snapshot_id": "snapshot",
+                "relative_dir": "corpus",
+                "documents": [{"name": "doc.md", "sha256": sha256(document)}],
+            },
+            "question_counts": {
+                "total": 1,
+                "scored": 1,
+                "diagnostic": 0,
+                "by_primary_type": {"single_doc_fact": 1},
+                "by_difficulty": {"simple": 1},
+            },
+            "design_constraints": {
+                "min_claims_per_document": 1,
+                "max_claim_share_per_document": 1.0,
+                "min_low_lexical_overlap_questions": int(bool(tags)),
+                "min_hard_negative_questions": 0,
+            },
+        },
+        "questions": [question],
+    }
+    exam_path = tmp_path / "exam.json"
+    exam_path.write_text(json.dumps(exam, ensure_ascii=False), encoding="utf-8")
+    return exam_path, document
 
-    def post(self, *_args, **_kwargs):
-        self.calls += 1
-        item = self.responses.pop(0)
-        if isinstance(item, Exception):
-            raise item
-        return item
+
+def test_validate_exam_checks_corpus_and_spans(tmp_path, monkeypatch):
+    exam_path, _ = make_exam(tmp_path, tags=["low_lexical_overlap"])
+    monkeypatch.setattr(MODULE, "PROJECT_ROOT", tmp_path)
+    exam, validation = MODULE.load_and_validate_exam(exam_path)
+    assert exam["schema_version"] == "3.0"
+    assert validation["total_claims"] == 1
+    assert validation["corpus_drift"] is False
 
 
-def test_correct_document_wrong_section_does_not_score():
-    result = metrics(
-        gt(("A.md", "目标章节", "真正的证据片段")),
-        [retrieved(1, "A.md", "这是同一文档中的错误章节")],
+def test_validate_exam_blocks_hash_drift_unless_overridden(tmp_path, monkeypatch):
+    exam_path, document = make_exam(tmp_path)
+    document.write_text(document.read_text(encoding="utf-8") + "漂移", encoding="utf-8")
+    monkeypatch.setattr(MODULE, "PROJECT_ROOT", tmp_path)
+    with pytest.raises(MODULE.ExamValidationError, match="SHA-256"):
+        MODULE.load_and_validate_exam(exam_path)
+    _, validation = MODULE.load_and_validate_exam(exam_path, allow_corpus_drift=True)
+    assert validation["corpus_drift"] is True
+    assert validation["warnings"]
+
+
+def test_validate_exam_rejects_missing_span(tmp_path, monkeypatch):
+    exam_path, _ = make_exam(tmp_path)
+    payload = json.loads(exam_path.read_text(encoding="utf-8"))
+    payload["questions"][0]["claims"][0]["accepted_spans"] = ["并不存在的原子证据"]
+    exam_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    monkeypatch.setattr(MODULE, "PROJECT_ROOT", tmp_path)
+    with pytest.raises(MODULE.ExamValidationError, match="span 不存在"):
+        MODULE.load_and_validate_exam(exam_path)
+
+
+def test_validate_exam_enforces_low_lexical_overlap(tmp_path, monkeypatch):
+    span = "这是一条非常明确且足够长的原子证据"
+    exam_path, _ = make_exam(tmp_path, span=span, tags=["low_lexical_overlap"])
+    payload = json.loads(exam_path.read_text(encoding="utf-8"))
+    payload["questions"][0]["question"] = span
+    exam_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    monkeypatch.setattr(MODULE, "PROJECT_ROOT", tmp_path)
+    with pytest.raises(MODULE.ExamValidationError, match="low_lexical_overlap 不成立"):
+        MODULE.load_and_validate_exam(exam_path)
+
+
+def test_exact_match_accepts_alternative_span_but_requires_document():
+    question = scored_question([claim("c1", "doc-a", "第一种说法", "第二种说法")])
+    metrics = MODULE.compute_metrics_at_k(
+        question, [chunk(1, "doc-a", "文本包含第二种说法")], 1
     )
-
-    assert result["doc_recall@k"] == 1.0
-    assert result["evidence_recall@k"] == 0.0
-    assert result["score"] == 0.0
-    assert result["snippet_detail"][0]["matched_rank"] is None
-
-
-def test_partial_multi_document_and_multi_evidence_recall():
-    result = metrics(
-        gt(("A.md", "一", "甲证据"), ("B.md", "二", "乙证据")),
-        [retrieved(1, "A.md", "前文 甲证据 后文"), retrieved(2, "C.md", "噪声")],
-        top_k=2,
+    assert metrics["claim_recall"] == 1.0
+    wrong_doc = MODULE.compute_metrics_at_k(
+        question, [chunk(1, "doc-b", "文本包含第二种说法")], 1
     )
-
-    assert result["evidence_recall@k"] == 0.5
-    assert result["evidence_precision@k"] == 0.5
-    assert result["doc_recall@k"] == 0.5
-    assert result["all_evidence_hit@k"] is False
-    assert result["score"] == 0.5
+    assert wrong_doc["claim_recall"] == 0.0
 
 
-def test_keyword_coverage_is_diagnostic_and_does_not_change_score():
-    result = metrics(
-        gt(("A.md", "一", "完整证据片段"), keywords=["诊断词/别名"]),
-        [retrieved(1, "A.md", "只含诊断词，不含完整证据")],
+def test_one_chunk_can_hit_multiple_claims_and_complete_chain():
+    question = scored_question(
+        [claim("c1", "doc", "证据甲内容"), claim("c2", "doc", "证据乙内容")]
     )
-
-    assert result["keyword_coverage"] == 1.0
-    assert result["evidence_recall@k"] == 0.0
-    assert result["score"] == 0.0
-
-
-def test_duplicate_documents_do_not_inflate_unique_precision():
-    result = metrics(
-        gt(("A.md", "一", "甲证据")),
-        [
-            retrieved(1, "A.md", "甲证据"),
-            retrieved(2, "A.md", "另一个块"),
-            retrieved(3, "C.md", "噪声"),
-        ],
-        top_k=3,
+    metrics = MODULE.compute_metrics_at_k(
+        question, [chunk(1, "doc", "证据甲内容和证据乙内容同时出现")], 1
     )
+    assert metrics["claim_hits"] == 2
+    assert metrics["complete_evidence_chain"] is True
+    assert metrics["novel_claim_rank_score"] == 1.0
 
-    assert result["unique_doc_precision@k"] == 0.5
-    assert result["duplicate_doc_rate@k"] == pytest.approx(0.3333)
 
-
-def test_image_url_must_be_covered_in_every_required_source():
-    url = "https://example.com/chart.png"
-    result = metrics(
-        gt(
-            ("A.md", "图", f"A 图 ![说明]({url})"),
-            ("B.md", "图", f"B 图 ![]({url})"),
-            image_url=url,
-        ),
-        [
-            retrieved(1, "A.md", f"A 图 ![]({url})"),
-            retrieved(2, "B.md", "B 图存在，但图片 URL 丢失"),
-        ],
-        top_k=2,
+def test_duplicate_chunks_do_not_repeat_novel_claim_gain():
+    question = scored_question(
+        [claim("c1", "doc", "证据甲内容"), claim("c2", "doc", "证据乙内容")]
     )
-
-    assert result["image_source_coverage"] == 0.5
-    assert result["image_hit"] is False
-    assert [item["hit"] for item in result["image_source_detail"]] == [True, False]
-
-
-def test_image_coverage_uses_same_normalization_as_evidence():
-    # URL carries uppercase + underscore; ingestion stored the chunk lowercased
-    # inside Markdown. A raw substring check would miss it while evidence_recall
-    # (normalized) matches — the two must not disagree over the same URL.
-    url = "https://example.com/Risk_Management.png"
-    stored = f"配图 ![]({url.lower()})"
-    result = metrics(
-        gt(("A.md", "图", url), image_url=url),
-        [retrieved(1, "A.md", stored)],
-    )
-
-    assert result["evidence_recall@k"] == 1.0
-    assert result["image_source_coverage"] == 1.0
-    assert result["image_hit"] is True
-    assert result["image_source_detail"][0]["hit"] is True
-
-
-def test_report_flags_partial_run_when_evaluated_fewer_than_declared():
-    result_metrics = metrics(
-        gt(("A.md", "章节", "必需证据")), [retrieved(1, "A.md", "必需证据")]
-    )
-    results = [
-        {
-            "id": "q_001",
-            "difficulty": "hard",
-            "type": "cross_document",
-            "question": "测试问题？",
-            "has_expected_image": False,
-            "status": "ok",
-            "metrics": result_metrics,
-        }
+    chunks = [
+        chunk(1, "doc", "证据甲内容"),
+        chunk(2, "doc", "重复的证据甲内容"),
+        chunk(3, "doc", "证据乙内容"),
     ]
-    summary = evaluator.aggregate(results, "response")  # num_questions == 1
-
-    partial = evaluator.build_markdown_report(
-        {"exam_id": "e", "title": "t", "total_questions": 25}, summary, results, 5
-    )
-    assert "部分运行" in partial
-
-    full = evaluator.build_markdown_report(
-        {"exam_id": "e", "title": "t", "total_questions": 1}, summary, results, 5
-    )
-    assert "部分运行" not in full
+    metrics = MODULE.compute_metrics_at_k(question, chunks, 3)
+    assert metrics["claim_recall"] == 1.0
+    assert metrics["novel_claim_rank_score"] == 0.75
+    assert metrics["duplicate_document_rate"] == pytest.approx(2 / 3, abs=1e-4)
 
 
-def test_normalization_handles_markdown_image_alt_dashes_quotes_and_whitespace():
-    url = "https://example.com/a.png"
-    expected = f'**风险 – 分级** “说明” ![不同 alt]({url})'
-    actual = f'风险-分级\n"说明" ![]({url})'
-
-    assert evaluator.normalize_text(expected) == evaluator.normalize_text(actual)
-    result = metrics(gt(("A.md", "图", expected)), [retrieved(1, "A.md", actual)])
-    assert result["evidence_recall@k"] == 1.0
-    assert result["snippet_detail"][0]["match_type"] == "normalized_exact"
-
-
-def test_top_k_excludes_later_evidence_from_recall_and_mrr():
-    result = metrics(
-        gt(("A.md", "一", "目标证据")),
-        [retrieved(1, "B.md", "噪声"), retrieved(2, "A.md", "目标证据")],
-        top_k=1,
-    )
-
-    assert result["evidence_recall@k"] == 0.0
-    assert result["evidence_mrr@k"] == 0.0
-    assert result["doc_mrr@k"] == 0.0
-
-
-def test_response_and_relevance_ranking_modes_are_auditable():
-    response = {
-        "success": True,
-        "content": [
-            {"documentName": "A.md", "chunkId": "a", "top": 8, "relevanceScore": 0.2},
-            {"documentName": "B.md", "chunkId": "b", "top": 2, "relevanceScore": 0.9},
-            {"documentName": "C.md", "chunkId": "c", "top": 3, "relevanceScore": None},
-        ],
-    }
-
-    response_order, anomaly = evaluator.parse_retrieved_chunks(response, "response")
-    relevance_order, _ = evaluator.parse_retrieved_chunks(response, "relevance")
-
-    assert anomaly is True
-    assert [item["document_name"] for item in response_order] == ["A.md", "B.md", "C.md"]
-    assert [item["document_name"] for item in relevance_order] == ["B.md", "A.md", "C.md"]
-    assert relevance_order[0]["original_index"] == 2
-    assert relevance_order[0]["server_top"] == 2
-    assert relevance_order[0]["relevance_score"] == 0.9
-    audited = metrics(gt(("B.md", "一", "" + "证据")), [dict(relevance_order[0], content="证据")])
-    assert audited["retrieved_chunk_detail"][0]["original_index"] == 2
-
-
-def test_missing_response_content_is_non_retryable_schema_error():
-    with pytest.raises(evaluator.ResponseSchemaError, match="content"):
-        evaluator.parse_retrieved_chunks({"success": True})
-
-
-def test_retry_429_and_5xx_then_succeed(monkeypatch):
-    session = FakeSession(
+def test_aggregate_distinguishes_query_macro_micro_and_chain_rate():
+    q1 = scored_question([claim("q1-c1", "a", "命中证据一")])
+    q1["id"] = "q1"
+    q2 = scored_question(
         [
-            FakeResponse(429, text="rate limit"),
-            FakeResponse(503, text="unavailable"),
-            FakeResponse(200, {"success": True, "content": []}),
+            claim("q2-c1", "b", "命中证据二"),
+            claim("q2-c2", "b", "缺失证据三"),
+            claim("q2-c3", "b", "缺失证据四"),
         ]
     )
-    sleeps = []
-    monkeypatch.setattr(evaluator.time, "sleep", sleeps.append)
-
-    response = evaluator.call_retrieval_api(session, "query", "dataset", 1.0, 3)
-
-    assert response["success"] is True
-    assert session.calls == 3
-    assert sleeps == [0.5, 1.0]
-
-
-def test_network_timeout_retries_and_normal_4xx_does_not(monkeypatch):
-    monkeypatch.setattr(evaluator.time, "sleep", lambda _seconds: None)
-    timeout_session = FakeSession(
-        [requests.Timeout("slow"), FakeResponse(200, {"success": True, "content": []})]
-    )
-    assert evaluator.call_retrieval_api(timeout_session, "q", "d", 1.0, 2)["success"]
-    assert timeout_session.calls == 2
-
-    bad_request_session = FakeSession([FakeResponse(400, text="bad request")])
-    with pytest.raises(evaluator.RetrievalError, match="HTTP 400"):
-        evaluator.call_retrieval_api(bad_request_session, "q", "d", 1.0, 3)
-    assert bad_request_session.calls == 1
-
-
-@pytest.mark.parametrize("status", [401, 403])
-def test_authentication_error_terminates_without_retry(status):
-    session = FakeSession([FakeResponse(status, text="expired")])
-    with pytest.raises(evaluator.AuthenticationError):
-        evaluator.call_retrieval_api(session, "q", "d", 1.0, 3)
-    assert session.calls == 1
-
-
-def test_authentication_abort_preserves_partial_results_without_valid_score():
-    questions = [question("q_001"), question("q_002"), question("q_003")]
-    session = FakeSession(
-        [
-            FakeResponse(
-                200,
-                {
-                    "success": True,
-                    "content": [
-                        {"documentName": "A.md", "chunkId": "a", "content": "必需证据"}
-                    ],
-                },
-            ),
-            FakeResponse(401, text="expired"),
-        ]
-    )
-    args = SimpleNamespace(
-        limit=0,
-        dataset_id="dataset",
-        timeout=1.0,
-        retries=1,
-        rank_by="response",
-        top_k=5,
-        sleep=0.0,
-    )
-
-    with pytest.raises(evaluator.EvaluationAborted) as caught:
-        evaluator.evaluate_exam(exam_payload(questions), session, args)
-
-    error = caught.value
-    assert error.total_questions == 3
-    assert [item["status"] for item in error.partial_results] == ["ok", "auth_error"]
-    summary = evaluator.aggregate(
-        error.partial_results,
-        "response",
-        run_status="aborted_auth",
-        total_expected=error.total_questions,
-    )
-    assert summary["run_status"] == "aborted_auth"
-    assert summary["overall"]["end_to_end_score"] is None
-    assert summary["retrieval_capability_score"] is None
-
-
-def test_eighteen_failed_hard_questions_make_total_score_40_not_80():
+    q2["id"] = "q2"
+    m1 = MODULE.compute_question_metrics(q1, [chunk(1, "a", "命中证据一")], [5], [100], False)
+    m2 = MODULE.compute_question_metrics(q2, [chunk(1, "b", "命中证据二")], [5], [100], False)
     results = [
-        {"id": f"q_{index:03d}", "difficulty": "hard", "type": "complex", "status": "error"}
-        for index in range(1, 19)
+        {
+            "id": "q1", "scored": True, "status": "ok", "metrics": m1,
+            "claim_count": 1, "difficulty": "simple", "primary_type": "single_doc_fact",
+            "tags": [], "gt_document_count": 1, "negative_evidence_count": 0,
+            "asset_claim_count": 0, "latency_ms": 1,
+        },
+        {
+            "id": "q2", "scored": True, "status": "ok", "metrics": m2,
+            "claim_count": 3, "difficulty": "hard", "primary_type": "single_doc_multi_claim",
+            "tags": [], "gt_document_count": 1, "negative_evidence_count": 0,
+            "asset_claim_count": 0, "latency_ms": 2,
+        },
     ]
-    successful_metrics = {
-        "score": 1.0,
-        "evidence_recall@k": 1.0,
-        "evidence_precision@k": 1.0,
-        "doc_recall@k": 1.0,
-        "unique_doc_precision@k": 1.0,
-        "evidence_mrr@k": 1.0,
-        "all_evidence_hit@k": True,
-        "ranking_anomaly": False,
+    summary = MODULE.aggregate(results, 5, [5], [100], "completed", "full", False)
+    assert summary["headline"]["query_macro_claim_recall"] == 0.6666
+    assert summary["diagnostics"]["claim_micro_recall"] == 0.5
+    assert summary["headline"]["complete_evidence_chain_rate"] == 0.5
+    assert summary["diagnostics"]["error_counts"] == {}
+    assert "mean_duplicate_document_rate" in summary["diagnostics"]
+
+
+def test_char_budget_curve_changes_when_evidence_is_late():
+    question = scored_question([claim("c1", "doc", "目标证据片段")])
+    chunks = [
+        chunk(1, "noise", "前置噪声内容很长"),
+        chunk(2, "doc", "这里包含目标证据片段"),
+    ]
+    metrics = MODULE.compute_question_metrics(question, chunks, [1, 2], [5, 50], False)
+    assert metrics["metrics_by_k"]["1"]["claim_recall"] == 0.0
+    assert metrics["metrics_by_k"]["2"]["claim_recall"] == 1.0
+    assert metrics["char_budget_metrics"]["5"]["claim_recall"] == 0.0
+    assert metrics["char_budget_metrics"]["50"]["claim_recall"] == 1.0
+
+
+def test_hard_negative_intrusion_is_explicit():
+    negative = {
+        "id": "n1",
+        "source_document": "wrong",
+        "section": "old",
+        "accepted_spans": ["已经废弃的旧口径"],
     }
-    results.extend(
-        {
-            "id": f"q_{index:03d}",
-            "difficulty": "medium",
-            "type": "complex",
-            "status": "ok",
-            "metrics": dict(successful_metrics),
-        }
-        for index in range(19, 31)
+    question = scored_question([claim("c1", "right", "当前有效证据")], [negative])
+    metrics = MODULE.compute_metrics_at_k(
+        question,
+        [chunk(1, "wrong", "已经废弃的旧口径"), chunk(2, "right", "当前有效证据")],
+        2,
     )
-
-    summary = evaluator.aggregate(results, "response")
-
-    assert summary["overall"]["end_to_end_score"] == 0.4
-    assert summary["retrieval_capability_score"] == 40.0
-    assert summary["overall"]["quality_score_on_success"] == 1.0
+    assert metrics["claim_recall"] == 1.0
+    assert metrics["hard_negative_intrusion"] is True
 
 
-def test_exam_validation_defaults_report_and_output_schema(tmp_path):
-    exam_file = tmp_path / "exam.json"
-    exam_file.write_text(json.dumps(exam_payload(), ensure_ascii=False), encoding="utf-8")
-    loaded = evaluator.load_and_validate_exam(exam_file)
-    args = evaluator.parse_args([])
+def test_dify_request_k_is_applied_without_mutating_constant():
+    payload = MODULE.build_dify_request(
+        "query", 17, True, score_threshold_enabled=True, score_threshold=None
+    )
+    assert payload["retrieval_model"]["top_k"] == 17
+    assert payload["retrieval_model"]["graph_search"]["enabled"] is True
+    assert payload["retrieval_model"]["score_threshold_enabled"] is True
+    assert payload["retrieval_model"]["score_threshold"] is None
+    assert MODULE.DIFY_RETRIEVAL_MODEL["top_k"] == 10
 
-    assert Path(args.exam_dir) == ROOT / "评测考试" / "考卷"
-    assert args.out_dir is None
-    assert args.backend == "arag"
-    assert evaluator.resolve_out_dir(args) == ROOT / "评测考试" / "考试结果-arag"
-    assert args.rank_by == "response"
 
-    result_metrics = metrics(gt(("A.md", "章节", "必需证据")), [retrieved(1, "A.md", "必需证据")])
+def test_dify_coverage_search_request_matches_reference_shape():
+    payload = MODULE.build_dify_request(
+        "query",
+        10,
+        False,
+        score_threshold_enabled=True,
+        score_threshold=None,
+        search_method="coverage_search",
+    )
+    model = payload["retrieval_model"]
+    assert model["search_method"] == "coverage_search"
+    assert model["reranking_enable"] is True
+    assert model["reranking_mode"] is None
+    assert model["weights"] is None
+    assert model["top_k"] == 10
+    assert model["score_threshold_enabled"] is True
+    assert model["score_threshold"] is None
+    assert model["graph_search"] is None
+    assert MODULE.DIFY_RETRIEVAL_MODEL["search_method"] == "hybrid_search"
+
+
+def test_arag_manifest_marks_request_k_unsupported_and_contains_no_credentials(monkeypatch):
+    monkeypatch.setenv("RETRIEVAL_COOKIE", "secret-cookie")
+    monkeypatch.setenv("RETRIEVAL_XSRF_TOKEN", "secret-token")
+    monkeypatch.setattr(MODULE, "_git_info", lambda: {"commit": "abc", "dirty": False})
+    exam = {
+        "exam_meta": {
+            "exam_id": "exam",
+            "corpus": {"snapshot_id": "s", "relative_dir": "c", "documents": []},
+        }
+    }
+    args = argparse.Namespace(
+        backend="arag", dataset_id="dataset", dataset_revision=None, graph_search=False,
+        score_threshold_enabled=False, score_threshold=None,
+        request_k=10, eval_k=[1, 5, 10], primary_k=5, char_budgets=[1000],
+        raw_content_limit=800,
+    )
+    manifest = MODULE.build_manifest(
+        exam, {"exam_sha256": "hash", "corpus_drift": False}, args,
+        "20260715_000000", "full",
+    )
+    serialized = json.dumps(manifest)
+    assert manifest["request_k_support"] == "unsupported_by_backend"
+    assert "secret-cookie" not in serialized
+    assert "secret-token" not in serialized
+
+
+def test_authentication_error_aborts_with_partial_result():
+    class Response:
+        status_code = 401
+        text = "unauthorized"
+
+    class Session:
+        def post(self, *args, **kwargs):
+            return Response()
+
+    args = argparse.Namespace(
+        backend="arag", dataset_id="dataset", timeout=1, retries=1, request_k=10,
+        graph_search=False, score_threshold_enabled=False, score_threshold=None,
+        eval_k=[5], char_budgets=[100], raw_content_limit=100,
+        limit=0, sleep=0,
+    )
+    exam = {"questions": [scored_question([claim("c1", "doc", "有效证据片段")])]}
+    with pytest.raises(MODULE.EvaluationAborted) as caught:
+        MODULE.evaluate_exam(exam, Session(), args)
+    assert caught.value.results[0]["status"] == "auth_error"
+
+
+def test_aborted_run_writes_four_partial_artifacts(tmp_path):
     results = [
         {
-            "id": "q_001",
-            "difficulty": "hard",
-            "type": "cross_document",
-            "question": "测试问题？",
-            "has_expected_image": False,
-            "status": "ok",
-            "metrics": result_metrics,
+            "id": "q", "scored": True, "status": "auth_error",
+            "difficulty": "hard", "primary_type": "single_doc_fact", "tags": [],
+            "question": "query", "claim_count": 1, "negative_evidence_count": 0,
+            "asset_claim_count": 0, "gt_document_count": 1, "latency_ms": 1,
+            "error": "authentication failed",
         }
     ]
-    summary = evaluator.aggregate(results, "response")
-    report = evaluator.build_markdown_report(loaded["exam_meta"], summary, results, 5)
-    assert "未命中证据" not in report
-    assert "Evidence Recall@5" in report
-    assert "重复文档率" in report
-    assert "排名异常" in report
-
-    out_dir = evaluator.write_outputs(
-        str(tmp_path / "results"), loaded["exam_meta"], summary, results, 5, "20260715_000000"
+    summary = MODULE.aggregate(
+        results, 5, [5], [100], "aborted_auth", "full", False
     )
-    output_names = {path.name for path in out_dir.iterdir()}
-    assert output_names == {
+    exam = {
+        "exam_meta": {
+            "exam_id": "exam", "title": "test",
+            "corpus": {"snapshot_id": "s", "documents": []},
+        }
+    }
+    manifest = {
+        "backend": "arag", "dataset_id": "dataset", "primary_k": 5,
+        "corpus_drift": False,
+    }
+    output = MODULE.write_outputs(
+        tmp_path, exam, {"exam_sha256": "hash"}, summary, results, manifest,
+        "20260715_000000",
+    )
+    names = {path.name for path in output.iterdir()}
+    assert names == {
         "results_20260715_000000.json",
         "summary_20260715_000000.json",
+        "manifest_20260715_000000.json",
         "report_20260715_000000.md",
     }
-    result_payload = json.loads((out_dir / "results_20260715_000000.json").read_text())
-    assert result_payload["metrics_version"] == "2.0"
-    assert json.loads((out_dir / "summary_20260715_000000.json").read_text())["metrics_version"] == "2.0"
+    assert json.loads(
+        (output / "summary_20260715_000000.json").read_text(encoding="utf-8")
+    )["headline"] is None
 
 
-def test_report_lists_missing_evidence_and_per_source_image_coverage():
-    url = "https://example.com/chart.png"
-    result_metrics = metrics(
-        gt(
-            ("A.md", "图一", f"甲证据 ![]({url})"),
-            ("B.md", "图二", f"乙证据 ![]({url})"),
-            image_url=url,
-        ),
-        [retrieved(1, "A.md", f"甲证据 ![]({url})")],
-    )
-    results = [
-        {
-            "id": "q_001",
-            "difficulty": "hard",
-            "type": "multimodal",
-            "question": "图片问题？",
-            "has_expected_image": True,
-            "status": "ok",
-            "metrics": result_metrics,
-        }
-    ]
-    report = evaluator.build_markdown_report(
-        {"exam_id": "exam", "title": "测试"},
-        evaluator.aggregate(results, "response"),
-        results,
-        5,
-    )
-
-    assert "未命中证据" in report
-    assert "乙证据" in report
-    assert "B.md: 未命中" in report
-    assert "A.md: 命中" in report
+def test_bootstrap_is_reproducible():
+    first = MODULE.bootstrap_ci([0.0, 0.5, 1.0], samples=200, seed=7)
+    second = MODULE.bootstrap_ci([0.0, 0.5, 1.0], samples=200, seed=7)
+    assert first == second
 
 
-def test_exam_validation_rejects_duplicate_ids_and_unreferenced_image(tmp_path):
-    duplicate = exam_payload([question("q_001"), question("q_001")])
-    duplicate_file = tmp_path / "duplicate.json"
-    duplicate_file.write_text(json.dumps(duplicate, ensure_ascii=False), encoding="utf-8")
-    with pytest.raises(evaluator.ExamValidationError, match="题号重复"):
-        evaluator.load_and_validate_exam(duplicate_file)
-
-    invalid_image = exam_payload([question(image_url="https://example.com/a.png")])
-    invalid_image["questions"][0]["retrieved_chunks"][0]["snippet"] = "无图片"
-    invalid_file = tmp_path / "invalid-image.json"
-    invalid_file.write_text(json.dumps(invalid_image, ensure_ascii=False), encoding="utf-8")
-    with pytest.raises(evaluator.ExamValidationError, match="未出现在任何 GT snippet"):
-        evaluator.load_and_validate_exam(invalid_file)
-
-
-@pytest.mark.parametrize(
-    "arguments",
-    [
-        ["--top-k", "0"],
-        ["--limit", "-1"],
-        ["--timeout", "0"],
-        ["--retries", "0"],
-        ["--sleep", "-0.1"],
-    ],
-)
-def test_invalid_numeric_cli_arguments_are_rejected(arguments):
-    with pytest.raises(SystemExit):
-        evaluator.parse_args(arguments)
-
-
-def test_validate_only_needs_no_credentials_or_network(tmp_path, monkeypatch):
-    exam_file = tmp_path / "exam.json"
-    exam_file.write_text(json.dumps(exam_payload(), ensure_ascii=False), encoding="utf-8")
-    monkeypatch.delenv("RETRIEVAL_COOKIE", raising=False)
-    monkeypatch.delenv("RETRIEVAL_XSRF_TOKEN", raising=False)
-
-    assert evaluator.main(["--validate-only", "--exam-dir", str(tmp_path), "--exam", exam_file.name]) == 0
-
-
-def test_formal_run_requires_both_credentials(tmp_path, monkeypatch):
-    exam_file = tmp_path / "exam.json"
-    exam_file.write_text(json.dumps(exam_payload(), ensure_ascii=False), encoding="utf-8")
-    monkeypatch.setenv("RETRIEVAL_COOKIE", "cookie")
-    monkeypatch.delenv("RETRIEVAL_XSRF_TOKEN", raising=False)
-
-    assert evaluator.main(["--exam-dir", str(tmp_path), "--exam", exam_file.name]) == 3
-
-
-def test_backend_selects_output_dir_and_dataset_id(tmp_path, monkeypatch):
-    exam_file = tmp_path / "exam.json"
-    exam_file.write_text(json.dumps(exam_payload(), ensure_ascii=False), encoding="utf-8")
-
-    # default backend -> 考试结果-arag; dify -> 考试结果-dify; --out-dir overrides both
-    assert evaluator.resolve_out_dir(evaluator.parse_args([])) == (
-        ROOT / "评测考试" / "考试结果-arag"
-    )
-    assert evaluator.resolve_out_dir(evaluator.parse_args(["--backend", "dify"])) == (
-        ROOT / "评测考试" / "考试结果-dify"
-    )
-    assert evaluator.resolve_out_dir(
-        evaluator.parse_args(["--backend", "dify", "--out-dir", str(tmp_path / "x")])
-    ) == (tmp_path / "x")
-
-    # dataset id defaults per backend; --dataset-id overrides
-    assert evaluator.resolve_dataset_id(evaluator.parse_args([])) == evaluator.DATASET_ID
-    assert evaluator.resolve_dataset_id(
-        evaluator.parse_args(["--backend", "dify"])
-    ) == evaluator.DIFY_DATASET_ID
-    assert evaluator.resolve_dataset_id(
-        evaluator.parse_args(["--backend", "dify", "--dataset-id", "custom-kb"])
-    ) == "custom-kb"
-
-    # validate-only works for any backend (no creds, no network)
-    assert evaluator.main(
-        ["--validate-only", "--backend", "dify", "--exam-dir", str(tmp_path), "--exam", exam_file.name]
-    ) == 0
-
-    # dify is an implemented backend: a live run without creds fails on missing creds (exit 3)
-    monkeypatch.delenv("RETRIEVAL_COOKIE", raising=False)
-    monkeypatch.delenv("RETRIEVAL_XSRF_TOKEN", raising=False)
-    assert evaluator.main(
-        ["--backend", "dify", "--exam-dir", str(tmp_path), "--exam", exam_file.name]
-    ) == 3
-
-    # an unsupported backend value is rejected by argparse
-    with pytest.raises(SystemExit):
-        evaluator.parse_args(["--backend", "milvus"])
-
-
-def test_call_dify_api_injects_graph_search_only_when_flagged():
-    captured = {}
-
-    class CapturingSession:
-        def post(self, url, json=None, timeout=None):
-            captured["url"] = url
-            captured["payload"] = json
-            return FakeResponse(200, {"query": "q", "records": []})
-
-    evaluator.call_dify_api(CapturingSession(), "低血糖", "kb-123", 1.0, 1)
-    assert "kb-123/hit-testing" in captured["url"]
-    assert captured["payload"]["retrieval_model"]["graph_search"] is None
-
-    evaluator.call_dify_api(CapturingSession(), "低血糖", "kb-123", 1.0, 1, graph_search=True)
-    assert captured["payload"]["retrieval_model"]["graph_search"] == {
-        "enabled": True,
-        "top_k": None,
-        "weight": 0.5,
-        "mode": "mix",
-    }
-    # the module-level default body must not be mutated by the injection
-    assert evaluator.DIFY_RETRIEVAL_MODEL["graph_search"] is None
-
-
-def test_parse_dify_response_maps_records_to_chunks():
-    response = {
-        "query": "q",
-        "records": [
+def result_payload(backend, values, *, exam_hash="hash"):
+    results = []
+    for index, value in enumerate(values, 1):
+        results.append(
             {
-                "segment": {
-                    "id": "seg-a",
-                    "position": 2,
-                    "document_id": "doc-1",
-                    "content": "甲证据片段",
-                    "document": {"id": "doc-1", "name": "01_急性冠脉综合征院内诊疗路径.md"},
+                "id": f"q{index}",
+                "scored": True,
+                "metrics": {
+                    "metrics_by_k": {
+                        "5": {
+                            "claim_recall": value,
+                            "complete_evidence_chain": value == 1.0,
+                            "novel_claim_rank_score": value,
+                        }
+                    }
                 },
-                "score": 0.9,
-            },
-            {
-                "segment": {
-                    "id": "seg-b",
-                    "position": 7,
-                    "document_id": "doc-2",
-                    "content": "乙证据片段",
-                    "document": {"id": "doc-2", "name": "05_量化交易策略研发内部笔记.md"},
-                },
-                "score": 0.4,
-            },
-        ],
+            }
+        )
+    return {
+        "schema_version": "3.0",
+        "run_status": "completed",
+        "run_scope": "full",
+        "comparison_eligible": True,
+        "manifest": {
+            "exam_id": "exam",
+            "exam_sha256": exam_hash,
+            "corpus": {"snapshot_id": "s", "documents": [{"name": "d", "sha256": "h"}]},
+            "primary_k": 5,
+            "eval_k": [1, 3, 5, 10],
+            "backend": backend,
+            "dataset_id": backend,
+        },
+        "results": results,
     }
 
-    chunks, anomaly = evaluator.parse_dify_response(response, "response")
-    assert anomaly is False
-    assert [c["document_name"] for c in chunks] == [
-        "01_急性冠脉综合征院内诊疗路径.md",
-        "05_量化交易策略研发内部笔记.md",
-    ]
-    assert [c["rank"] for c in chunks] == [1, 2]
-    assert chunks[0]["chunk_id"] == "seg-a" and chunks[0]["content"] == "甲证据片段"
-    assert chunks[0]["relevance_score"] == 0.9
 
-    # a Dify record parsed through the shared scorer hits when the snippet is present
-    result = metrics(
-        gt(("01_急性冠脉综合征院内诊疗路径.md", "章节", "甲证据片段")),
-        chunks,
-    )
-    assert result["evidence_recall@k"] == 1.0
+def test_compare_runs_is_paired_and_rejects_incompatible_exam(tmp_path):
+    left = tmp_path / "left.json"
+    right = tmp_path / "right.json"
+    left.write_text(json.dumps(result_payload("arag", [0.0, 1.0])), encoding="utf-8")
+    right.write_text(json.dumps(result_payload("dify", [1.0, 1.0])), encoding="utf-8")
+    comparison = MODULE.compare_runs(left, right)
+    assert comparison["num_paired_questions"] == 2
+    assert comparison["metrics"]["claim_recall"]["right_minus_left"] == 0.5
+    assert comparison["paired_question_deltas"][0]["claim_recall"] == 1.0
 
-    # response order that disagrees with score is flagged as a ranking anomaly
-    bumped = json.loads(json.dumps(response))
-    bumped["records"][1]["score"] = 0.95
-    _, anomaly2 = evaluator.parse_dify_response(bumped, "response")
-    assert anomaly2 is True
-
-    with pytest.raises(evaluator.ResponseSchemaError, match="records"):
-        evaluator.parse_dify_response({"query": "q"})
+    incompatible = result_payload("dify", [1.0, 1.0], exam_hash="other")
+    right.write_text(json.dumps(incompatible), encoding="utf-8")
+    with pytest.raises(MODULE.ComparisonError, match="exam_sha256"):
+        MODULE.compare_runs(left, right)

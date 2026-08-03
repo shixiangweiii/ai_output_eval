@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """实体桥接型跨文档多跳检索专项评测。
 
-本脚本复用 retrieval_eval_v3.py 的 aRAG/Dify 请求、响应归一化和基础
+本脚本复用 retrieval_eval.py 的 aRAG/Dify 请求、响应归一化和基础
 Claim 指标，只增加端点、桥接、辅助分支和图片引用的专项校验与聚合。
 它评估的是多跳回答所需证据能否闭环，不直接评分最终答案或推理过程。
 """
@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 
-CORE_PATH = Path(__file__).with_name("retrieval_eval_v3.py")
+CORE_PATH = Path(__file__).with_name("retrieval_eval.py")
 CORE_SPEC = importlib.util.spec_from_file_location("entity_bridge_retrieval_core", CORE_PATH)
 if CORE_SPEC is None or CORE_SPEC.loader is None:  # pragma: no cover - 环境损坏
     raise ImportError(f"无法加载基础评测器: {CORE_PATH}")
@@ -1328,7 +1328,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             {
                 "metrics_version": SPECIALIZED_METRICS_VERSION,
                 "specialization": "entity_bridge_multihop",
-                "interface_adapter": "retrieval_eval_v3 live implementation",
+                "interface_adapter": "retrieval_eval live implementation",
                 "evaluator": {
                     "specialized_metrics_version": SPECIALIZED_METRICS_VERSION,
                     "specialized_script_sha256": core.sha256_file(Path(__file__)),

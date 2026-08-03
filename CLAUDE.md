@@ -4,26 +4,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this project is
 
-A RAG retrieval-evaluation workspace. **Every implemented evaluator scores retrieval / evidence recall — whether a knowledge base returns the Ground-Truth evidence needed to answer a query. None of them score final-answer correctness, reasoning quality, refusal behavior, citation faithfulness, conversation memory, or tool calls**, despite the schema carrying `reference_answer`/`evidence_chain` fields for human review. The agent-Q&A samples in `相关接口调用例子/智能体问答/` are groundwork for a future answer-quality evaluator that has not been written.
+A RAG retrieval-evaluation workspace. **Every implemented evaluator scores retrieval / evidence recall — whether a knowledge base returns the Ground-Truth evidence needed to answer a query. None of them score final-answer correctness, reasoning quality, refusal behavior, citation faithfulness, conversation memory, or tool calls**, despite the schema carrying `reference_answer`/`evidence_chain` fields for human review. The agent-Q&A samples in `评测考试所测检索召回接口/DEAP智能体问答/` are groundwork for a future answer-quality evaluator that has not been written.
 
-There are **three evaluator scripts**, in two generations:
+There are **two active evaluator scripts**:
 
-- **`评测脚本/retrieval_eval_v3.py`** — the current retrieval evaluator (metrics **v3.0**). Claim-based scoring (not snippet), bootstrap confidence intervals, char-budget curves, relevance counterfactual, corpus SHA-256 pinning, a reproducibility `manifest_*.json`, and a paired `--compare` with randomization p-values. **This is the active evaluator; default it for new work.**
+- **`评测脚本/retrieval_eval.py`** — the current general retrieval evaluator (metrics **v3.0**). Claim-based scoring, bootstrap confidence intervals, char-budget curves, relevance counterfactual, corpus SHA-256 pinning, a reproducibility `manifest_*.json`, and a paired `--compare` with randomization p-values.
 - **`评测脚本/entity_bridge_multihop_eval.py`** — a multi-hop *specialization* layered on top of the v3 core (loaded via `importlib`), for "entity-bridge" cross-document chains (endpoint entity → bridge document → endpoint entity, plus image-asset references). Reuses v3's HTTP/normalization/Claim metrics and adds chain-level aggregation with the chain as the statistical clustering unit.
-- **`评测脚本/retrieval_eval.py`** — the predecessor (metrics **v2.0**, snippet-based, `--top-k`/`--rank-by`). Still in the repo and still works, but superseded; its exam set (`考卷/`) and output roots (`考试结果-arag`/`考试结果-dify*`, no `-v3-` infix) are legacy. Don't add new features here unless asked.
 
 Directory names are intentionally Chinese; preserve them. Rough map:
-- `评测脚本/{retrieval_eval_v3,entity_bridge_multihop_eval,retrieval_eval}.py` — the three evaluators.
+- `评测脚本/{retrieval_eval,entity_bridge_multihop_eval}.py` — the general evaluator and multi-hop specialization.
 - `评测考试/考卷-v3/考卷-2026-07-15-03.json` — v3 retrieval exam (40 q: 36 scored + 4 diagnostic), corpus `2026-07-14-01`.
 - `评测考试/考卷-多跳/考卷-2026-07-17-01.json` — entity-bridge multi-hop exam, corpus `2026-07-17-多跳-无词面重合` (10 docs + `assets/*.png`).
-- `评测考试/考卷/考卷-2026-07-1{4,5}-*.json` — legacy v2 exams (`retrieved_chunks`/`snippet` schema).
 - `评测考试/考试结果-v3-<backend|比较>/` — v3 run archives (auto-named). `考试结果-v3-dify-new` is a **manual `--out-dir`** for the `coverage_search` (覆盖索引) Dify variant — not auto-named by any `--backend` value.
-- `评测考试/考试结果-{arag,dify,dify-父子,dify-graphrag}/` — legacy v2 run archives.
-- `评测考试/考试结果分析/后端对比分析-*.md` — human-written cross-backend comparison reports (read for the "which backend wins and why", including the scoring caveat below).
+- `评测考试/考试结果-多跳-<backend|比较>/` — entity-bridge run and comparison archives.
 - `生成的原始文档语料/{2026-07-14-01,2026-07-17-多跳-无词面重合}/` — source corpora. **This on-disk corpus must stay in sync with the live retrieval KB**: scoring matches GT spans against chunks returned by a fixed knowledge base, so **editing the corpus changes nothing until it is re-ingested**.
-- `相关接口调用例子/{arag检索召回,dify检索召回接口,智能体问答}/` — raw curl request/response samples (`dify检索召回接口/` has plain / parent-child / graphrag / **覆盖索引 (coverage_search)** / api方式-覆盖索引 variants). Curl samples contain stale example cookies; do not reuse.
+- `评测考试所测检索召回接口/` — manual aRAG/Dify retrieval, DEAP Q&A, and model API examples. These are not pytest tests.
 - `评测相关参考文档/` — methodology notes (the "why", not code; they describe a broader evaluation vision than what is implemented).
-- `AGENTS.md` — contributor style/PR conventions. (Its metrics-v2.0 / `retrieval_eval.py` framing is stale; the conventions section is still authoritative.)
+- `AGENTS.md` — current contributor style, validation, and security conventions.
 
 ## Commands
 
@@ -33,14 +30,14 @@ Run from the repo root. The checked-in `.venv/` is empty of dependencies — ins
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r 评测脚本/requirements-dev.txt   # requests + pytest; requirements.txt is requests only
 
-python -m py_compile 评测脚本/retrieval_eval_v3.py 评测脚本/entity_bridge_multihop_eval.py  # offline syntax check
+python -m py_compile 评测脚本/retrieval_eval.py 评测脚本/entity_bridge_multihop_eval.py  # offline syntax check
 python -m pytest tests/                                          # full unit suite (no network/creds)
-python -m pytest tests/test_retrieval_eval_v3.py::test_name -q   # single test
-python 评测脚本/retrieval_eval_v3.py --validate-only            # validate v3 exams, no creds/network
+python -m pytest tests/test_retrieval_eval.py::test_name -q      # single test
+python 评测脚本/retrieval_eval.py --validate-only               # validate v3 exams, no creds/network
 python 评测脚本/entity_bridge_multihop_eval.py --validate-only   # validate multihop exam + PNG assets
 ```
 
-`tests/` has three suites: `test_retrieval_eval_v3.py`, `test_entity_bridge_multihop_eval.py` (loads the multihop script via `importlib` from its Chinese path, synthesizes PNG bytes in-memory to exercise asset validation, and uses the **real** `考卷-多跳/考卷-2026-07-17-01.json` + its on-disk corpus/PNGs), and `test_retrieval_eval.py` (v2). All mock HTTP, so no credentials are needed, but the v3/entity-bridge suites **do require the on-disk corpus and exam files** to be present. `--exam`/`--exam-dir`/`--out-dir`/`--dataset-id`/`--compare` override defaults; `--help` on each script lists everything.
+`tests/` has two suites: `test_retrieval_eval.py` and `test_entity_bridge_multihop_eval.py`. Both mock HTTP, so no credentials are needed; the entity-bridge suite uses the real multi-hop exam and local corpus/PNG assets. Manual GLM/Kimi API examples live under `评测考试所测检索召回接口/大模型接口调用示例/` and are intentionally outside pytest.
 
 ## Backends — arag + dify, three Dify retrieval modes
 
@@ -59,12 +56,12 @@ python 评测脚本/entity_bridge_multihop_eval.py --validate-only   # validate 
 ```bash
 # aRAG smoke run (3 q) → 考试结果-v3-arag
 RETRIEVAL_COOKIE=... RETRIEVAL_XSRF_TOKEN=... \
-  python 评测脚本/retrieval_eval_v3.py --backend arag \
+  python 评测脚本/retrieval_eval.py --backend arag \
   --exam 评测考试/考卷-v3/考卷-2026-07-15-03.json --limit 3 --primary-k 5
 
 # Dify coverage_search full run → 考试结果-v3-dify-new (needs local Dify console at localhost:5001)
 RETRIEVAL_COOKIE=... RETRIEVAL_XSRF_TOKEN=... \
-  python 评测脚本/retrieval_eval_v3.py --backend dify --dify-search-method coverage_search \
+  python 评测脚本/retrieval_eval.py --backend dify --dify-search-method coverage_search \
   --dataset-id c3ed4fcc-... --out-dir 评测考试/考试结果-v3-dify-new \
   --exam 评测考试/考卷-v3/考卷-2026-07-15-03.json --dataset-revision <rev>
 
@@ -75,14 +72,14 @@ RETRIEVAL_COOKIE=... RETRIEVAL_XSRF_TOKEN=... \
   --exam 评测考试/考卷-多跳/考卷-2026-07-17-01.json
 
 # paired comparison of two completed/full runs → 考试结果-v3-比较 (or 考试结果-多跳-比较)
-python 评测脚本/retrieval_eval_v3.py --compare <RUN_A_results.json> <RUN_B_results.json>
+python 评测脚本/retrieval_eval.py --compare <RUN_A_results.json> <RUN_B_results.json>
 ```
 
 `--dataset-revision` is a free-text label you supply to assert the remote KB was ingested from the same local snapshot; **omitting it marks the run not-comparison-eligible** (the multihop `--compare` rejects `unverified` outright). `--request-k` (default 10) is sent to Dify as `retrieval_model.top_k` (Dify-only; aRAG ignores it — request-side K is unsupported by aRAG, which returns whatever it returns). `--eval-k`/`--primary-k` (defaults `[1,3,5,10]`/`5`) are the **client-side evaluation windows**; `--char-budgets` (default `[1000,2000,4000]`) are normalized-character truncation budgets. Comparing backends fairly means holding `--primary-k`/`--eval-k`/`--char-budgets` constant.
 
 Credentials are **only** ever passed through `RETRIEVAL_COOKIE` / `RETRIEVAL_XSRF_TOKEN` (both backends read the same pair; aRAG sends them as `Cookie` + `x-xsrf-token` to DingTalk, Dify as `Cookie` + `x-csrf-token` to the local console). Never paste live cookies, tokens, or private corpus/API content into code, commits, or reports.
 
-## How the v3 evaluator works (retrieval_eval_v3.py)
+## How the v3 evaluator works (retrieval_eval.py)
 
 One file. `main` → `discover_exam_files` → `load_and_validate_exam` (strict schema + corpus hash + span-existence check) → `evaluate_exam` (per-question API call, dispatched by backend) → `compute_metrics_at_k` (per k) + `compute_question_metrics` → `aggregate` → `write_outputs`. Backend differences are isolated to `build_headers`, `_post_json`/`call_arag_api`/`call_dify_api`, and `parse_arag_response`/`parse_dify_response` — the last normalizes both response shapes (aRAG `content[]`, Dify `records[].segment`) into one Chunk dict, so **all metric math is backend-agnostic**. (`relevance_counterfactual` re-sorts chunks by `relevance_score` and recomputes, to measure what trusting score-over-server-order would yield.)
 
@@ -96,7 +93,7 @@ Each question carries Ground Truth as **atomic `claims`**, not `retrieved_chunks
 - `exam_meta.question_counts` must match actual; `exam_meta.design_constraints` (`min_claims_per_document`, `max_claim_share_per_document`, `min_low_lexical_overlap_questions`, `min_hard_negative_questions`) are enforced.
 - `exam_meta.corpus.documents[].sha256` — **SHA-256-pinned**; drift blocks the run unless `--allow-corpus-drift` (diagnostic-only).
 
-`load_and_validate_exam` enforces all of this **before any network call**, and unlike v2 it **does** verify that every `accepted_span` survives `normalize_text` and exists as a substring of its source doc — so `--validate-only` is a real span-existence check, not just a JSON-shape check.
+`load_and_validate_exam` enforces all of this **before any network call**, including verifying that every `accepted_span` survives `normalize_text` and exists as a substring of its source document.
 
 ### Scoring model — read this before touching metrics
 - **Claim match is the core primitive.** A `claim` counts as hit only if one of its `accepted_spans` (as a normalized substring) appears inside a retrieved chunk whose `document_name` equals the claim's `source_document`. Right document + wrong section = not a hit. Matching runs through `normalize_text` (NFKC, dash/quote folding, Markdown image/link handling, symbol stripping, whitespace removal, lowercase), so spans and corpus text must survive that normalization identically.
@@ -115,7 +112,7 @@ Each question carries Ground Truth as **atomic `claims`**, not `retrieved_chunks
 
 ## How the entity-bridge specialization works (entity_bridge_multihop_eval.py)
 
-A thin layer that loads `retrieval_eval_v3.py` as `core` via `importlib` (`CORE_PATH = retrieval_eval_v3.py`) and reuses its HTTP, `normalize_text`, and Claim metrics. It adds: `validate_entity_bridge_design` (specialized schema), `compute_bridge_metrics_at_k` (chain metrics), `aggregate_bridge` (chain-level aggregation), and its own `compare_runs`/`write_comparison`. `main` calls `core.evaluate_exam`/`core.aggregate` then `augment_results`/`aggregate_bridge`/`apply_comparison_guards`.
+A thin layer that loads `retrieval_eval.py` as `core` via `importlib` and reuses its HTTP, `normalize_text`, and Claim metrics. It adds: `validate_entity_bridge_design` (specialized schema), `compute_bridge_metrics_at_k` (chain metrics), `aggregate_bridge` (chain-level aggregation), and its own `compare_runs`/`write_comparison`. `main` calls `core.evaluate_exam`/`core.aggregate` then `augment_results`/`aggregate_bridge`/`apply_comparison_guards`.
 
 ### Extra schema (on top of v3)
 - `exam_meta.entity_bridge_design`: `benchmark_kind="entity_bridge_multihop"`, `chains[]` (`id`, `relation_type`, `bridge_entities`), `questions_per_chain`, `min_image_reference_questions`, `hard_negative_policy`.
@@ -128,16 +125,16 @@ A thin layer that loads `retrieval_eval_v3.py` as `core` via `importlib` (`CORE_
 Per-k bridge metrics: `endpoint_text_claim_recall`, `bridge_text_claim_recall`, `supporting_text_claim_recall`, `complete_core_bridge_chain`, `complete_declared_text_chain` (core + supporting), `image_reference_claim_recall`, `complete_image_reference_chain`, `endpoint`/`bridge_document_recall`, `bridge_only_document_miss`, and `path_status` (`complete`/`bridge_missing`/`endpoint_missing`/`supporting_missing`/`multiple_missing`/`image_reference_*`). `aggregate_bridge` reports both a **question macro** and a **chain macro** (mean per chain, then equal-weight over independent chains) with chain-level bootstrap CIs. **`inference_warning`: questions within a `chain_id` are correlated; significance inference must use the chain as the clustering unit — with few independent chains, treat CIs/p-values as exploratory.**
 
 ### Stricter comparison
-`apply_comparison_guards` sets `comparison_eligible = false` if any of: base run not eligible, `dataset_revision == "unverified"`, document corpus drift, or image-asset drift. The multihop `--compare` additionally requires both runs' `dataset_revision` to be verified and matching, plus matching `evaluator`/`chain_id`/`primary_type` shape. Its `compare_runs` reports **clustered** (by chain) bootstrap CI + randomization p-value on chain-level deltas, with `inference_unit: "chain_id"`. Output: `考试结果-多跳-比较`. The multihop script **refuses to run live without `--dataset-id`** (exit 2) — it will not fall back to the v2-era built-in datasets; you must point it at a KB that has the multi-hop corpus ingested.
+`apply_comparison_guards` sets `comparison_eligible = false` if any of: base run not eligible, `dataset_revision == "unverified"`, document corpus drift, or image-asset drift. The multihop `--compare` additionally requires both runs' `dataset_revision` to be verified and matching, plus matching `evaluator`/`chain_id`/`primary_type` shape. Its `compare_runs` reports **clustered** (by chain) bootstrap CI + randomization p-value on chain-level deltas, with `inference_unit: "chain_id"`. Output: `考试结果-多跳-比较`. The multihop script **refuses to run live without `--dataset-id`** (exit 2); point it at a KB that has the multi-hop corpus ingested.
 
 ## Cross-backend comparison caveat
 
-`claim_recall` is substring-based: a span hits only if it appears inside a returned chunk from the right document, so the metric is still **chunk-boundary-sensitive** (a backend whose chunks split differently can miss a span that another backend's chunk contains whole). That is exactly why `document_recall@k` (chunking-neutral) and the `char_budget` curves are reported alongside the headline — read them together, don't present a single `claim_recall` lead as "best retrieval" without the chunking-neutral view. The v3 exam `考卷-2026-07-15-03` is explicitly a **regression exam on the existing 10 docs**, not a blind benchmark; and the corpus SHA-256 pinning + paired `--compare` randomization p-values are the fairness mechanism for cross-backend claims. The v2-era aRAG structural-bias note (GT spans authored near aRAG chunk boundaries) lives in `评测考试/考试结果分析/后端对比分析-考卷-2026-07-15-02.md` and applies to v2 totals, not v3.
+`claim_recall` is substring-based: a span hits only if it appears inside a returned chunk from the right document, so the metric is still **chunk-boundary-sensitive** (a backend whose chunks split differently can miss a span that another backend's chunk contains whole). That is exactly why `document_recall@k` and the `char_budget` curves are reported alongside the headline. The v3 exam `考卷-2026-07-15-03` is a regression exam on the existing 10 documents, not a blind benchmark; corpus pinning and paired comparison improve auditability but do not turn it into an unseen benchmark.
 
 ## Conventions specific to this repo
 - Exam ids and files follow `考卷-YYYY-MM-DD-NN`; v3 exams live under `考卷-v3/`, multihop under `考卷-多跳/`.
 - Keep metric math pure and backend-agnostic; isolate HTTP and filesystem I/O. Any new backend's differences go inside the header/call/parse trio.
 - Python 3, UTF-8, four-space indent, type hints, `snake_case` functions, `UPPER_SNAKE` constants, descriptive exception names. JSON output: `ensure_ascii=False`, 2-space indent; keep `metrics_version`/report terminology synced when metric semantics change.
-- For metric/schema/retry/backend/output changes, update the matching test file (`test_retrieval_eval_v3.py` / `test_entity_bridge_multihop_eval.py`) in the same change, and run py_compile + `pytest tests/` + `--validate-only`.
+- For metric/schema/retry/backend/output changes, update the matching test file (`test_retrieval_eval.py` / `test_entity_bridge_multihop_eval.py`) in the same change, and run py_compile + `pytest tests/` + both `--validate-only` commands.
 - Commit code, corpus, and generated output as **separate** changes; don't commit `.venv/`, `.idea/`, `.qoder/`, `.claude/`, `.pytest_cache/`, or `__pycache__/`.
-- The "Dify online retrieval unimplemented" line in v2 `--help` is stale; v3 `--help` is current.
+- Keep manual online examples outside `tests/`; importing a test module must never trigger a live request.
