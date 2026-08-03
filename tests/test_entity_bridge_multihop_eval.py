@@ -450,6 +450,26 @@ def test_dify_request_contract_is_reused_without_mutating_base_constant():
     assert MODULE.core.DIFY_RETRIEVAL_MODEL["top_k"] == 10
 
 
+def test_specialized_cli_supports_coverage_search():
+    args = MODULE.parse_args(
+        ["--backend", "dify", "--dify-search-method", "coverage_search"]
+    )
+    assert args.dify_search_method == "coverage_search"
+    payload = MODULE.core.build_dify_request(
+        "甲和乙有什么联系？",
+        10,
+        False,
+        score_threshold_enabled=True,
+        score_threshold=None,
+        search_method=args.dify_search_method,
+    )
+    model = payload["retrieval_model"]
+    assert model["search_method"] == "coverage_search"
+    assert model["reranking_mode"] is None
+    assert model["weights"] is None
+    assert model["graph_search"] is None
+
+
 def test_real_specialized_exam_validates():
     exam, validation = MODULE.load_and_validate_exam(REAL_EXAM)
     assert len(exam["questions"]) == 24

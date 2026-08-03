@@ -789,6 +789,7 @@ def build_report(
         f"- 后端: {manifest['backend']}",
         f"- Dataset: {manifest['dataset_id']}",
         f"- Dataset Revision: {manifest['dataset_revision']}",
+        f"- Dify Search Method: {manifest.get('dify_search_method', 'hybrid_search')}",
         f"- GraphRAG: {manifest['graph_search']}",
         f"- 运行范围: {summary['run_scope']}",
         f"- 运行状态: {summary['run_status']}",
@@ -1203,6 +1204,12 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
         "--char-budgets", type=core.int_list, default=[1000, 2000, 4000]
     )
     parser.add_argument("--graph-search", action="store_true")
+    parser.add_argument(
+        "--dify-search-method",
+        choices=core.DIFY_SEARCH_METHODS,
+        default="hybrid_search",
+        help="(Dify) 检索策略；coverage_search 按覆盖索引接口发送请求",
+    )
     parser.add_argument("--score-threshold-enabled", action="store_true")
     parser.add_argument("--score-threshold", type=float, default=None)
     parser.add_argument("--limit", type=core.nonnegative_int, default=0)
@@ -1232,6 +1239,10 @@ def parse_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
         parser.error("Dify 的 --request-k 不能小于 --eval-k 最大值")
     if args.graph_search and args.backend != "dify":
         parser.error("--graph-search 仅支持 Dify")
+    if args.dify_search_method != "hybrid_search" and args.backend != "dify":
+        parser.error("--dify-search-method 仅支持 Dify")
+    if args.dify_search_method == "coverage_search" and args.graph_search:
+        parser.error("coverage_search 不能与 --graph-search 同时使用")
     if args.score_threshold is not None:
         if args.backend != "dify":
             parser.error("--score-threshold 仅支持 Dify")
