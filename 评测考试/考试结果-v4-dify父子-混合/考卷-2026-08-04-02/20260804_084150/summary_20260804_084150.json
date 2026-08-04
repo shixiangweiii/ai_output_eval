@@ -1,0 +1,867 @@
+{
+  "schema_version": "4.1",
+  "metrics_version": "4.1",
+  "run_status": "completed",
+  "run_scope": "full",
+  "comparison_eligible": false,
+  "comparison_blockers": [
+    "git_dirty"
+  ],
+  "headline": {
+    "primary_k": 10,
+    "primary_budget": 500,
+    "query_macro_claim_recall": 0.5,
+    "query_macro_claim_recall_ci95": [
+      0.25,
+      0.5834
+    ],
+    "complete_evidence_chain_rate": 0.2653,
+    "complete_evidence_chain_rate_ci95": [
+      0.0,
+      0.3553
+    ],
+    "budget_claim_recall": 0.4983,
+    "budget_claim_recall_ci95": [
+      0.2029,
+      0.597
+    ],
+    "abstention_auc": 0.6541,
+    "abstention_auc_ci95": [
+      0.421,
+      0.9942
+    ],
+    "bridge_claim_recall": 0.0,
+    "bridge_claim_recall_ci95": [
+      0.0,
+      0.0
+    ],
+    "inference_unit": "cluster_id",
+    "inference_warning": "同一 cluster_id 内的题目高度相关；置信区间与 p 值均以 cluster 为聚类单元计算。独立 cluster 数较少时，推断结果仅供探索性参考。"
+  },
+  "sanity": {
+    "count": 4,
+    "evaluated": 4,
+    "pass_rate": 1.0,
+    "claim_recall": 1.0,
+    "failed_question_ids": []
+  },
+  "abstention": {
+    "answerable_questions": 53,
+    "unanswerable_questions": 3,
+    "answerable_empty_response_rate": 0.0377,
+    "unanswerable_empty_response_rate": 0.3333,
+    "auc": 0.6541,
+    "auc_ci95": [
+      0.421,
+      0.9942
+    ],
+    "unavailable_reason": null
+  },
+  "multihop": {
+    "chain_questions": 12,
+    "bridge_claim_recall": 0.0,
+    "bridge_claim_recall_ci95": [
+      0.0,
+      0.0
+    ],
+    "endpoint_claim_recall": 0.5417,
+    "bridge_only_miss_rate": 0.4167,
+    "path_status": {
+      "bridge_missing": 5,
+      "multiple_missing": 7
+    },
+    "by_chain": {
+      "CH-C1": {
+        "count": 3,
+        "bridge_claim_recall": 0.0,
+        "endpoint_claim_recall": 0.6667,
+        "claim_recall": 0.4444
+      },
+      "CH-C2": {
+        "count": 3,
+        "bridge_claim_recall": 0.0,
+        "endpoint_claim_recall": 0.3333,
+        "claim_recall": 0.1667
+      },
+      "CH-D1": {
+        "count": 3,
+        "bridge_claim_recall": 0.0,
+        "endpoint_claim_recall": 0.8333,
+        "claim_recall": 0.5556
+      },
+      "CH-D2": {
+        "count": 3,
+        "bridge_claim_recall": 0.0,
+        "endpoint_claim_recall": 0.3333,
+        "claim_recall": 0.1667
+      }
+    }
+  },
+  "diagnostics": {
+    "num_questions": 56,
+    "num_scored_questions": 49,
+    "num_sanity_questions": 4,
+    "num_unanswerable_questions": 3,
+    "num_successful_requests": 56,
+    "request_success_rate": 1.0,
+    "error_counts": {},
+    "unmatched_document_names": [],
+    "claim_micro_recall": 0.4488,
+    "anchor_claim_recall": 0.4342,
+    "passage_claim_recall": 0.4706,
+    "mean_document_recall": 0.8776,
+    "mean_duplicate_document_rate": 0.4514,
+    "mean_off_target_chunk_rate": 0.4066,
+    "hard_negative_intrusion_rate": 0.6,
+    "hard_negative_questions_evaluated": 10,
+    "asset_source_coverage": 0.3333,
+    "response_depth_insufficient_rate": 0.5306,
+    "response_depth": {
+      "min": 0,
+      "median": 9,
+      "max": 20
+    },
+    "ranking_anomaly_count": 0,
+    "document_hit_claim_miss_review_queue": [
+      {
+        "question_id": "v4_q008",
+        "claim_id": "v4_q008_c2",
+        "claim_type": "passage",
+        "source_document": "B2-risk-jinzhou.md",
+        "section": "5. 模型效果验收"
+      },
+      {
+        "question_id": "v4_q009",
+        "claim_id": "v4_q009_c1",
+        "claim_type": "anchor",
+        "source_document": "B4-risk-qihe.md",
+        "section": "6. 模型监控与熔断"
+      },
+      {
+        "question_id": "v4_q010",
+        "claim_id": "v4_q010_c2",
+        "claim_type": "passage",
+        "source_document": "B5-risk-group.md",
+        "section": "9. 贷后与催收"
+      },
+      {
+        "question_id": "v4_q017",
+        "claim_id": "v4_q017_c1",
+        "claim_type": "passage",
+        "source_document": "B3-risk-nanxu.md",
+        "section": "7. 人工复核机制"
+      },
+      {
+        "question_id": "v4_q017",
+        "claim_id": "v4_q017_c2",
+        "claim_type": "passage",
+        "source_document": "B4-risk-qihe.md",
+        "section": "7. 人工复核机制"
+      },
+      {
+        "question_id": "v4_q020",
+        "claim_id": "v4_q020_c1",
+        "claim_type": "passage",
+        "source_document": "A1-anticoag-2023.md",
+        "section": "3. 肾功能与剂量调整"
+      },
+      {
+        "question_id": "v4_q020",
+        "claim_id": "v4_q020_c2",
+        "claim_type": "anchor",
+        "source_document": "A2-anticoag-2024.md",
+        "section": "6. 血象监测要求"
+      },
+      {
+        "question_id": "v4_q021",
+        "claim_id": "v4_q021_c1",
+        "claim_type": "anchor",
+        "source_document": "A1-anticoag-2023.md",
+        "section": "8. 事件上报与追溯"
+      },
+      {
+        "question_id": "v4_q021",
+        "claim_id": "v4_q021_c3",
+        "claim_type": "anchor",
+        "source_document": "A4-anticoag-2025r.md",
+        "section": "10. 用药重整"
+      },
+      {
+        "question_id": "v4_q022",
+        "claim_id": "v4_q022_c1",
+        "claim_type": "passage",
+        "source_document": "A1-anticoag-2023.md",
+        "section": "9. 抗栓联合治疗"
+      },
+      {
+        "question_id": "v4_q023",
+        "claim_id": "v4_q023_c1",
+        "claim_type": "anchor",
+        "source_document": "A1-anticoag-2023.md",
+        "section": "10. 用药重整"
+      },
+      {
+        "question_id": "v4_q023",
+        "claim_id": "v4_q023_c2",
+        "claim_type": "anchor",
+        "source_document": "A3-anticoag-2025.md",
+        "section": "8. 事件上报与追溯"
+      },
+      {
+        "question_id": "v4_q023",
+        "claim_id": "v4_q023_c3",
+        "claim_type": "passage",
+        "source_document": "A4-anticoag-2025r.md",
+        "section": "3. 肾功能与剂量调整"
+      },
+      {
+        "question_id": "v4_q024",
+        "claim_id": "v4_q024_c2",
+        "claim_type": "anchor",
+        "source_document": "A2-anticoag-2024.md",
+        "section": "10. 用药重整"
+      },
+      {
+        "question_id": "v4_q024",
+        "claim_id": "v4_q024_c3",
+        "claim_type": "anchor",
+        "source_document": "A5-anticoag-retired.md",
+        "section": "8. 事件上报与追溯"
+      },
+      {
+        "question_id": "v4_q025",
+        "claim_id": "v4_q025_c1",
+        "claim_type": "passage",
+        "source_document": "B1-risk-hongyuan.md",
+        "section": "5. 模型效果验收"
+      },
+      {
+        "question_id": "v4_q025",
+        "claim_id": "v4_q025_c2",
+        "claim_type": "anchor",
+        "source_document": "B2-risk-jinzhou.md",
+        "section": "6. 模型监控与熔断"
+      },
+      {
+        "question_id": "v4_q026",
+        "claim_id": "v4_q026_c1",
+        "claim_type": "anchor",
+        "source_document": "B1-risk-hongyuan.md",
+        "section": "6. 模型监控与熔断"
+      },
+      {
+        "question_id": "v4_q026",
+        "claim_id": "v4_q026_c3",
+        "claim_type": "anchor",
+        "source_document": "B3-risk-nanxu.md",
+        "section": "10. 模型迭代节奏"
+      },
+      {
+        "question_id": "v4_q027",
+        "claim_id": "v4_q027_c2",
+        "claim_type": "anchor",
+        "source_document": "B2-risk-jinzhou.md",
+        "section": "10. 模型迭代节奏"
+      },
+      {
+        "question_id": "v4_q027",
+        "claim_id": "v4_q027_c3",
+        "claim_type": "passage",
+        "source_document": "B3-risk-nanxu.md",
+        "section": "5. 模型效果验收"
+      },
+      {
+        "question_id": "v4_q028",
+        "claim_id": "v4_q028_c1",
+        "claim_type": "anchor",
+        "source_document": "B5-risk-group.md",
+        "section": "10. 模型迭代节奏"
+      },
+      {
+        "question_id": "v4_q028",
+        "claim_id": "v4_q028_c2",
+        "claim_type": "passage",
+        "source_document": "B5-risk-group.md",
+        "section": "5. 模型效果验收"
+      },
+      {
+        "question_id": "v4_q029",
+        "claim_id": "v4_q029_c1",
+        "claim_type": "anchor",
+        "source_document": "A4-anticoag-2025r.md",
+        "section": "4. 围手术期停药管理"
+      },
+      {
+        "question_id": "v4_q029",
+        "claim_id": "v4_q029_c2",
+        "claim_type": "passage",
+        "source_document": "A4-anticoag-2025r.md",
+        "section": "7. 出血事件识别"
+      },
+      {
+        "question_id": "v4_q030",
+        "claim_id": "v4_q030_c1",
+        "claim_type": "anchor",
+        "source_document": "A5-anticoag-retired.md",
+        "section": "2. 抗凝强度目标"
+      },
+      {
+        "question_id": "v4_q031",
+        "claim_id": "v4_q031_c1",
+        "claim_type": "anchor",
+        "source_document": "A2-anticoag-2024.md",
+        "section": "2. 抗凝强度目标"
+      },
+      {
+        "question_id": "v4_q032",
+        "claim_id": "v4_q032_c1",
+        "claim_type": "anchor",
+        "source_document": "A1-anticoag-2023.md",
+        "section": "4. 围手术期停药管理"
+      },
+      {
+        "question_id": "v4_q033",
+        "claim_id": "v4_q033_c1",
+        "claim_type": "anchor",
+        "source_document": "B3-risk-nanxu.md",
+        "section": "2. 评分卡与准入"
+      },
+      {
+        "question_id": "v4_q033",
+        "claim_id": "v4_q033_c2",
+        "claim_type": "passage",
+        "source_document": "B3-risk-nanxu.md",
+        "section": "3. 拒绝策略"
+      },
+      {
+        "question_id": "v4_q035",
+        "claim_id": "v4_q035_c1",
+        "claim_type": "passage",
+        "source_document": "B1-risk-hongyuan.md",
+        "section": "3. 拒绝策略"
+      },
+      {
+        "question_id": "v4_q036",
+        "claim_id": "v4_q036_c1",
+        "claim_type": "anchor",
+        "source_document": "B5-risk-group.md",
+        "section": "2. 评分卡与准入"
+      },
+      {
+        "question_id": "v4_q036",
+        "claim_id": "v4_q036_c2",
+        "claim_type": "passage",
+        "source_document": "B5-risk-group.md",
+        "section": "11. 可解释性与消费者权益"
+      },
+      {
+        "question_id": "v4_q037",
+        "claim_id": "v4_q037_c1",
+        "claim_type": "passage",
+        "source_document": "A3-anticoag-2025.md",
+        "section": "12. 附图与变更记录"
+      },
+      {
+        "question_id": "v4_q039",
+        "claim_id": "v4_q039_c1",
+        "claim_type": "passage",
+        "source_document": "B5-risk-group.md",
+        "section": "12. 架构图与修订记录"
+      },
+      {
+        "question_id": "v4_q043",
+        "claim_id": "v4_q043_c3",
+        "claim_type": "anchor",
+        "source_document": "C1c-louyan-role.md",
+        "section": "一、岗位任命"
+      },
+      {
+        "question_id": "v4_q044",
+        "claim_id": "v4_q044_c3",
+        "claim_type": "passage",
+        "source_document": "C1c-louyan-role.md",
+        "section": "二、汇报关系"
+      },
+      {
+        "question_id": "v4_q046",
+        "claim_id": "v4_q046_c1",
+        "claim_type": "anchor",
+        "source_document": "C2a-baichi-role.md",
+        "section": "一、岗位信息"
+      },
+      {
+        "question_id": "v4_q046",
+        "claim_id": "v4_q046_c4",
+        "claim_type": "anchor",
+        "source_document": "C2d-niezhao-role.md",
+        "section": "一、任命内容"
+      },
+      {
+        "question_id": "v4_q049",
+        "claim_id": "v4_q049_c1",
+        "claim_type": "anchor",
+        "source_document": "D1a-wenque-role.md",
+        "section": "一、从业经历"
+      },
+      {
+        "question_id": "v4_q054",
+        "claim_id": "v4_q054_c1",
+        "claim_type": "anchor",
+        "source_document": "D2a-lujian-role.md",
+        "section": "三、职责边界"
+      },
+      {
+        "question_id": "v4_q054",
+        "claim_id": "v4_q054_c4",
+        "claim_type": "anchor",
+        "source_document": "D2d-shaowei-role.md",
+        "section": "三、职责边界"
+      },
+      {
+        "question_id": "v4_q055",
+        "claim_id": "v4_q055_c1",
+        "claim_type": "anchor",
+        "source_document": "X1-relation-review.md",
+        "section": "一、装备制造方向"
+      },
+      {
+        "question_id": "v4_q055",
+        "claim_id": "v4_q055_c2",
+        "claim_type": "passage",
+        "source_document": "X1-relation-review.md",
+        "section": "二、文教服务方向"
+      },
+      {
+        "question_id": "v4_q055",
+        "claim_id": "v4_q055_c3",
+        "claim_type": "anchor",
+        "source_document": "X1-relation-review.md",
+        "section": "三、核验结论"
+      },
+      {
+        "question_id": "v4_q056",
+        "claim_id": "v4_q056_c1",
+        "claim_type": "anchor",
+        "source_document": "X2-data-coop.md",
+        "section": "一、互通范围"
+      },
+      {
+        "question_id": "v4_q056",
+        "claim_id": "v4_q056_c2",
+        "claim_type": "passage",
+        "source_document": "X2-data-coop.md",
+        "section": "二、技术安排"
+      },
+      {
+        "question_id": "v4_q056",
+        "claim_id": "v4_q056_c3",
+        "claim_type": "anchor",
+        "source_document": "X2-data-coop.md",
+        "section": "三、边界声明"
+      }
+    ],
+    "latency_ms": {
+      "p50": 840.81,
+      "p95": 1197.61
+    },
+    "k_curves": {
+      "1": {
+        "query_macro_claim_recall": 0.0782,
+        "complete_evidence_chain_rate": 0.0,
+        "novel_claim_rank_score": 0.0782
+      },
+      "3": {
+        "query_macro_claim_recall": 0.2058,
+        "complete_evidence_chain_rate": 0.0204,
+        "novel_claim_rank_score": 0.1514
+      },
+      "5": {
+        "query_macro_claim_recall": 0.3895,
+        "complete_evidence_chain_rate": 0.1633,
+        "novel_claim_rank_score": 0.2273
+      },
+      "10": {
+        "query_macro_claim_recall": 0.5,
+        "complete_evidence_chain_rate": 0.2653,
+        "novel_claim_rank_score": 0.2617
+      },
+      "20": {
+        "query_macro_claim_recall": 0.5204,
+        "complete_evidence_chain_rate": 0.3061,
+        "novel_claim_rank_score": 0.267
+      }
+    },
+    "char_budget_curves": {
+      "250": {
+        "query_macro_claim_recall": 0.3963
+      },
+      "500": {
+        "query_macro_claim_recall": 0.4983
+      },
+      "1000": {
+        "query_macro_claim_recall": 0.5204
+      }
+    },
+    "relevance_counterfactual": {
+      "query_macro_claim_recall": 0.5,
+      "complete_evidence_chain_rate": 0.2653,
+      "budget_claim_recall": 0.4983
+    },
+    "by_type": {
+      "asset_reference_retrieval": {
+        "count": 3,
+        "claim_recall": 0.6667,
+        "complete_evidence_chain_rate": 0.3333,
+        "budget_claim_recall": 0.6667,
+        "novel_claim_rank_score": 0.2493
+      },
+      "cross_doc_chain": {
+        "count": 12,
+        "claim_recall": 0.3333,
+        "complete_evidence_chain_rate": 0.0,
+        "budget_claim_recall": 0.2847,
+        "novel_claim_rank_score": 0.2178
+      },
+      "cross_doc_compare": {
+        "count": 18,
+        "claim_recall": 0.6111,
+        "complete_evidence_chain_rate": 0.4444,
+        "budget_claim_recall": 0.6111,
+        "novel_claim_rank_score": 0.3324
+      },
+      "disambiguation_hard_negative": {
+        "count": 10,
+        "claim_recall": 0.3,
+        "complete_evidence_chain_rate": 0.1,
+        "budget_claim_recall": 0.35,
+        "novel_claim_rank_score": 0.159
+      },
+      "single_doc_multi_claim": {
+        "count": 6,
+        "claim_recall": 0.75,
+        "complete_evidence_chain_rate": 0.5,
+        "budget_claim_recall": 0.75,
+        "novel_claim_rank_score": 0.315
+      }
+    },
+    "by_difficulty": {
+      "hard": {
+        "count": 40,
+        "claim_recall": 0.45,
+        "complete_evidence_chain_rate": 0.225,
+        "budget_claim_recall": 0.4479,
+        "novel_claim_rank_score": 0.2547
+      },
+      "medium": {
+        "count": 9,
+        "claim_recall": 0.7222,
+        "complete_evidence_chain_rate": 0.4444,
+        "budget_claim_recall": 0.7222,
+        "novel_claim_rank_score": 0.2931
+      }
+    },
+    "by_cluster": {
+      "C-A-anticoag": {
+        "count": 17,
+        "claim_recall": 0.6274,
+        "complete_evidence_chain_rate": 0.4118,
+        "budget_claim_recall": 0.6569,
+        "novel_claim_rank_score": 0.286
+      },
+      "C-B-riskctl": {
+        "count": 18,
+        "claim_recall": 0.5463,
+        "complete_evidence_chain_rate": 0.3333,
+        "budget_claim_recall": 0.5463,
+        "novel_claim_rank_score": 0.2972
+      },
+      "C-CH-C1": {
+        "count": 4,
+        "claim_recall": 0.3333,
+        "complete_evidence_chain_rate": 0.0,
+        "budget_claim_recall": 0.3333,
+        "novel_claim_rank_score": 0.2489
+      },
+      "C-CH-C2": {
+        "count": 3,
+        "claim_recall": 0.1667,
+        "complete_evidence_chain_rate": 0.0,
+        "budget_claim_recall": 0.0833,
+        "novel_claim_rank_score": 0.1084
+      },
+      "C-CH-D1": {
+        "count": 3,
+        "claim_recall": 0.5556,
+        "complete_evidence_chain_rate": 0.0,
+        "budget_claim_recall": 0.4444,
+        "novel_claim_rank_score": 0.3059
+      },
+      "C-CH-D2": {
+        "count": 4,
+        "claim_recall": 0.125,
+        "complete_evidence_chain_rate": 0.0,
+        "budget_claim_recall": 0.125,
+        "novel_claim_rank_score": 0.0938
+      }
+    },
+    "by_tag": {
+      "asset_reference": {
+        "count": 3,
+        "claim_recall": 0.6667,
+        "complete_evidence_chain_rate": 0.3333,
+        "budget_claim_recall": 0.6667,
+        "novel_claim_rank_score": 0.2493
+      },
+      "cross_doc": {
+        "count": 18,
+        "claim_recall": 0.6111,
+        "complete_evidence_chain_rate": 0.4444,
+        "budget_claim_recall": 0.6111,
+        "novel_claim_rank_score": 0.3324
+      },
+      "decoy_bridge": {
+        "count": 2,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "budget_claim_recall": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "deprecated_version": {
+        "count": 2,
+        "claim_recall": 0.75,
+        "complete_evidence_chain_rate": 0.5,
+        "budget_claim_recall": 0.75,
+        "novel_claim_rank_score": 0.3267
+      },
+      "draft_only": {
+        "count": 1,
+        "claim_recall": 0.0,
+        "complete_evidence_chain_rate": 0.0,
+        "budget_claim_recall": 0.0,
+        "novel_claim_rank_score": 0.0
+      },
+      "entity_bridge": {
+        "count": 12,
+        "claim_recall": 0.3333,
+        "complete_evidence_chain_rate": 0.0,
+        "budget_claim_recall": 0.2847,
+        "novel_claim_rank_score": 0.2178
+      },
+      "entity_conflict": {
+        "count": 9,
+        "claim_recall": 0.6111,
+        "complete_evidence_chain_rate": 0.5556,
+        "budget_claim_recall": 0.6111,
+        "novel_claim_rank_score": 0.3745
+      },
+      "hard_negative": {
+        "count": 10,
+        "claim_recall": 0.3,
+        "complete_evidence_chain_rate": 0.1,
+        "budget_claim_recall": 0.35,
+        "novel_claim_rank_score": 0.159
+      },
+      "low_lexical_overlap": {
+        "count": 24,
+        "claim_recall": 0.5208,
+        "complete_evidence_chain_rate": 0.2917,
+        "budget_claim_recall": 0.5208,
+        "novel_claim_rank_score": 0.2529
+      },
+      "multi_claim": {
+        "count": 6,
+        "claim_recall": 0.75,
+        "complete_evidence_chain_rate": 0.5,
+        "budget_claim_recall": 0.75,
+        "novel_claim_rank_score": 0.315
+      },
+      "multi_dimension": {
+        "count": 9,
+        "claim_recall": 0.3333,
+        "complete_evidence_chain_rate": 0.0,
+        "budget_claim_recall": 0.3333,
+        "novel_claim_rank_score": 0.1693
+      },
+      "multi_hop": {
+        "count": 12,
+        "claim_recall": 0.3333,
+        "complete_evidence_chain_rate": 0.0,
+        "budget_claim_recall": 0.2847,
+        "novel_claim_rank_score": 0.2178
+      },
+      "shared_url": {
+        "count": 3,
+        "claim_recall": 0.6667,
+        "complete_evidence_chain_rate": 0.3333,
+        "budget_claim_recall": 0.6667,
+        "novel_claim_rank_score": 0.2493
+      },
+      "single_doc": {
+        "count": 6,
+        "claim_recall": 0.75,
+        "complete_evidence_chain_rate": 0.5,
+        "budget_claim_recall": 0.75,
+        "novel_claim_rank_score": 0.315
+      },
+      "version_conflict": {
+        "count": 7,
+        "claim_recall": 0.7143,
+        "complete_evidence_chain_rate": 0.5714,
+        "budget_claim_recall": 0.7857,
+        "novel_claim_rank_score": 0.355
+      }
+    },
+    "by_gt_document_count": {
+      "1": {
+        "count": 18,
+        "claim_recall": 0.463,
+        "complete_evidence_chain_rate": 0.2222,
+        "budget_claim_recall": 0.4907,
+        "novel_claim_rank_score": 0.2106
+      },
+      "2": {
+        "count": 12,
+        "claim_recall": 0.8194,
+        "complete_evidence_chain_rate": 0.75,
+        "budget_claim_recall": 0.8194,
+        "novel_claim_rank_score": 0.4339
+      },
+      "3": {
+        "count": 13,
+        "claim_recall": 0.4102,
+        "complete_evidence_chain_rate": 0.0,
+        "budget_claim_recall": 0.3846,
+        "novel_claim_rank_score": 0.2406
+      },
+      "4": {
+        "count": 6,
+        "claim_recall": 0.1667,
+        "complete_evidence_chain_rate": 0.0,
+        "budget_claim_recall": 0.125,
+        "novel_claim_rank_score": 0.1167
+      }
+    },
+    "unanswerable_questions": [
+      {
+        "id": "v4_q040",
+        "cluster_id": "C-A-anticoag",
+        "status": "ok",
+        "metrics": {
+          "returned_count": 0,
+          "top_score": null,
+          "retrieved_documents": [],
+          "duplicate_document_rate": 0.0,
+          "top_chunks": []
+        }
+      },
+      {
+        "id": "v4_q041",
+        "cluster_id": "C-B-riskctl",
+        "status": "ok",
+        "metrics": {
+          "returned_count": 1,
+          "top_score": 0.6246140673029997,
+          "retrieved_documents": [
+            "B4-risk-qihe.md"
+          ],
+          "duplicate_document_rate": 0.0,
+          "top_chunks": [
+            {
+              "rank": 1,
+              "document_name": "B4-risk-qihe.md",
+              "chunk_id": "34ec08f2-e0b9-48f8-9d24-23c7c3e3ad36",
+              "relevance_score": 0.6246140673029997
+            }
+          ]
+        }
+      },
+      {
+        "id": "v4_q042",
+        "cluster_id": "C-B-riskctl",
+        "status": "ok",
+        "metrics": {
+          "returned_count": 13,
+          "top_score": 0.9234204478442084,
+          "retrieved_documents": [
+            "B3-risk-nanxu.md",
+            "B2-risk-jinzhou.md",
+            "B4-risk-qihe.md",
+            "B5-risk-group.md",
+            "B1-risk-hongyuan.md",
+            "B3-risk-nanxu.md",
+            "B5-risk-group.md",
+            "B2-risk-jinzhou.md",
+            "B1-risk-hongyuan.md",
+            "B4-risk-qihe.md",
+            "B2-risk-jinzhou.md",
+            "B3-risk-nanxu.md",
+            "B1-risk-hongyuan.md"
+          ],
+          "duplicate_document_rate": 0.6154,
+          "top_chunks": [
+            {
+              "rank": 1,
+              "document_name": "B3-risk-nanxu.md",
+              "chunk_id": "fb37017d-5f3f-499b-a2b6-d7d880739a28",
+              "relevance_score": 0.9234204478442084
+            },
+            {
+              "rank": 2,
+              "document_name": "B2-risk-jinzhou.md",
+              "chunk_id": "e8ea6fcc-873a-47c5-bdec-9c0ba18ea7cb",
+              "relevance_score": 0.9198507850595579
+            },
+            {
+              "rank": 3,
+              "document_name": "B4-risk-qihe.md",
+              "chunk_id": "6814c644-d202-4852-aa21-cad5d06a12fc",
+              "relevance_score": 0.9193133396170963
+            },
+            {
+              "rank": 4,
+              "document_name": "B5-risk-group.md",
+              "chunk_id": "055cbc3f-7351-45b3-83a6-14bbbcec9ad4",
+              "relevance_score": 0.9162749373150465
+            },
+            {
+              "rank": 5,
+              "document_name": "B1-risk-hongyuan.md",
+              "chunk_id": "3eec3b2b-2e1e-425c-9549-d3206f3a88cf",
+              "relevance_score": 0.916167266285453
+            },
+            {
+              "rank": 6,
+              "document_name": "B3-risk-nanxu.md",
+              "chunk_id": "e0088204-ee7c-4edc-9330-5ffb71045949",
+              "relevance_score": 0.8567255353085761
+            },
+            {
+              "rank": 7,
+              "document_name": "B5-risk-group.md",
+              "chunk_id": "2b5b9c75-55c0-49c2-a2ca-4b00874e55cf",
+              "relevance_score": 0.8533639826729322
+            },
+            {
+              "rank": 8,
+              "document_name": "B2-risk-jinzhou.md",
+              "chunk_id": "8c079dd3-cb27-4c3a-b95e-5313503f573a",
+              "relevance_score": 0.8400025585573399
+            },
+            {
+              "rank": 9,
+              "document_name": "B1-risk-hongyuan.md",
+              "chunk_id": "da5384bf-6b4f-4560-a8bf-0f156c217d7f",
+              "relevance_score": 0.8359983575348175
+            },
+            {
+              "rank": 10,
+              "document_name": "B4-risk-qihe.md",
+              "chunk_id": "82f42a45-0409-44bf-a804-024925c6a7dc",
+              "relevance_score": 0.8357752370471263
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

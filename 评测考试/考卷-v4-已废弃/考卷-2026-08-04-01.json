@@ -1,0 +1,2161 @@
+{
+  "schema_version": "4.0",
+  "exam_meta": {
+    "exam_id": "考卷-2026-08-04-01",
+    "title": "RAG 检索评测考卷 v4 试点：兄弟文档判别、完整证据链与拒答分离度",
+    "generated_date": "2026-08-04",
+    "purpose": "试点考卷，覆盖 A（版本轴）与 B（主体轴）两个文档族，用于横向评测不同 RAG 产品的检索召回；不作为独立盲测基准。",
+    "retrieval_protocol": {
+      "primary_k": 10,
+      "eval_ks": [
+        1,
+        3,
+        5,
+        10,
+        20
+      ],
+      "request_k": 20,
+      "char_budgets": [
+        250,
+        500,
+        1000
+      ],
+      "primary_budget": 500
+    },
+    "question_counts": {
+      "total": 42,
+      "scored": 35,
+      "sanity": 4,
+      "unanswerable": 3,
+      "by_primary_type": {
+        "asset_reference_retrieval": 3,
+        "cross_doc_chain": 9,
+        "cross_doc_compare": 9,
+        "disambiguation_hard_negative": 8,
+        "single_doc_fact": 4,
+        "single_doc_multi_claim": 6,
+        "unanswerable_diagnostic": 3
+      },
+      "by_difficulty": {
+        "diagnostic": 3,
+        "hard": 26,
+        "medium": 9,
+        "simple": 4
+      }
+    },
+    "clusters": [
+      {
+        "id": "C-A-anticoag",
+        "family": "A",
+        "axis": "version",
+        "documents": [
+          "A1-anticoag-2023.md",
+          "A2-anticoag-2024.md",
+          "A3-anticoag-2025.md",
+          "A4-anticoag-2025r.md",
+          "A5-anticoag-retired.md"
+        ]
+      },
+      {
+        "id": "C-B-riskctl",
+        "family": "B",
+        "axis": "entity",
+        "documents": [
+          "B1-risk-hongyuan.md",
+          "B2-risk-jinzhou.md",
+          "B3-risk-nanxu.md",
+          "B4-risk-qihe.md",
+          "B5-risk-group.md"
+        ]
+      }
+    ],
+    "design_constraints": {
+      "min_claims_per_document": 5,
+      "max_claim_share_per_document": 0.15,
+      "min_low_lexical_overlap_questions": 14,
+      "min_hard_negative_questions": 8,
+      "min_spans_per_claim": 2,
+      "max_span_normalized_len": 40,
+      "min_sanity_questions": 4,
+      "min_unanswerable_questions": 3,
+      "claim_reuse_policy": "同一 source_document + normalized accepted_span 不得在正式题中复用"
+    },
+    "corpus": {
+      "snapshot_id": "2026-08-04-01",
+      "relative_dir": "生成的原始文档语料/2026-08-04-01",
+      "documents": [
+        {
+          "name": "A1-anticoag-2023.md",
+          "sha256": "2604533dcf4792dad13d82355812c54ea10cb7c443a24bf8c5b1440e7b40bc2e"
+        },
+        {
+          "name": "A2-anticoag-2024.md",
+          "sha256": "eb352d12cdc93369e0245f5551a32f079dfa5afca8fa005879a22115d151bc0b"
+        },
+        {
+          "name": "A3-anticoag-2025.md",
+          "sha256": "08db60fb1bcc718beba99c02994795b4ebbc4702327f3472d6a9503fe44904c6"
+        },
+        {
+          "name": "A4-anticoag-2025r.md",
+          "sha256": "c45ef86eb4cd8cc57a2323476479227123d35415bbb26a309508bb45039ba366"
+        },
+        {
+          "name": "A5-anticoag-retired.md",
+          "sha256": "1f49180eb4dfd5a243dac8accfa2886fc0d1a551859627d74f6d65ed1d238de6"
+        },
+        {
+          "name": "B1-risk-hongyuan.md",
+          "sha256": "879f809f113e45a08b04af99a16f879d4de69bb87320e21b25a9c3bd6b0b25e8"
+        },
+        {
+          "name": "B2-risk-jinzhou.md",
+          "sha256": "909266a97db9d77a88563ac9775c4f1ec6948c55ba79016428d058a4cefbef8e"
+        },
+        {
+          "name": "B3-risk-nanxu.md",
+          "sha256": "798808da42483498a7bf08ef59a0c4d556efb8d02df44ba4992ce2b9a8fc3747"
+        },
+        {
+          "name": "B4-risk-qihe.md",
+          "sha256": "3e416f7a6e1f8c89846cad3b86ddd0397d92a94347bae5389f4b7b01c129fefc"
+        },
+        {
+          "name": "B5-risk-group.md",
+          "sha256": "6cc28cc131ba49a2dbd69681434e84b62d63d4f98a0bda5cd828283e5fcd6182"
+        }
+      ]
+    },
+    "scoring_note": "只有 claims 进入检索评分。sanity 题单列不进主指标；unanswerable 题用于计算拒答分离度 AUC；reference_answer 供人工复核与质量闸门使用。"
+  },
+  "questions": [
+    {
+      "id": "v4_q001",
+      "question_role": "sanity",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "simple",
+      "primary_type": "single_doc_fact",
+      "tags": [
+        "sanity",
+        "single_doc"
+      ],
+      "question": "现行版抗凝警戒简报把华法林 INR 目标区间的上限定在多少？",
+      "claims": [
+        {
+          "id": "v4_q001_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A3-anticoag-2025.md",
+          "section": "2. 抗凝强度目标",
+          "accepted_spans": [
+            "本版把华法林 INR 目标区间上限设为 2.8，超过该值即判定为抗凝过度",
+            "注意此处的判断基准是 2.8 这一封顶值，跨版本引用时务必核对"
+          ],
+          "fact_id": "F-A-INR"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "现行的 2025 版规定 INR 目标区间上限为 2.8，超过即判定为抗凝过度。",
+      "evidence_chain": [
+        "v4_q001_c1"
+      ]
+    },
+    {
+      "id": "v4_q002",
+      "question_role": "sanity",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "simple",
+      "primary_type": "single_doc_fact",
+      "tags": [
+        "sanity",
+        "single_doc"
+      ],
+      "question": "按照现行版要求，严重出血事件需要在多长时间内完成院内上报？",
+      "claims": [
+        {
+          "id": "v4_q002_c1",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "A3-anticoag-2025.md",
+          "section": "7. 出血事件识别",
+          "accepted_spans": [
+            "严重出血事件须在发现后 8 小时 内完成院内上报，逾期计入科室质控扣分",
+            "上报计时从发现时刻起算，窗口为 8 小时，不因交接班顺延"
+          ],
+          "fact_id": "F-A-REPORT"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "现行的 2025 版要求在发现后 8 小时内完成院内上报，逾期计入科室质控扣分。",
+      "evidence_chain": [
+        "v4_q002_c1"
+      ]
+    },
+    {
+      "id": "v4_q003",
+      "question_role": "sanity",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "simple",
+      "primary_type": "single_doc_fact",
+      "tags": [
+        "sanity",
+        "single_doc"
+      ],
+      "question": "宏元消费金融的评分卡自动通过线是多少分？",
+      "claims": [
+        {
+          "id": "v4_q003_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B1-risk-hongyuan.md",
+          "section": "2. 评分卡与准入",
+          "accepted_spans": [
+            "评分卡自动通过线设在 612 分，达到该线的申请直接进入放款队列",
+            "自动通过线 612 分 由风险管理部统一调参，业务侧无权自行调整"
+          ],
+          "fact_id": "F-B-CUTOFF"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "宏元消费金融把自动通过线设在 612 分，达到该线的申请直接进入放款队列。",
+      "evidence_chain": [
+        "v4_q003_c1"
+      ]
+    },
+    {
+      "id": "v4_q004",
+      "question_role": "sanity",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "simple",
+      "primary_type": "single_doc_fact",
+      "tags": [
+        "sanity",
+        "single_doc"
+      ],
+      "question": "瑾洲银行信用卡中心对自动通过的申请按多大比例做人工抽检？",
+      "claims": [
+        {
+          "id": "v4_q004_c1",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "B2-risk-jinzhou.md",
+          "section": "7. 人工复核机制",
+          "accepted_spans": [
+            "自动通过的申请需按 20% 的比例抽检人工复核",
+            "抽检比例为 20%，样本由系统随机抽取，不接受人工指定"
+          ],
+          "fact_id": "F-B-MANUAL"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "瑾洲银行信用卡中心的人工复核抽检比例为 20%。",
+      "evidence_chain": [
+        "v4_q004_c1"
+      ]
+    },
+    {
+      "id": "v4_q005",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "medium",
+      "primary_type": "single_doc_multi_claim",
+      "tags": [
+        "single_doc",
+        "multi_claim",
+        "low_lexical_overlap"
+      ],
+      "question": "一位正在服用达比加群的患者肾功能持续走低，同时排上了下个月的择期手术。按当前执行的那一版，肾功能到什么程度必须调整用量、术前又要空出多久？",
+      "claims": [
+        {
+          "id": "v4_q005_c1",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "A3-anticoag-2025.md",
+          "section": "3. 肾功能与剂量调整",
+          "accepted_spans": [
+            "达比加群在肌酐清除率低于 40 mL/min 时必须减量，不得维持原剂量",
+            "减量触发线仍以 40 mL/min 为准，检验科报告需附实测值"
+          ],
+          "fact_id": "F-A-CRCL"
+        },
+        {
+          "id": "v4_q005_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A3-anticoag-2025.md",
+          "section": "4. 围手术期停药管理",
+          "accepted_spans": [
+            "择期手术前应至少停药 48 小时，急诊手术另按拮抗流程处理",
+            "停药窗口按 48 小时 倒推排期，麻醉访视时需二次确认"
+          ],
+          "fact_id": "F-A-HOLD"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "现行 2025 版规定：肌酐清除率低于 40 mL/min 必须减量；择期手术前至少停药 48 小时。",
+      "evidence_chain": [
+        "v4_q005_c1",
+        "v4_q005_c2"
+      ]
+    },
+    {
+      "id": "v4_q006",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "medium",
+      "primary_type": "single_doc_multi_claim",
+      "tags": [
+        "single_doc",
+        "multi_claim",
+        "low_lexical_overlap"
+      ],
+      "question": "2023 年那一版里，患者岁数大到什么程度系统会自动帮他把量降下来？血细胞里负责凝血的那项指标掉到多少就必须停？",
+      "claims": [
+        {
+          "id": "v4_q006_c1",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "A1-anticoag-2023.md",
+          "section": "5. 特殊人群用药",
+          "accepted_spans": [
+            "患者达到 78 岁 及以上时进入自动减量通道，由药师复核后执行",
+            "自动减量的年龄门槛是 78 岁，系统会在开方环节直接拦截"
+          ],
+          "fact_id": "F-A-AGE"
+        },
+        {
+          "id": "v4_q006_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A1-anticoag-2023.md",
+          "section": "6. 血象监测要求",
+          "accepted_spans": [
+            "血小板计数跌破 60×10⁹/L 应立即停药并请血液科会诊",
+            "停药红线设在 60×10⁹/L，复查间隔不得超过两个工作日"
+          ],
+          "fact_id": "F-A-PLT"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "2023 版规定：78 岁及以上进入自动减量通道；血小板计数跌破 60×10⁹/L 应立即停药。",
+      "evidence_chain": [
+        "v4_q006_c1",
+        "v4_q006_c2"
+      ]
+    },
+    {
+      "id": "v4_q007",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "medium",
+      "primary_type": "single_doc_multi_claim",
+      "tags": [
+        "single_doc",
+        "multi_claim",
+        "deprecated_version"
+      ],
+      "question": "那份早已停止执行的旧版简报，对联合抗栓能开多久、以及长期患者多久要复核一次，分别是怎么写的？",
+      "claims": [
+        {
+          "id": "v4_q007_c1",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "A5-anticoag-retired.md",
+          "section": "9. 抗栓联合治疗",
+          "accepted_spans": [
+            "双联抗栓总疗程上限为 18 个月，超期需重新评估获益风险比",
+            "疗程封顶 18 个月，延长申请必须经心内与药学双签"
+          ],
+          "fact_id": "F-A-DUAL"
+        },
+        {
+          "id": "v4_q007_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A5-anticoag-retired.md",
+          "section": "10. 用药重整",
+          "accepted_spans": [
+            "长期服药患者的用药重整复核周期不得长于 180 天",
+            "复核周期 180 天 是硬性上限，门诊与住院口径一致"
+          ],
+          "fact_id": "F-A-REVIEW"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "已废止的 2021 版规定：双联抗栓总疗程上限 18 个月；用药重整复核周期不得长于 180 天。这两项都远宽于现行版，不得据此下医嘱。",
+      "evidence_chain": [
+        "v4_q007_c1",
+        "v4_q007_c2"
+      ]
+    },
+    {
+      "id": "v4_q008",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "medium",
+      "primary_type": "single_doc_multi_claim",
+      "tags": [
+        "single_doc",
+        "multi_claim",
+        "low_lexical_overlap"
+      ],
+      "question": "在那家受银行体系统一管控的机构里，申请人背的债最多能占到收入的几成？另外新模型要想推上生产，区分度至少要做到什么水平？",
+      "claims": [
+        {
+          "id": "v4_q008_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B2-risk-jinzhou.md",
+          "section": "4. 负债与多头风险",
+          "accepted_spans": [
+            "申请人的债务收入比不得超过 50%，超限一票否决",
+            "债务收入比红线为 50%，多头借贷数据需并表计算"
+          ],
+          "fact_id": "F-B-DTI"
+        },
+        {
+          "id": "v4_q008_c2",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "B2-risk-jinzhou.md",
+          "section": "5. 模型效果验收",
+          "accepted_spans": [
+            "模型在跨时间验证集上的 KS 值不得低于 0.38，否则不予上线",
+            "上线门槛 KS 为 0.38，验证集必须与训练期完全不重叠"
+          ],
+          "fact_id": "F-B-KS"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "瑾洲银行信用卡中心要求债务收入比不超过 50%，模型跨时间验证集上的 KS 不得低于 0.38。",
+      "evidence_chain": [
+        "v4_q008_c1",
+        "v4_q008_c2"
+      ]
+    },
+    {
+      "id": "v4_q009",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "medium",
+      "primary_type": "single_doc_multi_claim",
+      "tags": [
+        "single_doc",
+        "multi_claim",
+        "low_lexical_overlap"
+      ],
+      "question": "那家还在试运行阶段的科技子公司，单个入模变量漂到什么程度就要强制回滚？例行的模型翻新又是多久一轮？",
+      "claims": [
+        {
+          "id": "v4_q009_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B4-risk-qihe.md",
+          "section": "6. 模型监控与熔断",
+          "accepted_spans": [
+            "单特征 PSI 超过 0.28 即触发强制下线并回滚上一版本",
+            "漂移熔断线是 0.28，监控频率为每日一次全量比对"
+          ],
+          "fact_id": "F-B-PSI"
+        },
+        {
+          "id": "v4_q009_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B4-risk-qihe.md",
+          "section": "10. 模型迭代节奏",
+          "accepted_spans": [
+            "评分模型的例行重训周期为 每 30 天，逾期未重训视为模型失效",
+            "重训节奏保持 每 30 天，特征口径变更时需额外触发一次"
+          ],
+          "fact_id": "F-B-RETRAIN"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "岐禾数科规定单特征 PSI 超过 0.28 即触发强制下线并回滚，评分模型例行重训周期为每 30 天。",
+      "evidence_chain": [
+        "v4_q009_c1",
+        "v4_q009_c2"
+      ]
+    },
+    {
+      "id": "v4_q010",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "medium",
+      "primary_type": "single_doc_multi_claim",
+      "tags": [
+        "single_doc",
+        "multi_claim",
+        "low_lexical_overlap"
+      ],
+      "question": "集团层面那份底线文件里，头一回借钱的人最多能批到多少额度？还不上钱之后多久案子就转出去了？",
+      "claims": [
+        {
+          "id": "v4_q010_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B5-risk-group.md",
+          "section": "8. 额度策略",
+          "accepted_spans": [
+            "新客首次授信额度上限为 4 万元，提额需在正常还款六期之后",
+            "首次授信封顶 4 万元，任何白名单都不得突破该上限"
+          ],
+          "fact_id": "F-B-LIMIT"
+        },
+        {
+          "id": "v4_q010_c2",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "B5-risk-group.md",
+          "section": "9. 贷后与催收",
+          "accepted_spans": [
+            "逾期满 4 天 后案件自动移交催收系统",
+            "移交催收的时点是逾期满 4 天，节假日不顺延"
+          ],
+          "fact_id": "F-B-OVERDUE"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "集团总纲规定新客首次授信上限为 4 万元，逾期满 4 天后案件自动移交催收系统。",
+      "evidence_chain": [
+        "v4_q010_c1",
+        "v4_q010_c2"
+      ]
+    },
+    {
+      "id": "v4_q011",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "version_conflict"
+      ],
+      "question": "抗凝强度的封顶值，2023 版和还在征求意见的那版修订稿分别定在哪里？",
+      "claims": [
+        {
+          "id": "v4_q011_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A1-anticoag-2023.md",
+          "section": "2. 抗凝强度目标",
+          "accepted_spans": [
+            "本版把华法林 INR 目标区间上限设为 3.0，超过该值即判定为抗凝过度",
+            "注意此处的判断基准是 3.0 这一封顶值，跨版本引用时务必核对"
+          ],
+          "fact_id": "F-A-INR"
+        },
+        {
+          "id": "v4_q011_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A4-anticoag-2025r.md",
+          "section": "2. 抗凝强度目标",
+          "accepted_spans": [
+            "本版把华法林 INR 目标区间上限设为 2.7，超过该值即判定为抗凝过度",
+            "注意此处的判断基准是 2.7 这一封顶值，跨版本引用时务必核对"
+          ],
+          "fact_id": "F-A-INR"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "2023 版的 INR 上限是 3.0，2025 修订版收紧到 2.7。修订版尚未通过药事会，不得据此下医嘱。",
+      "evidence_chain": [
+        "v4_q011_c1",
+        "v4_q011_c2"
+      ]
+    },
+    {
+      "id": "v4_q012",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "version_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "同样一台排好期的手术，按 2024 年那版和按早就作废的那版，要提前多久让患者把药停下来？差多少？",
+      "claims": [
+        {
+          "id": "v4_q012_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A2-anticoag-2024.md",
+          "section": "4. 围手术期停药管理",
+          "accepted_spans": [
+            "择期手术前应至少停药 60 小时，急诊手术另按拮抗流程处理",
+            "停药窗口按 60 小时 倒推排期，麻醉访视时需二次确认"
+          ],
+          "fact_id": "F-A-HOLD"
+        },
+        {
+          "id": "v4_q012_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A5-anticoag-retired.md",
+          "section": "4. 围手术期停药管理",
+          "accepted_spans": [
+            "择期手术前应至少停药 96 小时，急诊手术另按拮抗流程处理",
+            "停药窗口按 96 小时 倒推排期，麻醉访视时需二次确认"
+          ],
+          "fact_id": "F-A-HOLD"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "2024 版要求术前至少停药 60 小时，已废止的 2021 版要求 96 小时，两者相差 36 小时。",
+      "evidence_chain": [
+        "v4_q012_c1",
+        "v4_q012_c2"
+      ]
+    },
+    {
+      "id": "v4_q013",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "version_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "自动降量的年龄门槛，现在执行的口径比那份作废文件挪动了多少？",
+      "claims": [
+        {
+          "id": "v4_q013_c1",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "A3-anticoag-2025.md",
+          "section": "5. 特殊人群用药",
+          "accepted_spans": [
+            "患者达到 75 岁 及以上时进入自动减量通道，由药师复核后执行",
+            "自动减量的年龄门槛是 75 岁，系统会在开方环节直接拦截"
+          ],
+          "fact_id": "F-A-AGE"
+        },
+        {
+          "id": "v4_q013_c2",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "A5-anticoag-retired.md",
+          "section": "5. 特殊人群用药",
+          "accepted_spans": [
+            "患者达到 80 岁 及以上时进入自动减量通道，由药师复核后执行",
+            "自动减量的年龄门槛是 80 岁，系统会在开方环节直接拦截"
+          ],
+          "fact_id": "F-A-AGE"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "现行 2025 版的门槛是 75 岁，已废止的 2021 版是 80 岁，门槛下调了 5 岁。",
+      "evidence_chain": [
+        "v4_q013_c1",
+        "v4_q013_c2"
+      ]
+    },
+    {
+      "id": "v4_q014",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "version_conflict"
+      ],
+      "question": "想拿到抗凝处方权，2023 版和现行版分别要求修满多少专项培训？",
+      "claims": [
+        {
+          "id": "v4_q014_c1",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "A1-anticoag-2023.md",
+          "section": "11. 处方权与培训",
+          "accepted_spans": [
+            "取得抗凝处方权需完成 16 学时 的专项培训并通过考核",
+            "培训学时要求为 16 学时，未达标者处方权自动冻结"
+          ],
+          "fact_id": "F-A-TRAIN"
+        },
+        {
+          "id": "v4_q014_c2",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "A3-anticoag-2025.md",
+          "section": "11. 处方权与培训",
+          "accepted_spans": [
+            "取得抗凝处方权需完成 24 学时 的专项培训并通过考核",
+            "培训学时要求为 24 学时，未达标者处方权自动冻结"
+          ],
+          "fact_id": "F-A-TRAIN"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "2023 版要求 16 学时，现行 2025 版要求 24 学时，多出 8 学时。",
+      "evidence_chain": [
+        "v4_q014_c1",
+        "v4_q014_c2"
+      ]
+    },
+    {
+      "id": "v4_q015",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "entity_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "同一个申请人，在受银行统一管控的那家和在还没正式上线的那家，要多高的分才能免于人工介入？",
+      "claims": [
+        {
+          "id": "v4_q015_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B2-risk-jinzhou.md",
+          "section": "2. 评分卡与准入",
+          "accepted_spans": [
+            "评分卡自动通过线设在 648 分，达到该线的申请直接进入放款队列",
+            "自动通过线 648 分 由风险管理部统一调参，业务侧无权自行调整"
+          ],
+          "fact_id": "F-B-CUTOFF"
+        },
+        {
+          "id": "v4_q015_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B4-risk-qihe.md",
+          "section": "2. 评分卡与准入",
+          "accepted_spans": [
+            "评分卡自动通过线设在 605 分，达到该线的申请直接进入放款队列",
+            "自动通过线 605 分 由风险管理部统一调参，业务侧无权自行调整"
+          ],
+          "fact_id": "F-B-CUTOFF"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "瑾洲银行信用卡中心的自动通过线是 648 分，岐禾数科是 605 分，前者高出 43 分。",
+      "evidence_chain": [
+        "v4_q015_c1",
+        "v4_q015_c2"
+      ]
+    },
+    {
+      "id": "v4_q016",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "entity_conflict"
+      ],
+      "question": "宏元消费金融的债务收入比红线，比集团底线松了还是紧了？",
+      "claims": [
+        {
+          "id": "v4_q016_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B1-risk-hongyuan.md",
+          "section": "4. 负债与多头风险",
+          "accepted_spans": [
+            "申请人的债务收入比不得超过 65%，超限一票否决",
+            "债务收入比红线为 65%，多头借贷数据需并表计算"
+          ],
+          "fact_id": "F-B-DTI"
+        },
+        {
+          "id": "v4_q016_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B5-risk-group.md",
+          "section": "4. 负债与多头风险",
+          "accepted_spans": [
+            "申请人的债务收入比不得超过 60%，超限一票否决",
+            "债务收入比红线为 60%，多头借贷数据需并表计算"
+          ],
+          "fact_id": "F-B-DTI"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "宏元消费金融的上限是 65%，集团总纲的底线是 60%，宏元比集团底线更松，属于不合规的放宽。",
+      "evidence_chain": [
+        "v4_q016_c1",
+        "v4_q016_c2"
+      ]
+    },
+    {
+      "id": "v4_q017",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "entity_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "以线下门店获客为主的那家，和刚成立的科技子公司，在事后翻查已通过件上的投入差多少？",
+      "claims": [
+        {
+          "id": "v4_q017_c1",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "B3-risk-nanxu.md",
+          "section": "7. 人工复核机制",
+          "accepted_spans": [
+            "自动通过的申请需按 35% 的比例抽检人工复核",
+            "抽检比例为 35%，样本由系统随机抽取，不接受人工指定"
+          ],
+          "fact_id": "F-B-MANUAL"
+        },
+        {
+          "id": "v4_q017_c2",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "B4-risk-qihe.md",
+          "section": "7. 人工复核机制",
+          "accepted_spans": [
+            "自动通过的申请需按 5% 的比例抽检人工复核",
+            "抽检比例为 5%，样本由系统随机抽取，不接受人工指定"
+          ],
+          "fact_id": "F-B-MANUAL"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "南序小额贷款的抽检比例是 35%，岐禾数科只有 5%，相差 30 个百分点。",
+      "evidence_chain": [
+        "v4_q017_c1",
+        "v4_q017_c2"
+      ]
+    },
+    {
+      "id": "v4_q018",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "entity_conflict"
+      ],
+      "question": "宏元消费金融和瑾洲银行信用卡中心，逾期多少天后把案子转给催收？",
+      "claims": [
+        {
+          "id": "v4_q018_c1",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "B1-risk-hongyuan.md",
+          "section": "9. 贷后与催收",
+          "accepted_spans": [
+            "逾期满 3 天 后案件自动移交催收系统",
+            "移交催收的时点是逾期满 3 天，节假日不顺延"
+          ],
+          "fact_id": "F-B-OVERDUE"
+        },
+        {
+          "id": "v4_q018_c2",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "B2-risk-jinzhou.md",
+          "section": "9. 贷后与催收",
+          "accepted_spans": [
+            "逾期满 7 天 后案件自动移交催收系统",
+            "移交催收的时点是逾期满 7 天，节假日不顺延"
+          ],
+          "fact_id": "F-B-OVERDUE"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "宏元消费金融是逾期满 3 天移交，瑾洲银行信用卡中心是逾期满 7 天移交。",
+      "evidence_chain": [
+        "v4_q018_c1",
+        "v4_q018_c2"
+      ]
+    },
+    {
+      "id": "v4_q019",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "entity_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "被驳回的申请人想知道自己为什么没过，在受银行管控的那家和在试运行的那家，最少能拿到几项说法？",
+      "claims": [
+        {
+          "id": "v4_q019_c1",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "B2-risk-jinzhou.md",
+          "section": "11. 可解释性与消费者权益",
+          "accepted_spans": [
+            "被拒申请人有权获得不少于 5 条 的主要拒绝原因说明",
+            "原因说明数量下限为 5 条，措辞需通过合规话术库校验"
+          ],
+          "fact_id": "F-B-EXPLAIN"
+        },
+        {
+          "id": "v4_q019_c2",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "B4-risk-qihe.md",
+          "section": "11. 可解释性与消费者权益",
+          "accepted_spans": [
+            "被拒申请人有权获得不少于 2 条 的主要拒绝原因说明",
+            "原因说明数量下限为 2 条，措辞需通过合规话术库校验"
+          ],
+          "fact_id": "F-B-EXPLAIN"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "瑾洲银行信用卡中心至少给出 5 条主要拒绝原因，岐禾数科只有 2 条。",
+      "evidence_chain": [
+        "v4_q019_c1",
+        "v4_q019_c2"
+      ]
+    },
+    {
+      "id": "v4_q020",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "cross_doc",
+        "three_doc",
+        "version_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "达比加群那条减量触发线，从 2023 年那版开始一路到征求意见稿，是怎么一步步往下挪的？",
+      "claims": [
+        {
+          "id": "v4_q020_c1",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "A1-anticoag-2023.md",
+          "section": "3. 肾功能与剂量调整",
+          "accepted_spans": [
+            "达比加群在肌酐清除率低于 45 mL/min 时必须减量，不得维持原剂量",
+            "减量触发线仍以 45 mL/min 为准，检验科报告需附实测值"
+          ],
+          "fact_id": "F-A-CRCL"
+        },
+        {
+          "id": "v4_q020_c2",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "A2-anticoag-2024.md",
+          "section": "3. 肾功能与剂量调整",
+          "accepted_spans": [
+            "达比加群在肌酐清除率低于 42 mL/min 时必须减量，不得维持原剂量",
+            "减量触发线仍以 42 mL/min 为准，检验科报告需附实测值"
+          ],
+          "fact_id": "F-A-CRCL"
+        },
+        {
+          "id": "v4_q020_c3",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "A4-anticoag-2025r.md",
+          "section": "3. 肾功能与剂量调整",
+          "accepted_spans": [
+            "达比加群在肌酐清除率低于 38 mL/min 时必须减量，不得维持原剂量",
+            "减量触发线仍以 38 mL/min 为准，检验科报告需附实测值"
+          ],
+          "fact_id": "F-A-CRCL"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "2023 版为 45 mL/min，2024 版收紧到 42 mL/min，2025 修订版进一步收紧到 38 mL/min，呈逐版下调趋势。",
+      "evidence_chain": [
+        "v4_q020_c1",
+        "v4_q020_c2",
+        "v4_q020_c3"
+      ]
+    },
+    {
+      "id": "v4_q021",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "cross_doc",
+        "three_doc",
+        "version_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "负责凝血的那项血细胞指标，停药红线在 2024 版、当前执行版和修订稿里各是多少？",
+      "claims": [
+        {
+          "id": "v4_q021_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A2-anticoag-2024.md",
+          "section": "6. 血象监测要求",
+          "accepted_spans": [
+            "血小板计数跌破 55×10⁹/L 应立即停药并请血液科会诊",
+            "停药红线设在 55×10⁹/L，复查间隔不得超过两个工作日"
+          ],
+          "fact_id": "F-A-PLT"
+        },
+        {
+          "id": "v4_q021_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A3-anticoag-2025.md",
+          "section": "6. 血象监测要求",
+          "accepted_spans": [
+            "血小板计数跌破 50×10⁹/L 应立即停药并请血液科会诊",
+            "停药红线设在 50×10⁹/L，复查间隔不得超过两个工作日"
+          ],
+          "fact_id": "F-A-PLT"
+        },
+        {
+          "id": "v4_q021_c3",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A4-anticoag-2025r.md",
+          "section": "6. 血象监测要求",
+          "accepted_spans": [
+            "血小板计数跌破 45×10⁹/L 应立即停药并请血液科会诊",
+            "停药红线设在 45×10⁹/L，复查间隔不得超过两个工作日"
+          ],
+          "fact_id": "F-A-PLT"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "2024 版为 55×10⁹/L，现行 2025 版为 50×10⁹/L，2025 修订版为 45×10⁹/L。",
+      "evidence_chain": [
+        "v4_q021_c1",
+        "v4_q021_c2",
+        "v4_q021_c3"
+      ]
+    },
+    {
+      "id": "v4_q022",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "cross_doc",
+        "three_doc",
+        "version_conflict"
+      ],
+      "question": "触发出血预警的血红蛋白下限，在 2023 版、现行版和那份已作废的版本里分别是多少？",
+      "claims": [
+        {
+          "id": "v4_q022_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A1-anticoag-2023.md",
+          "section": "8. 事件上报与追溯",
+          "accepted_spans": [
+            "血红蛋白低于 90 g/L 触发出血预警，需当日复查并记录",
+            "预警阈值 90 g/L 由检验系统自动比对，不接受手工豁免"
+          ],
+          "fact_id": "F-A-HB"
+        },
+        {
+          "id": "v4_q022_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A3-anticoag-2025.md",
+          "section": "8. 事件上报与追溯",
+          "accepted_spans": [
+            "血红蛋白低于 100 g/L 触发出血预警，需当日复查并记录",
+            "预警阈值 100 g/L 由检验系统自动比对，不接受手工豁免"
+          ],
+          "fact_id": "F-A-HB"
+        },
+        {
+          "id": "v4_q022_c3",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A5-anticoag-retired.md",
+          "section": "8. 事件上报与追溯",
+          "accepted_spans": [
+            "血红蛋白低于 85 g/L 触发出血预警，需当日复查并记录",
+            "预警阈值 85 g/L 由检验系统自动比对，不接受手工豁免"
+          ],
+          "fact_id": "F-A-HB"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "2023 版为 90 g/L，现行 2025 版为 100 g/L，已废止的 2021 版为 85 g/L；预警线整体在抬高。",
+      "evidence_chain": [
+        "v4_q022_c1",
+        "v4_q022_c2",
+        "v4_q022_c3"
+      ]
+    },
+    {
+      "id": "v4_q023",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "cross_doc",
+        "three_doc",
+        "version_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "长期吃药的人多久要把方子从头捋一遍，2023 版、2024 版和那份还在征意见的稿子各是怎么定的？",
+      "claims": [
+        {
+          "id": "v4_q023_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A1-anticoag-2023.md",
+          "section": "10. 用药重整",
+          "accepted_spans": [
+            "长期服药患者的用药重整复核周期不得长于 90 天",
+            "复核周期 90 天 是硬性上限，门诊与住院口径一致"
+          ],
+          "fact_id": "F-A-REVIEW"
+        },
+        {
+          "id": "v4_q023_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A2-anticoag-2024.md",
+          "section": "10. 用药重整",
+          "accepted_spans": [
+            "长期服药患者的用药重整复核周期不得长于 60 天",
+            "复核周期 60 天 是硬性上限，门诊与住院口径一致"
+          ],
+          "fact_id": "F-A-REVIEW"
+        },
+        {
+          "id": "v4_q023_c3",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A4-anticoag-2025r.md",
+          "section": "10. 用药重整",
+          "accepted_spans": [
+            "长期服药患者的用药重整复核周期不得长于 30 天",
+            "复核周期 30 天 是硬性上限，门诊与住院口径一致"
+          ],
+          "fact_id": "F-A-REVIEW"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "2023 版不长于 90 天，2024 版不长于 60 天，2025 修订版收紧到 30 天。",
+      "evidence_chain": [
+        "v4_q023_c1",
+        "v4_q023_c2",
+        "v4_q023_c3"
+      ]
+    },
+    {
+      "id": "v4_q024",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "cross_doc",
+        "three_doc",
+        "entity_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "模型能不能上生产的区分度门槛，线上小额分期那家、线下门店那家和集团底线分别卡在哪？",
+      "claims": [
+        {
+          "id": "v4_q024_c1",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "B1-risk-hongyuan.md",
+          "section": "5. 模型效果验收",
+          "accepted_spans": [
+            "模型在跨时间验证集上的 KS 值不得低于 0.32，否则不予上线",
+            "上线门槛 KS 为 0.32，验证集必须与训练期完全不重叠"
+          ],
+          "fact_id": "F-B-KS"
+        },
+        {
+          "id": "v4_q024_c2",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "B3-risk-nanxu.md",
+          "section": "5. 模型效果验收",
+          "accepted_spans": [
+            "模型在跨时间验证集上的 KS 值不得低于 0.35，否则不予上线",
+            "上线门槛 KS 为 0.35，验证集必须与训练期完全不重叠"
+          ],
+          "fact_id": "F-B-KS"
+        },
+        {
+          "id": "v4_q024_c3",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "B5-risk-group.md",
+          "section": "5. 模型效果验收",
+          "accepted_spans": [
+            "模型在跨时间验证集上的 KS 值不得低于 0.34，否则不予上线",
+            "上线门槛 KS 为 0.34，验证集必须与训练期完全不重叠"
+          ],
+          "fact_id": "F-B-KS"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "宏元消费金融 0.32，南序小额贷款 0.35，集团总纲底线 0.34；宏元低于集团底线。",
+      "evidence_chain": [
+        "v4_q024_c1",
+        "v4_q024_c2",
+        "v4_q024_c3"
+      ]
+    },
+    {
+      "id": "v4_q025",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "cross_doc",
+        "three_doc",
+        "entity_conflict"
+      ],
+      "question": "单个变量的分布漂移熔断线，宏元消费金融、瑾洲银行信用卡中心和集团总纲各定在多少？",
+      "claims": [
+        {
+          "id": "v4_q025_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B1-risk-hongyuan.md",
+          "section": "6. 模型监控与熔断",
+          "accepted_spans": [
+            "单特征 PSI 超过 0.25 即触发强制下线并回滚上一版本",
+            "漂移熔断线是 0.25，监控频率为每日一次全量比对"
+          ],
+          "fact_id": "F-B-PSI"
+        },
+        {
+          "id": "v4_q025_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B2-risk-jinzhou.md",
+          "section": "6. 模型监控与熔断",
+          "accepted_spans": [
+            "单特征 PSI 超过 0.15 即触发强制下线并回滚上一版本",
+            "漂移熔断线是 0.15，监控频率为每日一次全量比对"
+          ],
+          "fact_id": "F-B-PSI"
+        },
+        {
+          "id": "v4_q025_c3",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B5-risk-group.md",
+          "section": "6. 模型监控与熔断",
+          "accepted_spans": [
+            "单特征 PSI 超过 0.18 即触发强制下线并回滚上一版本",
+            "漂移熔断线是 0.18，监控频率为每日一次全量比对"
+          ],
+          "fact_id": "F-B-PSI"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "宏元消费金融 0.25，瑾洲银行信用卡中心 0.15，集团总纲 0.18。",
+      "evidence_chain": [
+        "v4_q025_c1",
+        "v4_q025_c2",
+        "v4_q025_c3"
+      ]
+    },
+    {
+      "id": "v4_q026",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "cross_doc",
+        "three_doc",
+        "entity_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "第一次来借钱的客户最多能拿到多少钱，线上小额分期那家、银行卡中心和试运行那家分别封在哪？",
+      "claims": [
+        {
+          "id": "v4_q026_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B1-risk-hongyuan.md",
+          "section": "8. 额度策略",
+          "accepted_spans": [
+            "新客首次授信额度上限为 2 万元，提额需在正常还款六期之后",
+            "首次授信封顶 2 万元，任何白名单都不得突破该上限"
+          ],
+          "fact_id": "F-B-LIMIT"
+        },
+        {
+          "id": "v4_q026_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B2-risk-jinzhou.md",
+          "section": "8. 额度策略",
+          "accepted_spans": [
+            "新客首次授信额度上限为 5 万元，提额需在正常还款六期之后",
+            "首次授信封顶 5 万元，任何白名单都不得突破该上限"
+          ],
+          "fact_id": "F-B-LIMIT"
+        },
+        {
+          "id": "v4_q026_c3",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B4-risk-qihe.md",
+          "section": "8. 额度策略",
+          "accepted_spans": [
+            "新客首次授信额度上限为 1.5 万元，提额需在正常还款六期之后",
+            "首次授信封顶 1.5 万元，任何白名单都不得突破该上限"
+          ],
+          "fact_id": "F-B-LIMIT"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "宏元消费金融 2 万元，瑾洲银行信用卡中心 5 万元，岐禾数科 1.5 万元。",
+      "evidence_chain": [
+        "v4_q026_c1",
+        "v4_q026_c2",
+        "v4_q026_c3"
+      ]
+    },
+    {
+      "id": "v4_q027",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "cross_doc",
+        "three_doc",
+        "entity_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "评分模型多久翻新一轮，银行卡中心、线下门店那家和集团底线三者节奏差多少？",
+      "claims": [
+        {
+          "id": "v4_q027_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B2-risk-jinzhou.md",
+          "section": "10. 模型迭代节奏",
+          "accepted_spans": [
+            "评分模型的例行重训周期为 每 180 天，逾期未重训视为模型失效",
+            "重训节奏保持 每 180 天，特征口径变更时需额外触发一次"
+          ],
+          "fact_id": "F-B-RETRAIN"
+        },
+        {
+          "id": "v4_q027_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B3-risk-nanxu.md",
+          "section": "10. 模型迭代节奏",
+          "accepted_spans": [
+            "评分模型的例行重训周期为 每 90 天，逾期未重训视为模型失效",
+            "重训节奏保持 每 90 天，特征口径变更时需额外触发一次"
+          ],
+          "fact_id": "F-B-RETRAIN"
+        },
+        {
+          "id": "v4_q027_c3",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B5-risk-group.md",
+          "section": "10. 模型迭代节奏",
+          "accepted_spans": [
+            "评分模型的例行重训周期为 每 120 天，逾期未重训视为模型失效",
+            "重训节奏保持 每 120 天，特征口径变更时需额外触发一次"
+          ],
+          "fact_id": "F-B-RETRAIN"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "瑾洲银行信用卡中心每 180 天，南序小额贷款每 90 天，集团总纲每 120 天；瑾洲慢于集团底线。",
+      "evidence_chain": [
+        "v4_q027_c1",
+        "v4_q027_c2",
+        "v4_q027_c3"
+      ]
+    },
+    {
+      "id": "v4_q028",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "cross_doc",
+        "three_doc",
+        "version_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "抗凝加抗血小板一起用最长能持续多久，从 2023 年那版到当前执行版是怎么一路收紧的？",
+      "claims": [
+        {
+          "id": "v4_q028_c1",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "A1-anticoag-2023.md",
+          "section": "9. 抗栓联合治疗",
+          "accepted_spans": [
+            "双联抗栓总疗程上限为 12 个月，超期需重新评估获益风险比",
+            "疗程封顶 12 个月，延长申请必须经心内与药学双签"
+          ],
+          "fact_id": "F-A-DUAL"
+        },
+        {
+          "id": "v4_q028_c2",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "A2-anticoag-2024.md",
+          "section": "9. 抗栓联合治疗",
+          "accepted_spans": [
+            "双联抗栓总疗程上限为 9 个月，超期需重新评估获益风险比",
+            "疗程封顶 9 个月，延长申请必须经心内与药学双签"
+          ],
+          "fact_id": "F-A-DUAL"
+        },
+        {
+          "id": "v4_q028_c3",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "A3-anticoag-2025.md",
+          "section": "9. 抗栓联合治疗",
+          "accepted_spans": [
+            "双联抗栓总疗程上限为 6 个月，超期需重新评估获益风险比",
+            "疗程封顶 6 个月，延长申请必须经心内与药学双签"
+          ],
+          "fact_id": "F-A-DUAL"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "2023 版上限 12 个月，2024 版收紧到 9 个月，现行 2025 版进一步收紧到 6 个月。",
+      "evidence_chain": [
+        "v4_q028_c1",
+        "v4_q028_c2",
+        "v4_q028_c3"
+      ]
+    },
+    {
+      "id": "v4_q029",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": [
+        "hard_negative",
+        "version_conflict",
+        "draft_only"
+      ],
+      "question": "那份尚在征求意见、还没通过药事会的修订稿，把术前停药和出血上报这两项分别提到了什么程度？",
+      "claims": [
+        {
+          "id": "v4_q029_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A4-anticoag-2025r.md",
+          "section": "4. 围手术期停药管理",
+          "accepted_spans": [
+            "择期手术前应至少停药 36 小时，急诊手术另按拮抗流程处理",
+            "停药窗口按 36 小时 倒推排期，麻醉访视时需二次确认"
+          ],
+          "fact_id": "F-A-HOLD"
+        },
+        {
+          "id": "v4_q029_c2",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "A4-anticoag-2025r.md",
+          "section": "7. 出血事件识别",
+          "accepted_spans": [
+            "严重出血事件须在发现后 6 小时 内完成院内上报，逾期计入科室质控扣分",
+            "上报计时从发现时刻起算，窗口为 6 小时，不因交接班顺延"
+          ],
+          "fact_id": "F-A-REPORT"
+        }
+      ],
+      "negative_evidence": [
+        {
+          "id": "v4_q029_n1",
+          "source_document": "A3-anticoag-2025.md",
+          "section": "4. 围手术期停药管理",
+          "accepted_spans": [
+            "择期手术前应至少停药 48 小时，急诊手术另按拮抗流程处理",
+            "停药窗口按 48 小时 倒推排期，麻醉访视时需二次确认"
+          ],
+          "fact_id": "F-A-HOLD"
+        },
+        {
+          "id": "v4_q029_n2",
+          "source_document": "A5-anticoag-retired.md",
+          "section": "7. 出血事件识别",
+          "accepted_spans": [
+            "严重出血事件须在发现后 48 小时 内完成院内上报，逾期计入科室质控扣分",
+            "上报计时从发现时刻起算，窗口为 48 小时，不因交接班顺延"
+          ],
+          "fact_id": "F-A-REPORT"
+        }
+      ],
+      "reference_answer": "2025 修订版要求术前至少停药 36 小时、严重出血在 6 小时内上报。该版仅为草案，不得据此下医嘱。",
+      "evidence_chain": [
+        "v4_q029_c1",
+        "v4_q029_c2"
+      ]
+    },
+    {
+      "id": "v4_q030",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": [
+        "hard_negative",
+        "deprecated_version",
+        "low_lexical_overlap"
+      ],
+      "question": "在那份只能用于病历追溯的老文件里，抗凝强度的天花板和必须停药的血小板下限各是多少？",
+      "claims": [
+        {
+          "id": "v4_q030_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A5-anticoag-retired.md",
+          "section": "2. 抗凝强度目标",
+          "accepted_spans": [
+            "本版把华法林 INR 目标区间上限设为 3.2，超过该值即判定为抗凝过度",
+            "注意此处的判断基准是 3.2 这一封顶值，跨版本引用时务必核对"
+          ],
+          "fact_id": "F-A-INR"
+        },
+        {
+          "id": "v4_q030_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A5-anticoag-retired.md",
+          "section": "6. 血象监测要求",
+          "accepted_spans": [
+            "血小板计数跌破 70×10⁹/L 应立即停药并请血液科会诊",
+            "停药红线设在 70×10⁹/L，复查间隔不得超过两个工作日"
+          ],
+          "fact_id": "F-A-PLT"
+        }
+      ],
+      "negative_evidence": [
+        {
+          "id": "v4_q030_n1",
+          "source_document": "A3-anticoag-2025.md",
+          "section": "2. 抗凝强度目标",
+          "accepted_spans": [
+            "本版把华法林 INR 目标区间上限设为 2.8，超过该值即判定为抗凝过度",
+            "注意此处的判断基准是 2.8 这一封顶值，跨版本引用时务必核对"
+          ],
+          "fact_id": "F-A-INR"
+        },
+        {
+          "id": "v4_q030_n2",
+          "source_document": "A1-anticoag-2023.md",
+          "section": "6. 血象监测要求",
+          "accepted_spans": [
+            "血小板计数跌破 60×10⁹/L 应立即停药并请血液科会诊",
+            "停药红线设在 60×10⁹/L，复查间隔不得超过两个工作日"
+          ],
+          "fact_id": "F-A-PLT"
+        }
+      ],
+      "reference_answer": "已废止的 2021 版规定 INR 上限 3.2、血小板跌破 70×10⁹/L 停药，两项都明显宽于现行版。",
+      "evidence_chain": [
+        "v4_q030_c1",
+        "v4_q030_c2"
+      ]
+    },
+    {
+      "id": "v4_q031",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": [
+        "hard_negative",
+        "version_conflict"
+      ],
+      "question": "2024 版对抗凝强度上限和高龄自动减量起点分别是怎么规定的？",
+      "claims": [
+        {
+          "id": "v4_q031_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A2-anticoag-2024.md",
+          "section": "2. 抗凝强度目标",
+          "accepted_spans": [
+            "本版把华法林 INR 目标区间上限设为 2.9，超过该值即判定为抗凝过度",
+            "注意此处的判断基准是 2.9 这一封顶值，跨版本引用时务必核对"
+          ],
+          "fact_id": "F-A-INR"
+        },
+        {
+          "id": "v4_q031_c2",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "A2-anticoag-2024.md",
+          "section": "5. 特殊人群用药",
+          "accepted_spans": [
+            "患者达到 76 岁 及以上时进入自动减量通道，由药师复核后执行",
+            "自动减量的年龄门槛是 76 岁，系统会在开方环节直接拦截"
+          ],
+          "fact_id": "F-A-AGE"
+        }
+      ],
+      "negative_evidence": [
+        {
+          "id": "v4_q031_n1",
+          "source_document": "A4-anticoag-2025r.md",
+          "section": "2. 抗凝强度目标",
+          "accepted_spans": [
+            "本版把华法林 INR 目标区间上限设为 2.7，超过该值即判定为抗凝过度",
+            "注意此处的判断基准是 2.7 这一封顶值，跨版本引用时务必核对"
+          ],
+          "fact_id": "F-A-INR"
+        },
+        {
+          "id": "v4_q031_n2",
+          "source_document": "A1-anticoag-2023.md",
+          "section": "5. 特殊人群用药",
+          "accepted_spans": [
+            "患者达到 78 岁 及以上时进入自动减量通道，由药师复核后执行",
+            "自动减量的年龄门槛是 78 岁，系统会在开方环节直接拦截"
+          ],
+          "fact_id": "F-A-AGE"
+        }
+      ],
+      "reference_answer": "2024 版规定 INR 上限 2.9、76 岁及以上进入自动减量通道。",
+      "evidence_chain": [
+        "v4_q031_c1",
+        "v4_q031_c2"
+      ]
+    },
+    {
+      "id": "v4_q032",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": [
+        "hard_negative",
+        "version_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "把时间倒回到最早那版合并了肾功能分层判定表的简报，术前要空出多久、出血事件又要多久报上去？",
+      "claims": [
+        {
+          "id": "v4_q032_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A1-anticoag-2023.md",
+          "section": "4. 围手术期停药管理",
+          "accepted_spans": [
+            "择期手术前应至少停药 72 小时，急诊手术另按拮抗流程处理",
+            "停药窗口按 72 小时 倒推排期，麻醉访视时需二次确认"
+          ],
+          "fact_id": "F-A-HOLD"
+        },
+        {
+          "id": "v4_q032_c2",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "A1-anticoag-2023.md",
+          "section": "7. 出血事件识别",
+          "accepted_spans": [
+            "严重出血事件须在发现后 24 小时 内完成院内上报，逾期计入科室质控扣分",
+            "上报计时从发现时刻起算，窗口为 24 小时，不因交接班顺延"
+          ],
+          "fact_id": "F-A-REPORT"
+        }
+      ],
+      "negative_evidence": [
+        {
+          "id": "v4_q032_n1",
+          "source_document": "A3-anticoag-2025.md",
+          "section": "4. 围手术期停药管理",
+          "accepted_spans": [
+            "择期手术前应至少停药 48 小时，急诊手术另按拮抗流程处理",
+            "停药窗口按 48 小时 倒推排期，麻醉访视时需二次确认"
+          ],
+          "fact_id": "F-A-HOLD"
+        },
+        {
+          "id": "v4_q032_n2",
+          "source_document": "A2-anticoag-2024.md",
+          "section": "7. 出血事件识别",
+          "accepted_spans": [
+            "严重出血事件须在发现后 12 小时 内完成院内上报，逾期计入科室质控扣分",
+            "上报计时从发现时刻起算，窗口为 12 小时，不因交接班顺延"
+          ],
+          "fact_id": "F-A-REPORT"
+        }
+      ],
+      "reference_answer": "2023 版要求术前至少停药 72 小时、严重出血在 24 小时内完成院内上报。",
+      "evidence_chain": [
+        "v4_q032_c1",
+        "v4_q032_c2"
+      ]
+    },
+    {
+      "id": "v4_q033",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": [
+        "hard_negative",
+        "entity_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "以线下门店获客、人工介入比重最大的那家机构，直接放行和直接驳回的两条分数线各在哪？",
+      "claims": [
+        {
+          "id": "v4_q033_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B3-risk-nanxu.md",
+          "section": "2. 评分卡与准入",
+          "accepted_spans": [
+            "评分卡自动通过线设在 630 分，达到该线的申请直接进入放款队列",
+            "自动通过线 630 分 由风险管理部统一调参，业务侧无权自行调整"
+          ],
+          "fact_id": "F-B-CUTOFF"
+        },
+        {
+          "id": "v4_q033_c2",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "B3-risk-nanxu.md",
+          "section": "3. 拒绝策略",
+          "accepted_spans": [
+            "低于 500 分 的申请直接自动拒绝，不再进入人工环节",
+            "自动拒绝线取 500 分，该线以下的申诉需走独立复议通道"
+          ],
+          "fact_id": "F-B-REJECT"
+        }
+      ],
+      "negative_evidence": [
+        {
+          "id": "v4_q033_n1",
+          "source_document": "B5-risk-group.md",
+          "section": "2. 评分卡与准入",
+          "accepted_spans": [
+            "评分卡自动通过线设在 620 分，达到该线的申请直接进入放款队列",
+            "自动通过线 620 分 由风险管理部统一调参，业务侧无权自行调整"
+          ],
+          "fact_id": "F-B-CUTOFF"
+        },
+        {
+          "id": "v4_q033_n2",
+          "source_document": "B5-risk-group.md",
+          "section": "3. 拒绝策略",
+          "accepted_spans": [
+            "低于 495 分 的申请直接自动拒绝，不再进入人工环节",
+            "自动拒绝线取 495 分，该线以下的申诉需走独立复议通道"
+          ],
+          "fact_id": "F-B-REJECT"
+        }
+      ],
+      "reference_answer": "南序小额贷款的自动通过线为 630 分，自动拒绝线为 500 分。",
+      "evidence_chain": [
+        "v4_q033_c1",
+        "v4_q033_c2"
+      ]
+    },
+    {
+      "id": "v4_q034",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": [
+        "hard_negative",
+        "entity_conflict"
+      ],
+      "question": "岐禾数科的自动拒绝分数线和债务收入比上限分别是多少？",
+      "claims": [
+        {
+          "id": "v4_q034_c1",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "B4-risk-qihe.md",
+          "section": "3. 拒绝策略",
+          "accepted_spans": [
+            "低于 465 分 的申请直接自动拒绝，不再进入人工环节",
+            "自动拒绝线取 465 分，该线以下的申诉需走独立复议通道"
+          ],
+          "fact_id": "F-B-REJECT"
+        },
+        {
+          "id": "v4_q034_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B4-risk-qihe.md",
+          "section": "4. 负债与多头风险",
+          "accepted_spans": [
+            "申请人的债务收入比不得超过 70%，超限一票否决",
+            "债务收入比红线为 70%，多头借贷数据需并表计算"
+          ],
+          "fact_id": "F-B-DTI"
+        }
+      ],
+      "negative_evidence": [
+        {
+          "id": "v4_q034_n1",
+          "source_document": "B2-risk-jinzhou.md",
+          "section": "3. 拒绝策略",
+          "accepted_spans": [
+            "低于 520 分 的申请直接自动拒绝，不再进入人工环节",
+            "自动拒绝线取 520 分，该线以下的申诉需走独立复议通道"
+          ],
+          "fact_id": "F-B-REJECT"
+        },
+        {
+          "id": "v4_q034_n2",
+          "source_document": "B2-risk-jinzhou.md",
+          "section": "4. 负债与多头风险",
+          "accepted_spans": [
+            "申请人的债务收入比不得超过 50%，超限一票否决",
+            "债务收入比红线为 50%，多头借贷数据需并表计算"
+          ],
+          "fact_id": "F-B-DTI"
+        }
+      ],
+      "reference_answer": "岐禾数科的自动拒绝线为 465 分，债务收入比上限为 70%，两项都明显宽于集团底线。",
+      "evidence_chain": [
+        "v4_q034_c1",
+        "v4_q034_c2"
+      ]
+    },
+    {
+      "id": "v4_q035",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": [
+        "hard_negative",
+        "entity_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "迭代最勤、客群以线上小额分期为主的那家，一刀切驳回的分数线在哪？模型多久重训一次？",
+      "claims": [
+        {
+          "id": "v4_q035_c1",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "B1-risk-hongyuan.md",
+          "section": "3. 拒绝策略",
+          "accepted_spans": [
+            "低于 480 分 的申请直接自动拒绝，不再进入人工环节",
+            "自动拒绝线取 480 分，该线以下的申诉需走独立复议通道"
+          ],
+          "fact_id": "F-B-REJECT"
+        },
+        {
+          "id": "v4_q035_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B1-risk-hongyuan.md",
+          "section": "10. 模型迭代节奏",
+          "accepted_spans": [
+            "评分模型的例行重训周期为 每 45 天，逾期未重训视为模型失效",
+            "重训节奏保持 每 45 天，特征口径变更时需额外触发一次"
+          ],
+          "fact_id": "F-B-RETRAIN"
+        }
+      ],
+      "negative_evidence": [
+        {
+          "id": "v4_q035_n1",
+          "source_document": "B5-risk-group.md",
+          "section": "3. 拒绝策略",
+          "accepted_spans": [
+            "低于 495 分 的申请直接自动拒绝，不再进入人工环节",
+            "自动拒绝线取 495 分，该线以下的申诉需走独立复议通道"
+          ],
+          "fact_id": "F-B-REJECT"
+        },
+        {
+          "id": "v4_q035_n2",
+          "source_document": "B5-risk-group.md",
+          "section": "10. 模型迭代节奏",
+          "accepted_spans": [
+            "评分模型的例行重训周期为 每 120 天，逾期未重训视为模型失效",
+            "重训节奏保持 每 120 天，特征口径变更时需额外触发一次"
+          ],
+          "fact_id": "F-B-RETRAIN"
+        }
+      ],
+      "reference_answer": "宏元消费金融的自动拒绝线为 480 分，模型例行重训周期为每 45 天。",
+      "evidence_chain": [
+        "v4_q035_c1",
+        "v4_q035_c2"
+      ]
+    },
+    {
+      "id": "v4_q036",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": [
+        "hard_negative",
+        "entity_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "那份成员机构只能收紧不能放宽的底线文件，规定了怎样的免人工放行分数线和最少几项驳回说明？",
+      "claims": [
+        {
+          "id": "v4_q036_c1",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B5-risk-group.md",
+          "section": "2. 评分卡与准入",
+          "accepted_spans": [
+            "评分卡自动通过线设在 620 分，达到该线的申请直接进入放款队列",
+            "自动通过线 620 分 由风险管理部统一调参，业务侧无权自行调整"
+          ],
+          "fact_id": "F-B-CUTOFF"
+        },
+        {
+          "id": "v4_q036_c2",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "B5-risk-group.md",
+          "section": "11. 可解释性与消费者权益",
+          "accepted_spans": [
+            "被拒申请人有权获得不少于 3 条 的主要拒绝原因说明",
+            "原因说明数量下限为 3 条，措辞需通过合规话术库校验"
+          ],
+          "fact_id": "F-B-EXPLAIN"
+        }
+      ],
+      "negative_evidence": [
+        {
+          "id": "v4_q036_n1",
+          "source_document": "B1-risk-hongyuan.md",
+          "section": "2. 评分卡与准入",
+          "accepted_spans": [
+            "评分卡自动通过线设在 612 分，达到该线的申请直接进入放款队列",
+            "自动通过线 612 分 由风险管理部统一调参，业务侧无权自行调整"
+          ],
+          "fact_id": "F-B-CUTOFF"
+        },
+        {
+          "id": "v4_q036_n2",
+          "source_document": "B4-risk-qihe.md",
+          "section": "11. 可解释性与消费者权益",
+          "accepted_spans": [
+            "被拒申请人有权获得不少于 2 条 的主要拒绝原因说明",
+            "原因说明数量下限为 2 条，措辞需通过合规话术库校验"
+          ],
+          "fact_id": "F-B-EXPLAIN"
+        }
+      ],
+      "reference_answer": "集团总纲规定自动通过线 620 分、拒绝原因说明不少于 3 条。",
+      "evidence_chain": [
+        "v4_q036_c1",
+        "v4_q036_c2"
+      ]
+    },
+    {
+      "id": "v4_q037",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "medium",
+      "primary_type": "asset_reference_retrieval",
+      "tags": [
+        "asset_reference",
+        "shared_url"
+      ],
+      "question": "现行版简报末尾那张出血事件处置流程图配的是哪个图片地址？同一版里用药重整的复核周期又是多久？",
+      "claims": [
+        {
+          "id": "v4_q037_c1",
+          "kind": "asset",
+          "claim_type": "passage",
+          "source_document": "A3-anticoag-2025.md",
+          "section": "12. 附图与变更记录",
+          "accepted_spans": [
+            "https://upload.wikimedia.org/wikipedia/commons/7/7e/Flowchart_Process.svg"
+          ],
+          "fact_id": "F-A-IMG"
+        },
+        {
+          "id": "v4_q037_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "A3-anticoag-2025.md",
+          "section": "10. 用药重整",
+          "accepted_spans": [
+            "长期服药患者的用药重整复核周期不得长于 45 天",
+            "复核周期 45 天 是硬性上限，门诊与住院口径一致"
+          ],
+          "fact_id": "F-A-REVIEW"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "现行 2025 版附图为 Flowchart_Process.svg，用药重整复核周期不得长于 45 天。",
+      "evidence_chain": [
+        "v4_q037_c1",
+        "v4_q037_c2"
+      ]
+    },
+    {
+      "id": "v4_q038",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "medium",
+      "primary_type": "asset_reference_retrieval",
+      "tags": [
+        "asset_reference",
+        "shared_url"
+      ],
+      "question": "宏元消费金融那份说明书里的风控链路架构图引用了哪个图片地址？南序小额贷款的债务收入比红线是多少？",
+      "claims": [
+        {
+          "id": "v4_q038_c1",
+          "kind": "asset",
+          "claim_type": "passage",
+          "source_document": "B1-risk-hongyuan.md",
+          "section": "12. 架构图与修订记录",
+          "accepted_spans": [
+            "https://upload.wikimedia.org/wikipedia/commons/1/13/Network_architecture_2levels.png"
+          ],
+          "fact_id": "F-B-IMG"
+        },
+        {
+          "id": "v4_q038_c2",
+          "kind": "text",
+          "claim_type": "anchor",
+          "source_document": "B3-risk-nanxu.md",
+          "section": "4. 负债与多头风险",
+          "accepted_spans": [
+            "申请人的债务收入比不得超过 58%，超限一票否决",
+            "债务收入比红线为 58%，多头借贷数据需并表计算"
+          ],
+          "fact_id": "F-B-DTI"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "宏元消费金融的架构图为 Network_architecture_2levels.png；南序小额贷款的债务收入比上限为 58%。",
+      "evidence_chain": [
+        "v4_q038_c1",
+        "v4_q038_c2"
+      ]
+    },
+    {
+      "id": "v4_q039",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "medium",
+      "primary_type": "asset_reference_retrieval",
+      "tags": [
+        "asset_reference",
+        "shared_url",
+        "low_lexical_overlap"
+      ],
+      "question": "集团那份底线文件末尾附的示意图指向哪个地址？另外还在试运行的那家机构，模型上线的区分度门槛是多少？",
+      "claims": [
+        {
+          "id": "v4_q039_c1",
+          "kind": "asset",
+          "claim_type": "passage",
+          "source_document": "B5-risk-group.md",
+          "section": "12. 架构图与修订记录",
+          "accepted_spans": [
+            "https://upload.wikimedia.org/wikipedia/commons/5/5e/UK_tv_viewing_share_line_chart_1999_-_2009.png"
+          ],
+          "fact_id": "F-B-IMG"
+        },
+        {
+          "id": "v4_q039_c2",
+          "kind": "text",
+          "claim_type": "passage",
+          "source_document": "B4-risk-qihe.md",
+          "section": "5. 模型效果验收",
+          "accepted_spans": [
+            "模型在跨时间验证集上的 KS 值不得低于 0.30，否则不予上线",
+            "上线门槛 KS 为 0.30，验证集必须与训练期完全不重叠"
+          ],
+          "fact_id": "F-B-KS"
+        }
+      ],
+      "negative_evidence": [],
+      "reference_answer": "集团总纲的附图为 UK_tv_viewing_share_line_chart_1999_-_2009.png；岐禾数科的模型上线 KS 门槛为 0.30。",
+      "evidence_chain": [
+        "v4_q039_c1",
+        "v4_q039_c2"
+      ]
+    },
+    {
+      "id": "v4_q040",
+      "question_role": "unanswerable",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "diagnostic",
+      "primary_type": "unanswerable_diagnostic",
+      "tags": [
+        "no_answer",
+        "out_of_scope"
+      ],
+      "question": "本院上个月一共发生了多少例抗凝相关的严重出血事件，其中几例进了 ICU？",
+      "claims": [],
+      "negative_evidence": [],
+      "expected_behavior": "no_relevant_evidence",
+      "diagnostic_reason": "语料是口径类简报，不含任何逐月事件统计数据。"
+    },
+    {
+      "id": "v4_q041",
+      "question_role": "unanswerable",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "diagnostic",
+      "primary_type": "unanswerable_diagnostic",
+      "tags": [
+        "no_answer",
+        "realtime_data"
+      ],
+      "question": "岐禾数科今天实时的申请通过率和平均审批时长分别是多少？",
+      "claims": [],
+      "negative_evidence": [],
+      "expected_behavior": "no_relevant_evidence",
+      "diagnostic_reason": "语料是设计说明书，不含实时运营指标。"
+    },
+    {
+      "id": "v4_q042",
+      "question_role": "unanswerable",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "diagnostic",
+      "primary_type": "unanswerable_diagnostic",
+      "tags": [
+        "no_answer",
+        "fictional_entity"
+      ],
+      "question": "澜川普惠金融的评分卡自动通过线定在多少分？",
+      "claims": [],
+      "negative_evidence": [],
+      "expected_behavior": "no_relevant_evidence",
+      "diagnostic_reason": "澜川普惠金融并不在本语料覆盖的成员机构范围内。"
+    }
+  ]
+}

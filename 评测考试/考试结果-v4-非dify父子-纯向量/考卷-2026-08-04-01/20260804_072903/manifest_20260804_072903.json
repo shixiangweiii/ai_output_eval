@@ -1,0 +1,115 @@
+{
+  "schema_version": "4.0",
+  "metrics_version": "4.0",
+  "timestamp": "20260804_072903",
+  "timezone": "CST",
+  "exam_id": "考卷-2026-08-04-01",
+  "exam_sha256": "35e201a2e35be84a8dd58b48f7f4133d3c1d4e0c00759af14bf39a5f693afbee",
+  "corpus": {
+    "snapshot_id": "2026-08-04-01",
+    "relative_dir": "生成的原始文档语料/2026-08-04-01",
+    "documents": [
+      {
+        "name": "A1-anticoag-2023.md",
+        "sha256": "2604533dcf4792dad13d82355812c54ea10cb7c443a24bf8c5b1440e7b40bc2e"
+      },
+      {
+        "name": "A2-anticoag-2024.md",
+        "sha256": "eb352d12cdc93369e0245f5551a32f079dfa5afca8fa005879a22115d151bc0b"
+      },
+      {
+        "name": "A3-anticoag-2025.md",
+        "sha256": "08db60fb1bcc718beba99c02994795b4ebbc4702327f3472d6a9503fe44904c6"
+      },
+      {
+        "name": "A4-anticoag-2025r.md",
+        "sha256": "c45ef86eb4cd8cc57a2323476479227123d35415bbb26a309508bb45039ba366"
+      },
+      {
+        "name": "A5-anticoag-retired.md",
+        "sha256": "1f49180eb4dfd5a243dac8accfa2886fc0d1a551859627d74f6d65ed1d238de6"
+      },
+      {
+        "name": "B1-risk-hongyuan.md",
+        "sha256": "879f809f113e45a08b04af99a16f879d4de69bb87320e21b25a9c3bd6b0b25e8"
+      },
+      {
+        "name": "B2-risk-jinzhou.md",
+        "sha256": "909266a97db9d77a88563ac9775c4f1ec6948c55ba79016428d058a4cefbef8e"
+      },
+      {
+        "name": "B3-risk-nanxu.md",
+        "sha256": "798808da42483498a7bf08ef59a0c4d556efb8d02df44ba4992ce2b9a8fc3747"
+      },
+      {
+        "name": "B4-risk-qihe.md",
+        "sha256": "3e416f7a6e1f8c89846cad3b86ddd0397d92a94347bae5389f4b7b01c129fefc"
+      },
+      {
+        "name": "B5-risk-group.md",
+        "sha256": "6cc28cc131ba49a2dbd69681434e84b62d63d4f98a0bda5cd828283e5fcd6182"
+      }
+    ]
+  },
+  "corpus_drift": false,
+  "backend_profile": "dify-semantic-flat",
+  "backend_profile_path": "/Users/shixiangweii/run_proj/ai_output_eval/评测脚本/后端配置/dify-semantic-flat.json",
+  "backend_profile_sha256": "7b12455fba965655934815e8e051990a608da0018a3acdfce54eea5e9c78e056",
+  "auth_mode": "bearer_env",
+  "endpoint": "http://localhost:5001/v1/datasets/{dataset_id}/retrieve",
+  "dataset_id": "e4ae9a0d-710a-4d50-a65f-5d847db1d83a",
+  "dataset_revision": "2026-08-04-01",
+  "request_config": {
+    "query": "<query>",
+    "attachment_ids": [],
+    "retrieval_model": {
+      "search_method": "semantic_search",
+      "reranking_enable": true,
+      "reranking_mode": null,
+      "reranking_model": {
+        "reranking_provider_name": "langgenius/tongyi/tongyi",
+        "reranking_model_name": "qwen3-rerank"
+      },
+      "weights": null,
+      "top_k": 20,
+      "score_threshold_enabled": true,
+      "score_threshold": 0.55
+    }
+  },
+  "request_k_support": "applied",
+  "document_alias_map": {},
+  "retrieval_protocol": {
+    "primary_k": 10,
+    "eval_ks": [
+      1,
+      3,
+      5,
+      10,
+      20
+    ],
+    "request_k": 20,
+    "char_budgets": [
+      250,
+      500,
+      1000
+    ],
+    "primary_budget": 500
+  },
+  "retrieval_protocol_source": {
+    "primary_k": "exam",
+    "eval_ks": "exam",
+    "request_k": "exam",
+    "char_budgets": "exam",
+    "primary_budget": "exam"
+  },
+  "ranking_policy": "production_response_order",
+  "run_scope": "full",
+  "raw_content_limit": 800,
+  "python_version": "3.14.2",
+  "evaluator_script_sha256": "0cb6d8b71a5795c28b7f9e1c4ea1308d9ebfad40acb43a6e801c622bffd7befe",
+  "git": {
+    "commit": "c33c1d42d5672a2aa2557f4496d9dc8f6a86d91b",
+    "dirty": true
+  },
+  "security": "credentials and request headers are never persisted"
+}

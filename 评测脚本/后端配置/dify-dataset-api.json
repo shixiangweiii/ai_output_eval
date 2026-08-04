@@ -1,0 +1,48 @@
+{
+  "name": "dify-dataset-api",
+  "description": "Dify Dataset API /v1/datasets/<id>/retrieve，Bearer 鉴权，hybrid_search + rerank。",
+  "url_template": "http://localhost:5001/v1/datasets/{dataset_id}/retrieve",
+  "method": "POST",
+  "auth": "bearer_env",
+  "auth_env": { "token": "DIFY_DATASET_API_KEY" },
+  "token_header": "authorization",
+  "token_format": "Bearer {token}",
+  "extra_headers": {
+    "origin": "http://localhost:3000",
+    "referer": "http://localhost:3000/"
+  },
+  "supports_request_k": true,
+  "request_template": {
+    "query": "{query}",
+    "retrieval_model": {
+      "search_method": "hybrid_search",
+      "reranking_enable": true,
+      "reranking_mode": "reranking_model",
+      "reranking_model": {
+        "reranking_provider_name": "langgenius/tongyi/tongyi",
+        "reranking_model_name": "qwen3-rerank"
+      },
+      "weights": {
+        "weight_type": "customized",
+        "keyword_setting": { "keyword_weight": 0.3 },
+        "vector_setting": {
+          "vector_weight": 0.7,
+          "embedding_model_name": "",
+          "embedding_provider_name": ""
+        }
+      },
+      "top_k": "{top_k}",
+      "score_threshold_enabled": false,
+      "score_threshold": null
+    }
+  },
+  "records_path": "records",
+  "field_map": {
+    "document_name": "segment.document.name",
+    "content": "segment.content",
+    "relevance_score": "score",
+    "chunk_id": "segment.id",
+    "document_id": "segment.document_id",
+    "server_top": "segment.position"
+  }
+}

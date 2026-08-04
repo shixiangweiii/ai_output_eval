@@ -1,0 +1,1528 @@
+{
+  "ledger_version": "2026-08-04-02",
+  "exam_id": "考卷-2026-08-04-02",
+  "exam_title": "RAG 检索评测考卷 v4：兄弟文档判别、实体桥接多跳与拒答分离度",
+  "generated_date": "2026-08-04",
+  "purpose": "覆盖 A/B 两个兄弟文档族（版本轴、主体轴）与 C/D 两个实体桥接族，用于横向评测不同 RAG 产品的检索召回与真多跳能力；不作为独立盲测基准。",
+  "corpus_snapshot_id": "2026-08-04-02",
+  "corpus_relative_dir": "生成的原始文档语料/2026-08-04-02",
+  "scoring_note": "只有 claims 进入检索评分。sanity 题单列不进主指标；unanswerable 题用于计算拒答分离度 AUC；cross_doc_chain 题额外产出桥接召回与路径状态。",
+  "retrieval_protocol": {
+    "primary_k": 10,
+    "eval_ks": [
+      1,
+      3,
+      5,
+      10,
+      20
+    ],
+    "request_k": 20,
+    "char_budgets": [
+      250,
+      500,
+      1000
+    ],
+    "primary_budget": 500
+  },
+  "design_constraints": {
+    "min_claims_per_document": 3,
+    "max_claim_share_per_document": 0.15,
+    "min_low_lexical_overlap_questions": 20,
+    "min_hard_negative_questions": 10,
+    "min_spans_per_claim": 2,
+    "max_span_normalized_len": 40,
+    "min_sanity_questions": 4,
+    "min_unanswerable_questions": 3,
+    "claim_reuse_policy": "同一 source_document + normalized accepted_span 不得在正式题中复用"
+  },
+  "questions": [
+    {
+      "id": "v4_q001",
+      "question_role": "sanity",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "simple",
+      "primary_type": "single_doc_fact",
+      "tags": [
+        "sanity",
+        "single_doc"
+      ],
+      "question": "现行版抗凝警戒简报把华法林 INR 目标区间的上限定在多少？",
+      "reference_answer": "现行的 2025 版规定 INR 目标区间上限为 2.8，超过即判定为抗凝过度。",
+      "claims": [
+        {
+          "fact_id": "F-A-INR",
+          "document": "A3-anticoag-2025.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q002",
+      "question_role": "sanity",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "simple",
+      "primary_type": "single_doc_fact",
+      "tags": [
+        "sanity",
+        "single_doc"
+      ],
+      "question": "按照现行版要求，严重出血事件需要在多长时间内完成院内上报？",
+      "reference_answer": "现行的 2025 版要求在发现后 8 小时内完成院内上报，逾期计入科室质控扣分。",
+      "claims": [
+        {
+          "fact_id": "F-A-REPORT",
+          "document": "A3-anticoag-2025.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q003",
+      "question_role": "sanity",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "simple",
+      "primary_type": "single_doc_fact",
+      "tags": [
+        "sanity",
+        "single_doc"
+      ],
+      "question": "宏元消费金融的评分卡自动通过线是多少分？",
+      "reference_answer": "宏元消费金融把自动通过线设在 612 分，达到该线的申请直接进入放款队列。",
+      "claims": [
+        {
+          "fact_id": "F-B-CUTOFF",
+          "document": "B1-risk-hongyuan.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q004",
+      "question_role": "sanity",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "simple",
+      "primary_type": "single_doc_fact",
+      "tags": [
+        "sanity",
+        "single_doc"
+      ],
+      "question": "瑾洲银行信用卡中心对自动通过的申请按多大比例做人工抽检？",
+      "reference_answer": "瑾洲银行信用卡中心的人工复核抽检比例为 20%。",
+      "claims": [
+        {
+          "fact_id": "F-B-MANUAL",
+          "document": "B2-risk-jinzhou.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q005",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "medium",
+      "primary_type": "single_doc_multi_claim",
+      "tags": [
+        "single_doc",
+        "multi_claim",
+        "low_lexical_overlap"
+      ],
+      "question": "一位正在服用达比加群的患者肾功能持续走低，同时排上了下个月的择期手术。按当前执行的那一版，肾功能到什么程度必须调整用量、术前又要空出多久？",
+      "reference_answer": "现行 2025 版规定：肌酐清除率低于 40 mL/min 必须减量；择期手术前至少停药 48 小时。",
+      "claims": [
+        {
+          "fact_id": "F-A-CRCL",
+          "document": "A3-anticoag-2025.md"
+        },
+        {
+          "fact_id": "F-A-HOLD",
+          "document": "A3-anticoag-2025.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q006",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "medium",
+      "primary_type": "single_doc_multi_claim",
+      "tags": [
+        "single_doc",
+        "multi_claim",
+        "low_lexical_overlap"
+      ],
+      "question": "2023 年那一版里，患者岁数大到什么程度系统会自动帮他把量降下来？血细胞里负责凝血的那项指标掉到多少就必须停？",
+      "reference_answer": "2023 版规定：78 岁及以上进入自动减量通道；血小板计数跌破 60×10⁹/L 应立即停药。",
+      "claims": [
+        {
+          "fact_id": "F-A-AGE",
+          "document": "A1-anticoag-2023.md"
+        },
+        {
+          "fact_id": "F-A-PLT",
+          "document": "A1-anticoag-2023.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q007",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "medium",
+      "primary_type": "single_doc_multi_claim",
+      "tags": [
+        "single_doc",
+        "multi_claim",
+        "deprecated_version",
+        "low_lexical_overlap"
+      ],
+      "question": "那份早已停止执行的旧版简报，对联合抗栓能开多久、以及长期患者多久要复核一次，分别是怎么写的？",
+      "reference_answer": "已废止的 2021 版规定：双联抗栓总疗程上限 18 个月；用药重整复核周期不得长于 180 天。这两项都远宽于现行版，不得据此下医嘱。",
+      "claims": [
+        {
+          "fact_id": "F-A-DUAL",
+          "document": "A5-anticoag-retired.md"
+        },
+        {
+          "fact_id": "F-A-REVIEW",
+          "document": "A5-anticoag-retired.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q008",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "medium",
+      "primary_type": "single_doc_multi_claim",
+      "tags": [
+        "single_doc",
+        "multi_claim",
+        "low_lexical_overlap"
+      ],
+      "question": "在那家受银行体系统一管控的机构里，申请人背的债最多能占到收入的几成？另外新模型要想推上生产，区分度至少要做到什么水平？",
+      "reference_answer": "瑾洲银行信用卡中心要求债务收入比不超过 50%，模型跨时间验证集上的 KS 不得低于 0.38。",
+      "claims": [
+        {
+          "fact_id": "F-B-DTI",
+          "document": "B2-risk-jinzhou.md"
+        },
+        {
+          "fact_id": "F-B-KS",
+          "document": "B2-risk-jinzhou.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q009",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "medium",
+      "primary_type": "single_doc_multi_claim",
+      "tags": [
+        "single_doc",
+        "multi_claim",
+        "low_lexical_overlap"
+      ],
+      "question": "那家还在试运行阶段的科技子公司，单个入模变量漂到什么程度就要强制回滚？例行的模型翻新又是多久一轮？",
+      "reference_answer": "岐禾数科规定单特征 PSI 超过 0.28 即触发强制下线并回滚，评分模型例行重训周期为每 30 天。",
+      "claims": [
+        {
+          "fact_id": "F-B-PSI",
+          "document": "B4-risk-qihe.md"
+        },
+        {
+          "fact_id": "F-B-RETRAIN",
+          "document": "B4-risk-qihe.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q010",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "medium",
+      "primary_type": "single_doc_multi_claim",
+      "tags": [
+        "single_doc",
+        "multi_claim",
+        "low_lexical_overlap"
+      ],
+      "question": "集团层面那份底线文件里，头一回借钱的人最多能批到多少额度？还不上钱之后多久案子就转出去了？",
+      "reference_answer": "集团总纲规定新客首次授信上限为 4 万元，逾期满 4 天后案件自动移交催收系统。",
+      "claims": [
+        {
+          "fact_id": "F-B-LIMIT",
+          "document": "B5-risk-group.md"
+        },
+        {
+          "fact_id": "F-B-OVERDUE",
+          "document": "B5-risk-group.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q011",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "version_conflict"
+      ],
+      "question": "抗凝强度的封顶值，2023 版和还在征求意见的那版修订稿分别定在哪里？",
+      "reference_answer": "2023 版的 INR 上限是 3.0，2025 修订版收紧到 2.7。修订版尚未通过药事会，不得据此下医嘱。",
+      "claims": [
+        {
+          "fact_id": "F-A-INR",
+          "document": "A1-anticoag-2023.md"
+        },
+        {
+          "fact_id": "F-A-INR",
+          "document": "A4-anticoag-2025r.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q012",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "version_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "同样一台排好期的手术，按 2024 年那版和按早就作废的那版，要提前多久让患者把药停下来？差多少？",
+      "reference_answer": "2024 版要求术前至少停药 60 小时，已废止的 2021 版要求 96 小时，两者相差 36 小时。",
+      "claims": [
+        {
+          "fact_id": "F-A-HOLD",
+          "document": "A2-anticoag-2024.md"
+        },
+        {
+          "fact_id": "F-A-HOLD",
+          "document": "A5-anticoag-retired.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q013",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "version_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "自动降量的年龄门槛，现在执行的口径比那份作废文件挪动了多少？",
+      "reference_answer": "现行 2025 版的门槛是 75 岁，已废止的 2021 版是 80 岁，门槛下调了 5 岁。",
+      "claims": [
+        {
+          "fact_id": "F-A-AGE",
+          "document": "A3-anticoag-2025.md"
+        },
+        {
+          "fact_id": "F-A-AGE",
+          "document": "A5-anticoag-retired.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q014",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "version_conflict"
+      ],
+      "question": "想拿到抗凝处方权，2023 版和现行版分别要求修满多少专项培训？",
+      "reference_answer": "2023 版要求 16 学时，现行 2025 版要求 24 学时，多出 8 学时。",
+      "claims": [
+        {
+          "fact_id": "F-A-TRAIN",
+          "document": "A1-anticoag-2023.md"
+        },
+        {
+          "fact_id": "F-A-TRAIN",
+          "document": "A3-anticoag-2025.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q015",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "entity_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "同一个申请人，在受银行统一管控的那家和在还没正式上线的那家，要多高的分才能免于人工介入？",
+      "reference_answer": "瑾洲银行信用卡中心的自动通过线是 648 分，岐禾数科是 605 分，前者高出 43 分。",
+      "claims": [
+        {
+          "fact_id": "F-B-CUTOFF",
+          "document": "B2-risk-jinzhou.md"
+        },
+        {
+          "fact_id": "F-B-CUTOFF",
+          "document": "B4-risk-qihe.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q016",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "entity_conflict"
+      ],
+      "question": "宏元消费金融的债务收入比红线，比集团底线松了还是紧了？",
+      "reference_answer": "宏元消费金融的上限是 65%，集团总纲的底线是 60%，宏元比集团底线更松，属于不合规的放宽。",
+      "claims": [
+        {
+          "fact_id": "F-B-DTI",
+          "document": "B1-risk-hongyuan.md"
+        },
+        {
+          "fact_id": "F-B-DTI",
+          "document": "B5-risk-group.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q017",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "entity_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "以线下门店获客为主的那家，和刚成立的科技子公司，在事后翻查已通过件上的投入差多少？",
+      "reference_answer": "南序小额贷款的抽检比例是 35%，岐禾数科只有 5%，相差 30 个百分点。",
+      "claims": [
+        {
+          "fact_id": "F-B-MANUAL",
+          "document": "B3-risk-nanxu.md"
+        },
+        {
+          "fact_id": "F-B-MANUAL",
+          "document": "B4-risk-qihe.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q018",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "entity_conflict"
+      ],
+      "question": "宏元消费金融和瑾洲银行信用卡中心，逾期多少天后把案子转给催收？",
+      "reference_answer": "宏元消费金融是逾期满 3 天移交，瑾洲银行信用卡中心是逾期满 7 天移交。",
+      "claims": [
+        {
+          "fact_id": "F-B-OVERDUE",
+          "document": "B1-risk-hongyuan.md"
+        },
+        {
+          "fact_id": "F-B-OVERDUE",
+          "document": "B2-risk-jinzhou.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q019",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "entity_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "被驳回的申请人想知道自己为什么没过，在受银行管控的那家和在试运行的那家，最少能拿到几项说法？",
+      "reference_answer": "瑾洲银行信用卡中心至少给出 5 条主要拒绝原因，岐禾数科只有 2 条。",
+      "claims": [
+        {
+          "fact_id": "F-B-EXPLAIN",
+          "document": "B2-risk-jinzhou.md"
+        },
+        {
+          "fact_id": "F-B-EXPLAIN",
+          "document": "B4-risk-qihe.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q020",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "multi_dimension"
+      ],
+      "question": "分别看三个版本各一项：最早那版对达比加群的减量触发线、次年版的血小板停药下限、以及当前执行版的联合抗栓疗程上限，各是多少？",
+      "reference_answer": "2023 版的肌酐清除率触发线为 45 mL/min，2024 版的血小板停药下限为 55×10⁹/L，现行 2025 版的双联抗栓疗程上限为 6 个月。",
+      "claims": [
+        {
+          "fact_id": "F-A-CRCL",
+          "document": "A1-anticoag-2023.md"
+        },
+        {
+          "fact_id": "F-A-PLT",
+          "document": "A2-anticoag-2024.md"
+        },
+        {
+          "fact_id": "F-A-DUAL",
+          "document": "A3-anticoag-2025.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q021",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "multi_dimension",
+        "low_lexical_overlap"
+      ],
+      "question": "早期那版对出血预警的血指标下限、当前执行版对凝血细胞的停药红线、以及征求意见稿对长期患者重新理方子的间隔，三项分别怎么定？",
+      "reference_answer": "2023 版血红蛋白预警下限 90 g/L，现行 2025 版血小板停药红线 50×10⁹/L，2025 修订版用药重整周期不长于 30 天。",
+      "claims": [
+        {
+          "fact_id": "F-A-HB",
+          "document": "A1-anticoag-2023.md"
+        },
+        {
+          "fact_id": "F-A-PLT",
+          "document": "A3-anticoag-2025.md"
+        },
+        {
+          "fact_id": "F-A-REVIEW",
+          "document": "A4-anticoag-2025r.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q022",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "multi_dimension"
+      ],
+      "question": "把 2023 版的联合抗栓疗程、2024 版的肾功能减量线、修订稿的血小板红线放在一起，三者分别是什么水平？",
+      "reference_answer": "2023 版双联抗栓上限 12 个月，2024 版肌酐清除率触发线 42 mL/min，2025 修订版血小板停药下限 45×10⁹/L。",
+      "claims": [
+        {
+          "fact_id": "F-A-DUAL",
+          "document": "A1-anticoag-2023.md"
+        },
+        {
+          "fact_id": "F-A-CRCL",
+          "document": "A2-anticoag-2024.md"
+        },
+        {
+          "fact_id": "F-A-PLT",
+          "document": "A4-anticoag-2025r.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q023",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "multi_dimension",
+        "low_lexical_overlap"
+      ],
+      "question": "最早那版多久要把长期患者的方子重捋一遍？当前执行版触发出血预警的血色素线在哪？修订稿又把肾功能减量线压到了什么程度？",
+      "reference_answer": "2023 版用药重整周期不长于 90 天，现行 2025 版血红蛋白预警下限 100 g/L，2025 修订版肌酐清除率触发线 38 mL/min。",
+      "claims": [
+        {
+          "fact_id": "F-A-REVIEW",
+          "document": "A1-anticoag-2023.md"
+        },
+        {
+          "fact_id": "F-A-HB",
+          "document": "A3-anticoag-2025.md"
+        },
+        {
+          "fact_id": "F-A-CRCL",
+          "document": "A4-anticoag-2025r.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q024",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "multi_dimension",
+        "low_lexical_overlap"
+      ],
+      "question": "2024 版的联合抗栓疗程上限和用药重整周期，与那份已废止版本的出血预警血色素线，分别是多少？",
+      "reference_answer": "2024 版双联抗栓上限 9 个月、用药重整周期不长于 60 天；已废止的 2021 版血红蛋白预警下限为 85 g/L。",
+      "claims": [
+        {
+          "fact_id": "F-A-DUAL",
+          "document": "A2-anticoag-2024.md"
+        },
+        {
+          "fact_id": "F-A-REVIEW",
+          "document": "A2-anticoag-2024.md"
+        },
+        {
+          "fact_id": "F-A-HB",
+          "document": "A5-anticoag-retired.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q025",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "multi_dimension",
+        "low_lexical_overlap"
+      ],
+      "question": "线上小额分期那家的模型上线门槛、银行卡中心的漂移熔断线、以及试运行那家的新客额度上限，三项各是多少？",
+      "reference_answer": "宏元消费金融的模型上线 KS 门槛 0.32，瑾洲银行信用卡中心的 PSI 熔断线 0.15，岐禾数科的新客首次授信上限 1.5 万元。",
+      "claims": [
+        {
+          "fact_id": "F-B-KS",
+          "document": "B1-risk-hongyuan.md"
+        },
+        {
+          "fact_id": "F-B-PSI",
+          "document": "B2-risk-jinzhou.md"
+        },
+        {
+          "fact_id": "F-B-LIMIT",
+          "document": "B4-risk-qihe.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q026",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "multi_dimension",
+        "low_lexical_overlap"
+      ],
+      "question": "线上小额分期那家的变量漂移熔断线、银行卡中心头回借钱的额度上限、以及线下门店那家多久翻新一次模型？",
+      "reference_answer": "宏元消费金融 PSI 熔断线 0.25，瑾洲银行信用卡中心新客首次授信上限 5 万元，南序小额贷款模型重训周期为每 90 天。",
+      "claims": [
+        {
+          "fact_id": "F-B-PSI",
+          "document": "B1-risk-hongyuan.md"
+        },
+        {
+          "fact_id": "F-B-LIMIT",
+          "document": "B2-risk-jinzhou.md"
+        },
+        {
+          "fact_id": "F-B-RETRAIN",
+          "document": "B3-risk-nanxu.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q027",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "multi_dimension",
+        "low_lexical_overlap"
+      ],
+      "question": "宏元消费金融的新客授信上限、瑾洲银行信用卡中心的模型重训周期、南序小额贷款的模型上线门槛，分别是多少？",
+      "reference_answer": "宏元消费金融新客首次授信上限 2 万元，瑾洲银行信用卡中心模型重训周期为每 180 天，南序小额贷款模型上线 KS 门槛 0.35。",
+      "claims": [
+        {
+          "fact_id": "F-B-LIMIT",
+          "document": "B1-risk-hongyuan.md"
+        },
+        {
+          "fact_id": "F-B-RETRAIN",
+          "document": "B2-risk-jinzhou.md"
+        },
+        {
+          "fact_id": "F-B-KS",
+          "document": "B3-risk-nanxu.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q028",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_compare",
+      "tags": [
+        "cross_doc",
+        "multi_dimension",
+        "low_lexical_overlap"
+      ],
+      "question": "那份成员机构只能收紧不能放宽的底线文件，在模型翻新节奏、上线区分度门槛和变量漂移熔断三项上分别怎么规定？",
+      "reference_answer": "集团总纲规定模型重训周期为每 120 天，模型上线 KS 门槛 0.34，单特征 PSI 熔断线 0.18。",
+      "claims": [
+        {
+          "fact_id": "F-B-RETRAIN",
+          "document": "B5-risk-group.md"
+        },
+        {
+          "fact_id": "F-B-KS",
+          "document": "B5-risk-group.md"
+        },
+        {
+          "fact_id": "F-B-PSI",
+          "document": "B5-risk-group.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q029",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": [
+        "hard_negative",
+        "version_conflict",
+        "draft_only"
+      ],
+      "question": "那份尚在征求意见、还没通过药事会的修订稿，把术前停药和出血上报这两项分别提到了什么程度？",
+      "reference_answer": "2025 修订版要求术前至少停药 36 小时、严重出血在 6 小时内上报。该版仅为草案，不得据此下医嘱。",
+      "claims": [
+        {
+          "fact_id": "F-A-HOLD",
+          "document": "A4-anticoag-2025r.md"
+        },
+        {
+          "fact_id": "F-A-REPORT",
+          "document": "A4-anticoag-2025r.md"
+        }
+      ],
+      "negatives": [
+        {
+          "fact_id": "F-A-HOLD",
+          "document": "A3-anticoag-2025.md"
+        },
+        {
+          "fact_id": "F-A-REPORT",
+          "document": "A5-anticoag-retired.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q030",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": [
+        "hard_negative",
+        "deprecated_version",
+        "low_lexical_overlap"
+      ],
+      "question": "在那份只能用于病历追溯的老文件里，抗凝强度的天花板和必须停药的血小板下限各是多少？",
+      "reference_answer": "已废止的 2021 版规定 INR 上限 3.2、血小板跌破 70×10⁹/L 停药，两项都明显宽于现行版。",
+      "claims": [
+        {
+          "fact_id": "F-A-INR",
+          "document": "A5-anticoag-retired.md"
+        },
+        {
+          "fact_id": "F-A-PLT",
+          "document": "A5-anticoag-retired.md"
+        }
+      ],
+      "negatives": [
+        {
+          "fact_id": "F-A-INR",
+          "document": "A3-anticoag-2025.md"
+        },
+        {
+          "fact_id": "F-A-PLT",
+          "document": "A1-anticoag-2023.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q031",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": [
+        "hard_negative",
+        "version_conflict"
+      ],
+      "question": "2024 版对抗凝强度上限和高龄自动减量起点分别是怎么规定的？",
+      "reference_answer": "2024 版规定 INR 上限 2.9、76 岁及以上进入自动减量通道。",
+      "claims": [
+        {
+          "fact_id": "F-A-INR",
+          "document": "A2-anticoag-2024.md"
+        },
+        {
+          "fact_id": "F-A-AGE",
+          "document": "A2-anticoag-2024.md"
+        }
+      ],
+      "negatives": [
+        {
+          "fact_id": "F-A-INR",
+          "document": "A4-anticoag-2025r.md"
+        },
+        {
+          "fact_id": "F-A-AGE",
+          "document": "A1-anticoag-2023.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q032",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": [
+        "hard_negative",
+        "version_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "把时间倒回到最早那版合并了肾功能分层判定表的简报，术前要空出多久、出血事件又要多久报上去？",
+      "reference_answer": "2023 版要求术前至少停药 72 小时、严重出血在 24 小时内完成院内上报。",
+      "claims": [
+        {
+          "fact_id": "F-A-HOLD",
+          "document": "A1-anticoag-2023.md"
+        },
+        {
+          "fact_id": "F-A-REPORT",
+          "document": "A1-anticoag-2023.md"
+        }
+      ],
+      "negatives": [
+        {
+          "fact_id": "F-A-HOLD",
+          "document": "A3-anticoag-2025.md"
+        },
+        {
+          "fact_id": "F-A-REPORT",
+          "document": "A2-anticoag-2024.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q033",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": [
+        "hard_negative",
+        "entity_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "以线下门店获客、人工介入比重最大的那家机构，直接放行和直接驳回的两条分数线各在哪？",
+      "reference_answer": "南序小额贷款的自动通过线为 630 分，自动拒绝线为 500 分。",
+      "claims": [
+        {
+          "fact_id": "F-B-CUTOFF",
+          "document": "B3-risk-nanxu.md"
+        },
+        {
+          "fact_id": "F-B-REJECT",
+          "document": "B3-risk-nanxu.md"
+        }
+      ],
+      "negatives": [
+        {
+          "fact_id": "F-B-CUTOFF",
+          "document": "B5-risk-group.md"
+        },
+        {
+          "fact_id": "F-B-REJECT",
+          "document": "B5-risk-group.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q034",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": [
+        "hard_negative",
+        "entity_conflict"
+      ],
+      "question": "岐禾数科的自动拒绝分数线和债务收入比上限分别是多少？",
+      "reference_answer": "岐禾数科的自动拒绝线为 465 分，债务收入比上限为 70%，两项都明显宽于集团底线。",
+      "claims": [
+        {
+          "fact_id": "F-B-REJECT",
+          "document": "B4-risk-qihe.md"
+        },
+        {
+          "fact_id": "F-B-DTI",
+          "document": "B4-risk-qihe.md"
+        }
+      ],
+      "negatives": [
+        {
+          "fact_id": "F-B-REJECT",
+          "document": "B2-risk-jinzhou.md"
+        },
+        {
+          "fact_id": "F-B-DTI",
+          "document": "B2-risk-jinzhou.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q035",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": [
+        "hard_negative",
+        "entity_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "迭代最勤、客群以线上小额分期为主的那家，一刀切驳回的分数线在哪？模型多久重训一次？",
+      "reference_answer": "宏元消费金融的自动拒绝线为 480 分，模型例行重训周期为每 45 天。",
+      "claims": [
+        {
+          "fact_id": "F-B-REJECT",
+          "document": "B1-risk-hongyuan.md"
+        },
+        {
+          "fact_id": "F-B-RETRAIN",
+          "document": "B1-risk-hongyuan.md"
+        }
+      ],
+      "negatives": [
+        {
+          "fact_id": "F-B-REJECT",
+          "document": "B5-risk-group.md"
+        },
+        {
+          "fact_id": "F-B-RETRAIN",
+          "document": "B5-risk-group.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q036",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": [
+        "hard_negative",
+        "entity_conflict",
+        "low_lexical_overlap"
+      ],
+      "question": "那份成员机构只能收紧不能放宽的底线文件，规定了怎样的免人工放行分数线和最少几项驳回说明？",
+      "reference_answer": "集团总纲规定自动通过线 620 分、拒绝原因说明不少于 3 条。",
+      "claims": [
+        {
+          "fact_id": "F-B-CUTOFF",
+          "document": "B5-risk-group.md"
+        },
+        {
+          "fact_id": "F-B-EXPLAIN",
+          "document": "B5-risk-group.md"
+        }
+      ],
+      "negatives": [
+        {
+          "fact_id": "F-B-CUTOFF",
+          "document": "B1-risk-hongyuan.md"
+        },
+        {
+          "fact_id": "F-B-EXPLAIN",
+          "document": "B4-risk-qihe.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q037",
+      "question_role": "scored",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "medium",
+      "primary_type": "asset_reference_retrieval",
+      "tags": [
+        "asset_reference",
+        "shared_url"
+      ],
+      "question": "现行版简报末尾那张出血事件处置流程图配的是哪个图片地址？同一版里用药重整的复核周期又是多久？",
+      "reference_answer": "现行 2025 版附图为 Flowchart_Process.svg，用药重整复核周期不得长于 45 天。",
+      "claims": [
+        {
+          "fact_id": "F-A-IMG",
+          "document": "A3-anticoag-2025.md"
+        },
+        {
+          "fact_id": "F-A-REVIEW",
+          "document": "A3-anticoag-2025.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q038",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "medium",
+      "primary_type": "asset_reference_retrieval",
+      "tags": [
+        "asset_reference",
+        "shared_url"
+      ],
+      "question": "宏元消费金融那份说明书里的风控链路架构图引用了哪个图片地址？南序小额贷款的债务收入比红线是多少？",
+      "reference_answer": "宏元消费金融的架构图为 Network_architecture_2levels.png；南序小额贷款的债务收入比上限为 58%。",
+      "claims": [
+        {
+          "fact_id": "F-B-IMG",
+          "document": "B1-risk-hongyuan.md"
+        },
+        {
+          "fact_id": "F-B-DTI",
+          "document": "B3-risk-nanxu.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q039",
+      "question_role": "scored",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "medium",
+      "primary_type": "asset_reference_retrieval",
+      "tags": [
+        "asset_reference",
+        "shared_url",
+        "low_lexical_overlap"
+      ],
+      "question": "集团那份底线文件末尾附的示意图指向哪个地址？另外还在试运行的那家机构，模型上线的区分度门槛是多少？",
+      "reference_answer": "集团总纲的附图为 UK_tv_viewing_share_line_chart_1999_-_2009.png；岐禾数科的模型上线 KS 门槛为 0.30。",
+      "claims": [
+        {
+          "fact_id": "F-B-IMG",
+          "document": "B5-risk-group.md"
+        },
+        {
+          "fact_id": "F-B-KS",
+          "document": "B4-risk-qihe.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q043",
+      "question_role": "scored",
+      "cluster_id": "C-CH-C1",
+      "chain_id": "CH-C1",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "multi_hop",
+        "entity_bridge"
+      ],
+      "question": "顾屿和楼砚之间存在什么间接的职业关联？只说明材料能够证明的部分。",
+      "reference_answer": "顾屿任职于砺岩精工，楼砚任职于潮生重工，而潮生重工已完成对砺岩精工的控股收购，两人因此处在同一控制关系之下。",
+      "claims": [
+        {
+          "fact_id": "F-C1A-JOIN",
+          "document": "C1a-guyu-role.md"
+        },
+        {
+          "fact_id": "F-C1B-DEAL",
+          "document": "C1b-liyan-equity.md"
+        },
+        {
+          "fact_id": "F-C1C-APPOINT",
+          "document": "C1c-louyan-role.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q044",
+      "question_role": "scored",
+      "cluster_id": "C-CH-C1",
+      "chain_id": "CH-C1",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "multi_hop",
+        "entity_bridge"
+      ],
+      "question": "顾屿负责的技术方法和楼砚分管的业务，最终是否归到同一个报表口径下？依据是什么？",
+      "reference_answer": "是。顾屿主持的校准方案已是砺岩精工的内部基准，而砺岩精工自交割日起纳入潮生重工的合并报表范围；楼砚所在岗位则直接向潮生重工首席运营官汇报。",
+      "claims": [
+        {
+          "fact_id": "F-C1A-SCOPE",
+          "document": "C1a-guyu-role.md"
+        },
+        {
+          "fact_id": "F-C1B-CONSOLIDATE",
+          "document": "C1b-liyan-equity.md"
+        },
+        {
+          "fact_id": "F-C1C-REPORT",
+          "document": "C1c-louyan-role.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q045",
+      "question_role": "scored",
+      "cluster_id": "C-CH-C1",
+      "chain_id": "CH-C1",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "multi_hop",
+        "entity_bridge"
+      ],
+      "question": "顾屿和楼砚各自的签字权限，是否足以处理这两家主体之间的股权类事项？",
+      "reference_answer": "都不足以。顾屿不代表砺岩精工签署资本或股权文件；砺岩精工在被收购后仍自行决定人员任命；楼砚也无权单独批准潮生重工的并购或股权转让。",
+      "claims": [
+        {
+          "fact_id": "F-C1A-LIMIT",
+          "document": "C1a-guyu-role.md"
+        },
+        {
+          "fact_id": "F-C1B-AUTONOMY",
+          "document": "C1b-liyan-equity.md"
+        },
+        {
+          "fact_id": "F-C1C-LIMIT",
+          "document": "C1c-louyan-role.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q046",
+      "question_role": "scored",
+      "cluster_id": "C-CH-C2",
+      "chain_id": "CH-C2",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "multi_hop",
+        "entity_bridge"
+      ],
+      "question": "柏迟和聂昭之间隔着几层关系？把中间涉及的机构按顺序串起来说明。",
+      "reference_answer": "柏迟在云枢检测任职；云枢检测为屿白材料提供第三方检测服务；屿白材料的多数表决权由岱川控股持有；聂昭则是岱川控股产业投资部总经理。",
+      "claims": [
+        {
+          "fact_id": "F-C2A-ROLE",
+          "document": "C2a-baichi-role.md"
+        },
+        {
+          "fact_id": "F-C2B-PARTY",
+          "document": "C2b-yunshu-service.md"
+        },
+        {
+          "fact_id": "F-C2C-CONTROL",
+          "document": "C2c-yubai-equity.md"
+        },
+        {
+          "fact_id": "F-C2D-APPOINT",
+          "document": "C2d-niezhao-role.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q047",
+      "question_role": "scored",
+      "cluster_id": "C-CH-C2",
+      "chain_id": "CH-C2",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "multi_hop",
+        "entity_bridge"
+      ],
+      "question": "柏迟所在机构出具的报告，最终会流向聂昭分管的哪一类资产？给出完整的中间链条。",
+      "reference_answer": "柏迟的试验资质由云枢检测备案管理，检测报告直送屿白材料质量部；屿白材料董事会多数席位由岱川控股提名；而聂昭分管岱川控股在新材料方向的参控股项目。",
+      "claims": [
+        {
+          "fact_id": "F-C2A-CERT",
+          "document": "C2a-baichi-role.md"
+        },
+        {
+          "fact_id": "F-C2B-DELIVER",
+          "document": "C2b-yunshu-service.md"
+        },
+        {
+          "fact_id": "F-C2C-BOARD",
+          "document": "C2c-yubai-equity.md"
+        },
+        {
+          "fact_id": "F-C2D-SCOPE",
+          "document": "C2d-niezhao-role.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q048",
+      "question_role": "scored",
+      "cluster_id": "C-CH-C2",
+      "chain_id": "CH-C2",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "multi_hop",
+        "entity_bridge"
+      ],
+      "question": "柏迟和聂昭各自的权限边界，说明了这条链条上哪些事情不能由他们个人决定？",
+      "reference_answer": "柏迟不参与云枢检测的商务定价；云枢检测在财务核算与对外责任上与委托方各自独立；屿白材料仍以原主体资格对外签约；聂昭的审批也以岱川控股董事会授权额度为上限。",
+      "claims": [
+        {
+          "fact_id": "F-C2A-LIMIT",
+          "document": "C2a-baichi-role.md"
+        },
+        {
+          "fact_id": "F-C2B-INDEPENDENT",
+          "document": "C2b-yunshu-service.md"
+        },
+        {
+          "fact_id": "F-C2C-BRAND",
+          "document": "C2c-yubai-equity.md"
+        },
+        {
+          "fact_id": "F-C2D-LIMIT",
+          "document": "C2d-niezhao-role.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q049",
+      "question_role": "scored",
+      "cluster_id": "C-CH-D1",
+      "chain_id": "CH-D1",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "multi_hop",
+        "entity_bridge"
+      ],
+      "question": "温阙和祁楠之间存在什么工作上的间接关联？只说明材料能够证明的部分。",
+      "reference_answer": "温阙在屏山修复院从事纸质文物修复；屏山修复院中标承接了澜庭档案馆的档案修复项目；祁楠则是澜庭档案馆馆藏管理部主任。",
+      "claims": [
+        {
+          "fact_id": "F-D1A-JOIN",
+          "document": "D1a-wenque-role.md"
+        },
+        {
+          "fact_id": "F-D1B-AWARD",
+          "document": "D1b-pingshan-award.md"
+        },
+        {
+          "fact_id": "F-D1C-APPOINT",
+          "document": "D1c-qinan-role.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q050",
+      "question_role": "scored",
+      "cluster_id": "C-CH-D1",
+      "chain_id": "CH-D1",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "multi_hop",
+        "entity_bridge"
+      ],
+      "question": "温阙经手的工艺评审和祁楠管辖的调阅审批，会在哪个环节发生交集？",
+      "reference_answer": "温阙负责屏山修复院承接项目的霉斑处理工艺评审；该项目的全部作业须在澜庭档案馆指定的馆内工作间完成；而澜庭档案馆全部档案的调阅审批由祁楠负责。",
+      "claims": [
+        {
+          "fact_id": "F-D1A-SKILL",
+          "document": "D1a-wenque-role.md"
+        },
+        {
+          "fact_id": "F-D1B-SITE",
+          "document": "D1b-pingshan-award.md"
+        },
+        {
+          "fact_id": "F-D1C-SCOPE",
+          "document": "D1c-qinan-role.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q051",
+      "question_role": "scored",
+      "cluster_id": "C-CH-D1",
+      "chain_id": "CH-D1",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "multi_hop",
+        "entity_bridge"
+      ],
+      "question": "温阙和祁楠是否有人能够决定这次合作的承接方？依据各是什么？",
+      "reference_answer": "都不能。温阙不参与屏山修复院的投标与合同签署；屏山修复院在合同期内保持独立法人资格并独立核算；祁楠也无权批准澜庭档案馆的对外服务采购。",
+      "claims": [
+        {
+          "fact_id": "F-D1A-LIMIT",
+          "document": "D1a-wenque-role.md"
+        },
+        {
+          "fact_id": "F-D1B-INDEPENDENT",
+          "document": "D1b-pingshan-award.md"
+        },
+        {
+          "fact_id": "F-D1C-LIMIT",
+          "document": "D1c-qinan-role.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q052",
+      "question_role": "scored",
+      "cluster_id": "C-CH-D2",
+      "chain_id": "CH-D2",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "multi_hop",
+        "entity_bridge"
+      ],
+      "question": "陆见和邵微之间隔着哪些机构？把中间的委托与备案关系按顺序说明。",
+      "reference_answer": "陆见是岫云教育课程研发中心负责人；岫云教育委托秋渡测评开展独立评估；秋渡测评的教育测量业务在明夷学会完成资质备案；邵微则是明夷学会学术委员会常务委员。",
+      "claims": [
+        {
+          "fact_id": "F-D2A-ROLE",
+          "document": "D2a-lujian-role.md"
+        },
+        {
+          "fact_id": "F-D2B-ENTRUST",
+          "document": "D2b-xiuyun-entrust.md"
+        },
+        {
+          "fact_id": "F-D2C-REGISTER",
+          "document": "D2c-qiudu-affiliation.md"
+        },
+        {
+          "fact_id": "F-D2D-APPOINT",
+          "document": "D2d-shaowei-role.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q053",
+      "question_role": "scored",
+      "cluster_id": "C-CH-D2",
+      "chain_id": "CH-D2",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "multi_hop",
+        "entity_bridge"
+      ],
+      "question": "陆见主持的内容重构，最终会被邵微所在体系用什么方式复核？给出中间环节。",
+      "reference_answer": "陆见主持岫云教育理科课程体系的知识点重构；评估方案的抽样与统计口径由秋渡测评独立确定；备案机构须接受明夷学会组织的同行评议与抽样复核；而明夷学会的年度检查方案由邵微所在委员会审议。",
+      "claims": [
+        {
+          "fact_id": "F-D2A-SCOPE",
+          "document": "D2a-lujian-role.md"
+        },
+        {
+          "fact_id": "F-D2B-METHOD",
+          "document": "D2b-xiuyun-entrust.md"
+        },
+        {
+          "fact_id": "F-D2C-SUPERVISE",
+          "document": "D2c-qiudu-affiliation.md"
+        },
+        {
+          "fact_id": "F-D2D-SCOPE",
+          "document": "D2d-shaowei-role.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q054",
+      "question_role": "scored",
+      "cluster_id": "C-CH-D2",
+      "chain_id": "CH-D2",
+      "difficulty": "hard",
+      "primary_type": "cross_doc_chain",
+      "tags": [
+        "multi_hop",
+        "entity_bridge"
+      ],
+      "question": "陆见和邵微的职责范围，能否说明这条链条上存在经营层面的利益安排？",
+      "reference_answer": "不能。陆见不负责岫云教育的招生宣传与市场投放；本次委托不涉及岫云教育与受托方的股权投资或人员互派；备案也不改变秋渡测评的独立法人地位；邵微更不参与明夷学会备案机构的商务活动。",
+      "claims": [
+        {
+          "fact_id": "F-D2A-LIMIT",
+          "document": "D2a-lujian-role.md"
+        },
+        {
+          "fact_id": "F-D2B-INDEPENDENT",
+          "document": "D2b-xiuyun-entrust.md"
+        },
+        {
+          "fact_id": "F-D2C-NAME",
+          "document": "D2c-qiudu-affiliation.md"
+        },
+        {
+          "fact_id": "F-D2D-LIMIT",
+          "document": "D2d-shaowei-role.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q055",
+      "question_role": "scored",
+      "cluster_id": "C-CH-C1",
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": [
+        "hard_negative",
+        "decoy_bridge"
+      ],
+      "question": "有一份跨行业核验周报列举了几组机构之间的往来，它分别记录了哪三类关系？",
+      "reference_answer": "周报记录了潮生重工与气象站的海况数据合作、岱川控股旗下企业对检测机构的长期采购、以及澜庭档案馆与院校的库房共用；三者都不构成股权或隶属关系。",
+      "claims": [
+        {
+          "fact_id": "F-X1-DATA",
+          "document": "X1-relation-review.md"
+        },
+        {
+          "fact_id": "F-X1-SUPPLY",
+          "document": "X1-relation-review.md"
+        },
+        {
+          "fact_id": "F-X1-VENUE",
+          "document": "X1-relation-review.md"
+        }
+      ],
+      "negatives": [
+        {
+          "fact_id": "F-C1B-DEAL",
+          "document": "C1b-liyan-equity.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q056",
+      "question_role": "scored",
+      "cluster_id": "C-CH-D2",
+      "difficulty": "hard",
+      "primary_type": "disambiguation_hard_negative",
+      "tags": [
+        "hard_negative",
+        "decoy_bridge"
+      ],
+      "question": "那份注明为非约束性的数据互通备忘里，参与的三方各自承担什么角色？",
+      "reference_answer": "秋渡测评与教研中心共享脱敏后的难度参数，岫云教育开放知识点编码对照表，明夷学会仅作为方法学观察方列席；备忘不产生出资、委托或隶属关系。",
+      "claims": [
+        {
+          "fact_id": "F-X2-SCOPE",
+          "document": "X2-data-coop.md"
+        },
+        {
+          "fact_id": "F-X2-TECH",
+          "document": "X2-data-coop.md"
+        },
+        {
+          "fact_id": "F-X2-BOUNDARY",
+          "document": "X2-data-coop.md"
+        }
+      ],
+      "negatives": [
+        {
+          "fact_id": "F-D2C-REGISTER",
+          "document": "D2c-qiudu-affiliation.md"
+        }
+      ]
+    },
+    {
+      "id": "v4_q040",
+      "question_role": "unanswerable",
+      "cluster_id": "C-A-anticoag",
+      "difficulty": "diagnostic",
+      "primary_type": "unanswerable_diagnostic",
+      "tags": [
+        "no_answer",
+        "out_of_scope"
+      ],
+      "question": "本院上个月一共发生了多少例抗凝相关的严重出血事件，其中几例进了 ICU？",
+      "diagnostic_reason": "语料是口径类简报，不含任何逐月事件统计数据。"
+    },
+    {
+      "id": "v4_q041",
+      "question_role": "unanswerable",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "diagnostic",
+      "primary_type": "unanswerable_diagnostic",
+      "tags": [
+        "no_answer",
+        "realtime_data"
+      ],
+      "question": "岐禾数科今天实时的申请通过率和平均审批时长分别是多少？",
+      "diagnostic_reason": "语料是设计说明书，不含实时运营指标。"
+    },
+    {
+      "id": "v4_q042",
+      "question_role": "unanswerable",
+      "cluster_id": "C-B-riskctl",
+      "difficulty": "diagnostic",
+      "primary_type": "unanswerable_diagnostic",
+      "tags": [
+        "no_answer",
+        "fictional_entity"
+      ],
+      "question": "澜川普惠金融的评分卡自动通过线定在多少分？",
+      "diagnostic_reason": "澜川普惠金融并不在本语料覆盖的成员机构范围内。"
+    }
+  ]
+}

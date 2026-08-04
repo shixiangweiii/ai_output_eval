@@ -1,0 +1,1466 @@
+{
+  "families": [
+    {
+      "id": "A",
+      "cluster_id": "C-A-anticoag",
+      "axis": "version",
+      "title": "口服抗凝药物用药安全警戒简报",
+      "documents": [
+        "A1-anticoag-2023.md",
+        "A2-anticoag-2024.md",
+        "A3-anticoag-2025.md",
+        "A4-anticoag-2025r.md",
+        "A5-anticoag-retired.md"
+      ]
+    },
+    {
+      "id": "B",
+      "cluster_id": "C-B-riskctl",
+      "axis": "entity",
+      "title": "消费信贷智能风控体系设计说明书",
+      "documents": [
+        "B1-risk-hongyuan.md",
+        "B2-risk-jinzhou.md",
+        "B3-risk-nanxu.md",
+        "B4-risk-qihe.md",
+        "B5-risk-group.md"
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "fact_id": "F-A-INR",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "华法林 INR 目标区间上限",
+      "values": {
+        "A1-anticoag-2023.md": "3.0",
+        "A2-anticoag-2024.md": "2.9",
+        "A3-anticoag-2025.md": "2.8",
+        "A4-anticoag-2025r.md": "2.7",
+        "A5-anticoag-retired.md": "3.2"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "2. 抗凝强度目标",
+            "locator": "本版把华法林 INR 目标区间上限设为 3.0，超过该值即判定为抗凝过度"
+          },
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "注意此处的判断基准是 3.0 这一封顶值，跨版本引用时务必核对"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "2. 抗凝强度目标",
+            "locator": "本版把华法林 INR 目标区间上限设为 2.9，超过该值即判定为抗凝过度"
+          },
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "注意此处的判断基准是 2.9 这一封顶值，跨版本引用时务必核对"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "2. 抗凝强度目标",
+            "locator": "本版把华法林 INR 目标区间上限设为 2.8，超过该值即判定为抗凝过度"
+          },
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "注意此处的判断基准是 2.8 这一封顶值，跨版本引用时务必核对"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "2. 抗凝强度目标",
+            "locator": "本版把华法林 INR 目标区间上限设为 2.7，超过该值即判定为抗凝过度"
+          },
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "注意此处的判断基准是 2.7 这一封顶值，跨版本引用时务必核对"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "2. 抗凝强度目标",
+            "locator": "本版把华法林 INR 目标区间上限设为 3.2，超过该值即判定为抗凝过度"
+          },
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "注意此处的判断基准是 3.2 这一封顶值，跨版本引用时务必核对"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-CRCL",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "达比加群减量的肌酐清除率阈值",
+      "values": {
+        "A1-anticoag-2023.md": "45 mL/min",
+        "A2-anticoag-2024.md": "42 mL/min",
+        "A3-anticoag-2025.md": "40 mL/min",
+        "A4-anticoag-2025r.md": "38 mL/min",
+        "A5-anticoag-retired.md": "50 mL/min"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "达比加群在肌酐清除率低于 45 mL/min 时必须减量，不得维持原剂量"
+          },
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "减量触发线仍以 45 mL/min 为准，检验科报告需附实测值"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "达比加群在肌酐清除率低于 42 mL/min 时必须减量，不得维持原剂量"
+          },
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "减量触发线仍以 42 mL/min 为准，检验科报告需附实测值"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "达比加群在肌酐清除率低于 40 mL/min 时必须减量，不得维持原剂量"
+          },
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "减量触发线仍以 40 mL/min 为准，检验科报告需附实测值"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "达比加群在肌酐清除率低于 38 mL/min 时必须减量，不得维持原剂量"
+          },
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "减量触发线仍以 38 mL/min 为准，检验科报告需附实测值"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "达比加群在肌酐清除率低于 50 mL/min 时必须减量，不得维持原剂量"
+          },
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "减量触发线仍以 50 mL/min 为准，检验科报告需附实测值"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-HOLD",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "择期手术前停药时长",
+      "values": {
+        "A1-anticoag-2023.md": "72 小时",
+        "A2-anticoag-2024.md": "60 小时",
+        "A3-anticoag-2025.md": "48 小时",
+        "A4-anticoag-2025r.md": "36 小时",
+        "A5-anticoag-retired.md": "96 小时"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "择期手术前应至少停药 72 小时，急诊手术另按拮抗流程处理"
+          },
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "停药窗口按 72 小时 倒推排期，麻醉访视时需二次确认"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "择期手术前应至少停药 60 小时，急诊手术另按拮抗流程处理"
+          },
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "停药窗口按 60 小时 倒推排期，麻醉访视时需二次确认"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "择期手术前应至少停药 48 小时，急诊手术另按拮抗流程处理"
+          },
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "停药窗口按 48 小时 倒推排期，麻醉访视时需二次确认"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "择期手术前应至少停药 36 小时，急诊手术另按拮抗流程处理"
+          },
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "停药窗口按 36 小时 倒推排期，麻醉访视时需二次确认"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "择期手术前应至少停药 96 小时，急诊手术另按拮抗流程处理"
+          },
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "停药窗口按 96 小时 倒推排期，麻醉访视时需二次确认"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-AGE",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "高龄自动减量起始年龄",
+      "values": {
+        "A1-anticoag-2023.md": "78 岁",
+        "A2-anticoag-2024.md": "76 岁",
+        "A3-anticoag-2025.md": "75 岁",
+        "A4-anticoag-2025r.md": "74 岁",
+        "A5-anticoag-retired.md": "80 岁"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "患者达到 78 岁 及以上时进入自动减量通道，由药师复核后执行"
+          },
+          {
+            "section": "6. 血象监测要求",
+            "locator": "自动减量的年龄门槛是 78 岁，系统会在开方环节直接拦截"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "患者达到 76 岁 及以上时进入自动减量通道，由药师复核后执行"
+          },
+          {
+            "section": "6. 血象监测要求",
+            "locator": "自动减量的年龄门槛是 76 岁，系统会在开方环节直接拦截"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "患者达到 75 岁 及以上时进入自动减量通道，由药师复核后执行"
+          },
+          {
+            "section": "6. 血象监测要求",
+            "locator": "自动减量的年龄门槛是 75 岁，系统会在开方环节直接拦截"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "患者达到 74 岁 及以上时进入自动减量通道，由药师复核后执行"
+          },
+          {
+            "section": "6. 血象监测要求",
+            "locator": "自动减量的年龄门槛是 74 岁，系统会在开方环节直接拦截"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "患者达到 80 岁 及以上时进入自动减量通道，由药师复核后执行"
+          },
+          {
+            "section": "6. 血象监测要求",
+            "locator": "自动减量的年龄门槛是 80 岁，系统会在开方环节直接拦截"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-PLT",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "血小板计数停药下限",
+      "values": {
+        "A1-anticoag-2023.md": "60×10⁹/L",
+        "A2-anticoag-2024.md": "55×10⁹/L",
+        "A3-anticoag-2025.md": "50×10⁹/L",
+        "A4-anticoag-2025r.md": "45×10⁹/L",
+        "A5-anticoag-retired.md": "70×10⁹/L"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "6. 血象监测要求",
+            "locator": "血小板计数跌破 60×10⁹/L 应立即停药并请血液科会诊"
+          },
+          {
+            "section": "7. 出血事件识别",
+            "locator": "停药红线设在 60×10⁹/L，复查间隔不得超过两个工作日"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "6. 血象监测要求",
+            "locator": "血小板计数跌破 55×10⁹/L 应立即停药并请血液科会诊"
+          },
+          {
+            "section": "7. 出血事件识别",
+            "locator": "停药红线设在 55×10⁹/L，复查间隔不得超过两个工作日"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "6. 血象监测要求",
+            "locator": "血小板计数跌破 50×10⁹/L 应立即停药并请血液科会诊"
+          },
+          {
+            "section": "7. 出血事件识别",
+            "locator": "停药红线设在 50×10⁹/L，复查间隔不得超过两个工作日"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "6. 血象监测要求",
+            "locator": "血小板计数跌破 45×10⁹/L 应立即停药并请血液科会诊"
+          },
+          {
+            "section": "7. 出血事件识别",
+            "locator": "停药红线设在 45×10⁹/L，复查间隔不得超过两个工作日"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "6. 血象监测要求",
+            "locator": "血小板计数跌破 70×10⁹/L 应立即停药并请血液科会诊"
+          },
+          {
+            "section": "7. 出血事件识别",
+            "locator": "停药红线设在 70×10⁹/L，复查间隔不得超过两个工作日"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-REPORT",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "严重出血事件上报时限",
+      "values": {
+        "A1-anticoag-2023.md": "24 小时",
+        "A2-anticoag-2024.md": "12 小时",
+        "A3-anticoag-2025.md": "8 小时",
+        "A4-anticoag-2025r.md": "6 小时",
+        "A5-anticoag-retired.md": "48 小时"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "7. 出血事件识别",
+            "locator": "严重出血事件须在发现后 24 小时 内完成院内上报，逾期计入科室质控扣分"
+          },
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "上报计时从发现时刻起算，窗口为 24 小时，不因交接班顺延"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "7. 出血事件识别",
+            "locator": "严重出血事件须在发现后 12 小时 内完成院内上报，逾期计入科室质控扣分"
+          },
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "上报计时从发现时刻起算，窗口为 12 小时，不因交接班顺延"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "7. 出血事件识别",
+            "locator": "严重出血事件须在发现后 8 小时 内完成院内上报，逾期计入科室质控扣分"
+          },
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "上报计时从发现时刻起算，窗口为 8 小时，不因交接班顺延"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "7. 出血事件识别",
+            "locator": "严重出血事件须在发现后 6 小时 内完成院内上报，逾期计入科室质控扣分"
+          },
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "上报计时从发现时刻起算，窗口为 6 小时，不因交接班顺延"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "7. 出血事件识别",
+            "locator": "严重出血事件须在发现后 48 小时 内完成院内上报，逾期计入科室质控扣分"
+          },
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "上报计时从发现时刻起算，窗口为 48 小时，不因交接班顺延"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-HB",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "血红蛋白预警下限",
+      "values": {
+        "A1-anticoag-2023.md": "90 g/L",
+        "A2-anticoag-2024.md": "95 g/L",
+        "A3-anticoag-2025.md": "100 g/L",
+        "A4-anticoag-2025r.md": "105 g/L",
+        "A5-anticoag-retired.md": "85 g/L"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "血红蛋白低于 90 g/L 触发出血预警，需当日复查并记录"
+          },
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "预警阈值 90 g/L 由检验系统自动比对，不接受手工豁免"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "血红蛋白低于 95 g/L 触发出血预警，需当日复查并记录"
+          },
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "预警阈值 95 g/L 由检验系统自动比对，不接受手工豁免"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "血红蛋白低于 100 g/L 触发出血预警，需当日复查并记录"
+          },
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "预警阈值 100 g/L 由检验系统自动比对，不接受手工豁免"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "血红蛋白低于 105 g/L 触发出血预警，需当日复查并记录"
+          },
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "预警阈值 105 g/L 由检验系统自动比对，不接受手工豁免"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "血红蛋白低于 85 g/L 触发出血预警，需当日复查并记录"
+          },
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "预警阈值 85 g/L 由检验系统自动比对，不接受手工豁免"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-DUAL",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "双联抗栓最长疗程",
+      "values": {
+        "A1-anticoag-2023.md": "12 个月",
+        "A2-anticoag-2024.md": "9 个月",
+        "A3-anticoag-2025.md": "6 个月",
+        "A4-anticoag-2025r.md": "3 个月",
+        "A5-anticoag-retired.md": "18 个月"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "双联抗栓总疗程上限为 12 个月，超期需重新评估获益风险比"
+          },
+          {
+            "section": "10. 用药重整",
+            "locator": "疗程封顶 12 个月，延长申请必须经心内与药学双签"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "双联抗栓总疗程上限为 9 个月，超期需重新评估获益风险比"
+          },
+          {
+            "section": "10. 用药重整",
+            "locator": "疗程封顶 9 个月，延长申请必须经心内与药学双签"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "双联抗栓总疗程上限为 6 个月，超期需重新评估获益风险比"
+          },
+          {
+            "section": "10. 用药重整",
+            "locator": "疗程封顶 6 个月，延长申请必须经心内与药学双签"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "双联抗栓总疗程上限为 3 个月，超期需重新评估获益风险比"
+          },
+          {
+            "section": "10. 用药重整",
+            "locator": "疗程封顶 3 个月，延长申请必须经心内与药学双签"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "双联抗栓总疗程上限为 18 个月，超期需重新评估获益风险比"
+          },
+          {
+            "section": "10. 用药重整",
+            "locator": "疗程封顶 18 个月，延长申请必须经心内与药学双签"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-REVIEW",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "用药重整复核周期",
+      "values": {
+        "A1-anticoag-2023.md": "90 天",
+        "A2-anticoag-2024.md": "60 天",
+        "A3-anticoag-2025.md": "45 天",
+        "A4-anticoag-2025r.md": "30 天",
+        "A5-anticoag-retired.md": "180 天"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "10. 用药重整",
+            "locator": "长期服药患者的用药重整复核周期不得长于 90 天"
+          },
+          {
+            "section": "11. 处方权与培训",
+            "locator": "复核周期 90 天 是硬性上限，门诊与住院口径一致"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "10. 用药重整",
+            "locator": "长期服药患者的用药重整复核周期不得长于 60 天"
+          },
+          {
+            "section": "11. 处方权与培训",
+            "locator": "复核周期 60 天 是硬性上限，门诊与住院口径一致"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "10. 用药重整",
+            "locator": "长期服药患者的用药重整复核周期不得长于 45 天"
+          },
+          {
+            "section": "11. 处方权与培训",
+            "locator": "复核周期 45 天 是硬性上限，门诊与住院口径一致"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "10. 用药重整",
+            "locator": "长期服药患者的用药重整复核周期不得长于 30 天"
+          },
+          {
+            "section": "11. 处方权与培训",
+            "locator": "复核周期 30 天 是硬性上限，门诊与住院口径一致"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "10. 用药重整",
+            "locator": "长期服药患者的用药重整复核周期不得长于 180 天"
+          },
+          {
+            "section": "11. 处方权与培训",
+            "locator": "复核周期 180 天 是硬性上限，门诊与住院口径一致"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-TRAIN",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "处方权培训学时",
+      "values": {
+        "A1-anticoag-2023.md": "16 学时",
+        "A2-anticoag-2024.md": "20 学时",
+        "A3-anticoag-2025.md": "24 学时",
+        "A4-anticoag-2025r.md": "28 学时",
+        "A5-anticoag-retired.md": "8 学时"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "11. 处方权与培训",
+            "locator": "取得抗凝处方权需完成 16 学时 的专项培训并通过考核"
+          },
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "培训学时要求为 16 学时，未达标者处方权自动冻结"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "11. 处方权与培训",
+            "locator": "取得抗凝处方权需完成 20 学时 的专项培训并通过考核"
+          },
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "培训学时要求为 20 学时，未达标者处方权自动冻结"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "11. 处方权与培训",
+            "locator": "取得抗凝处方权需完成 24 学时 的专项培训并通过考核"
+          },
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "培训学时要求为 24 学时，未达标者处方权自动冻结"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "11. 处方权与培训",
+            "locator": "取得抗凝处方权需完成 28 学时 的专项培训并通过考核"
+          },
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "培训学时要求为 28 学时，未达标者处方权自动冻结"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "11. 处方权与培训",
+            "locator": "取得抗凝处方权需完成 8 学时 的专项培训并通过考核"
+          },
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "培训学时要求为 8 学时，未达标者处方权自动冻结"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-IMG",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "asset",
+      "claim_type": "passage",
+      "dimension": "处置流程图",
+      "values": {
+        "A1-anticoag-2023.md": "https://upload.wikimedia.org/wikipedia/commons/9/93/The_Risk_Management_Process.png",
+        "A2-anticoag-2024.md": "https://upload.wikimedia.org/wikipedia/commons/9/93/The_Risk_Management_Process.png",
+        "A3-anticoag-2025.md": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Flowchart_Process.svg",
+        "A4-anticoag-2025r.md": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Flowchart_Process.svg",
+        "A5-anticoag-retired.md": "https://upload.wikimedia.org/wikipedia/commons/a/a5/BalanceSheet.jpg"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/9/93/The_Risk_Management_Process.png"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/9/93/The_Risk_Management_Process.png"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Flowchart_Process.svg"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Flowchart_Process.svg"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/a/a5/BalanceSheet.jpg"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-CUTOFF",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "评分卡自动通过分数线",
+      "values": {
+        "B1-risk-hongyuan.md": "612 分",
+        "B2-risk-jinzhou.md": "648 分",
+        "B3-risk-nanxu.md": "630 分",
+        "B4-risk-qihe.md": "605 分",
+        "B5-risk-group.md": "620 分"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "2. 评分卡与准入",
+            "locator": "评分卡自动通过线设在 612 分，达到该线的申请直接进入放款队列"
+          },
+          {
+            "section": "3. 拒绝策略",
+            "locator": "自动通过线 612 分 由风险管理部统一调参，业务侧无权自行调整"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "2. 评分卡与准入",
+            "locator": "评分卡自动通过线设在 648 分，达到该线的申请直接进入放款队列"
+          },
+          {
+            "section": "3. 拒绝策略",
+            "locator": "自动通过线 648 分 由风险管理部统一调参，业务侧无权自行调整"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "2. 评分卡与准入",
+            "locator": "评分卡自动通过线设在 630 分，达到该线的申请直接进入放款队列"
+          },
+          {
+            "section": "3. 拒绝策略",
+            "locator": "自动通过线 630 分 由风险管理部统一调参，业务侧无权自行调整"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "2. 评分卡与准入",
+            "locator": "评分卡自动通过线设在 605 分，达到该线的申请直接进入放款队列"
+          },
+          {
+            "section": "3. 拒绝策略",
+            "locator": "自动通过线 605 分 由风险管理部统一调参，业务侧无权自行调整"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "2. 评分卡与准入",
+            "locator": "评分卡自动通过线设在 620 分，达到该线的申请直接进入放款队列"
+          },
+          {
+            "section": "3. 拒绝策略",
+            "locator": "自动通过线 620 分 由风险管理部统一调参，业务侧无权自行调整"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-REJECT",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "自动拒绝分数线",
+      "values": {
+        "B1-risk-hongyuan.md": "480 分",
+        "B2-risk-jinzhou.md": "520 分",
+        "B3-risk-nanxu.md": "500 分",
+        "B4-risk-qihe.md": "465 分",
+        "B5-risk-group.md": "495 分"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "3. 拒绝策略",
+            "locator": "低于 480 分 的申请直接自动拒绝，不再进入人工环节"
+          },
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "自动拒绝线取 480 分，该线以下的申诉需走独立复议通道"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "3. 拒绝策略",
+            "locator": "低于 520 分 的申请直接自动拒绝，不再进入人工环节"
+          },
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "自动拒绝线取 520 分，该线以下的申诉需走独立复议通道"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "3. 拒绝策略",
+            "locator": "低于 500 分 的申请直接自动拒绝，不再进入人工环节"
+          },
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "自动拒绝线取 500 分，该线以下的申诉需走独立复议通道"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "3. 拒绝策略",
+            "locator": "低于 465 分 的申请直接自动拒绝，不再进入人工环节"
+          },
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "自动拒绝线取 465 分，该线以下的申诉需走独立复议通道"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "3. 拒绝策略",
+            "locator": "低于 495 分 的申请直接自动拒绝，不再进入人工环节"
+          },
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "自动拒绝线取 495 分，该线以下的申诉需走独立复议通道"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-DTI",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "债务收入比上限",
+      "values": {
+        "B1-risk-hongyuan.md": "65%",
+        "B2-risk-jinzhou.md": "50%",
+        "B3-risk-nanxu.md": "58%",
+        "B4-risk-qihe.md": "70%",
+        "B5-risk-group.md": "60%"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "申请人的债务收入比不得超过 65%，超限一票否决"
+          },
+          {
+            "section": "5. 模型效果验收",
+            "locator": "债务收入比红线为 65%，多头借贷数据需并表计算"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "申请人的债务收入比不得超过 50%，超限一票否决"
+          },
+          {
+            "section": "5. 模型效果验收",
+            "locator": "债务收入比红线为 50%，多头借贷数据需并表计算"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "申请人的债务收入比不得超过 58%，超限一票否决"
+          },
+          {
+            "section": "5. 模型效果验收",
+            "locator": "债务收入比红线为 58%，多头借贷数据需并表计算"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "申请人的债务收入比不得超过 70%，超限一票否决"
+          },
+          {
+            "section": "5. 模型效果验收",
+            "locator": "债务收入比红线为 70%，多头借贷数据需并表计算"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "申请人的债务收入比不得超过 60%，超限一票否决"
+          },
+          {
+            "section": "5. 模型效果验收",
+            "locator": "债务收入比红线为 60%，多头借贷数据需并表计算"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-KS",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "模型上线最低 KS 值",
+      "values": {
+        "B1-risk-hongyuan.md": "0.32",
+        "B2-risk-jinzhou.md": "0.38",
+        "B3-risk-nanxu.md": "0.35",
+        "B4-risk-qihe.md": "0.30",
+        "B5-risk-group.md": "0.34"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "5. 模型效果验收",
+            "locator": "模型在跨时间验证集上的 KS 值不得低于 0.32，否则不予上线"
+          },
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "上线门槛 KS 为 0.32，验证集必须与训练期完全不重叠"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "5. 模型效果验收",
+            "locator": "模型在跨时间验证集上的 KS 值不得低于 0.38，否则不予上线"
+          },
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "上线门槛 KS 为 0.38，验证集必须与训练期完全不重叠"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "5. 模型效果验收",
+            "locator": "模型在跨时间验证集上的 KS 值不得低于 0.35，否则不予上线"
+          },
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "上线门槛 KS 为 0.35，验证集必须与训练期完全不重叠"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "5. 模型效果验收",
+            "locator": "模型在跨时间验证集上的 KS 值不得低于 0.30，否则不予上线"
+          },
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "上线门槛 KS 为 0.30，验证集必须与训练期完全不重叠"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "5. 模型效果验收",
+            "locator": "模型在跨时间验证集上的 KS 值不得低于 0.34，否则不予上线"
+          },
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "上线门槛 KS 为 0.34，验证集必须与训练期完全不重叠"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-PSI",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "特征漂移下线阈值",
+      "values": {
+        "B1-risk-hongyuan.md": "0.25",
+        "B2-risk-jinzhou.md": "0.15",
+        "B3-risk-nanxu.md": "0.20",
+        "B4-risk-qihe.md": "0.28",
+        "B5-risk-group.md": "0.18"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "单特征 PSI 超过 0.25 即触发强制下线并回滚上一版本"
+          },
+          {
+            "section": "7. 人工复核机制",
+            "locator": "漂移熔断线是 0.25，监控频率为每日一次全量比对"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "单特征 PSI 超过 0.15 即触发强制下线并回滚上一版本"
+          },
+          {
+            "section": "7. 人工复核机制",
+            "locator": "漂移熔断线是 0.15，监控频率为每日一次全量比对"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "单特征 PSI 超过 0.20 即触发强制下线并回滚上一版本"
+          },
+          {
+            "section": "7. 人工复核机制",
+            "locator": "漂移熔断线是 0.20，监控频率为每日一次全量比对"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "单特征 PSI 超过 0.28 即触发强制下线并回滚上一版本"
+          },
+          {
+            "section": "7. 人工复核机制",
+            "locator": "漂移熔断线是 0.28，监控频率为每日一次全量比对"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "单特征 PSI 超过 0.18 即触发强制下线并回滚上一版本"
+          },
+          {
+            "section": "7. 人工复核机制",
+            "locator": "漂移熔断线是 0.18，监控频率为每日一次全量比对"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-MANUAL",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "人工复核抽检比例",
+      "values": {
+        "B1-risk-hongyuan.md": "8%",
+        "B2-risk-jinzhou.md": "20%",
+        "B3-risk-nanxu.md": "35%",
+        "B4-risk-qihe.md": "5%",
+        "B5-risk-group.md": "12%"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "7. 人工复核机制",
+            "locator": "自动通过的申请需按 8% 的比例抽检人工复核"
+          },
+          {
+            "section": "8. 额度策略",
+            "locator": "抽检比例为 8%，样本由系统随机抽取，不接受人工指定"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "7. 人工复核机制",
+            "locator": "自动通过的申请需按 20% 的比例抽检人工复核"
+          },
+          {
+            "section": "8. 额度策略",
+            "locator": "抽检比例为 20%，样本由系统随机抽取，不接受人工指定"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "7. 人工复核机制",
+            "locator": "自动通过的申请需按 35% 的比例抽检人工复核"
+          },
+          {
+            "section": "8. 额度策略",
+            "locator": "抽检比例为 35%，样本由系统随机抽取，不接受人工指定"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "7. 人工复核机制",
+            "locator": "自动通过的申请需按 5% 的比例抽检人工复核"
+          },
+          {
+            "section": "8. 额度策略",
+            "locator": "抽检比例为 5%，样本由系统随机抽取，不接受人工指定"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "7. 人工复核机制",
+            "locator": "自动通过的申请需按 12% 的比例抽检人工复核"
+          },
+          {
+            "section": "8. 额度策略",
+            "locator": "抽检比例为 12%，样本由系统随机抽取，不接受人工指定"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-LIMIT",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "新客首次授信上限",
+      "values": {
+        "B1-risk-hongyuan.md": "2 万元",
+        "B2-risk-jinzhou.md": "5 万元",
+        "B3-risk-nanxu.md": "3 万元",
+        "B4-risk-qihe.md": "1.5 万元",
+        "B5-risk-group.md": "4 万元"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "8. 额度策略",
+            "locator": "新客首次授信额度上限为 2 万元，提额需在正常还款六期之后"
+          },
+          {
+            "section": "9. 贷后与催收",
+            "locator": "首次授信封顶 2 万元，任何白名单都不得突破该上限"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "8. 额度策略",
+            "locator": "新客首次授信额度上限为 5 万元，提额需在正常还款六期之后"
+          },
+          {
+            "section": "9. 贷后与催收",
+            "locator": "首次授信封顶 5 万元，任何白名单都不得突破该上限"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "8. 额度策略",
+            "locator": "新客首次授信额度上限为 3 万元，提额需在正常还款六期之后"
+          },
+          {
+            "section": "9. 贷后与催收",
+            "locator": "首次授信封顶 3 万元，任何白名单都不得突破该上限"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "8. 额度策略",
+            "locator": "新客首次授信额度上限为 1.5 万元，提额需在正常还款六期之后"
+          },
+          {
+            "section": "9. 贷后与催收",
+            "locator": "首次授信封顶 1.5 万元，任何白名单都不得突破该上限"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "8. 额度策略",
+            "locator": "新客首次授信额度上限为 4 万元，提额需在正常还款六期之后"
+          },
+          {
+            "section": "9. 贷后与催收",
+            "locator": "首次授信封顶 4 万元，任何白名单都不得突破该上限"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-OVERDUE",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "进入催收的逾期天数",
+      "values": {
+        "B1-risk-hongyuan.md": "3 天",
+        "B2-risk-jinzhou.md": "7 天",
+        "B3-risk-nanxu.md": "5 天",
+        "B4-risk-qihe.md": "1 天",
+        "B5-risk-group.md": "4 天"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "9. 贷后与催收",
+            "locator": "逾期满 3 天 后案件自动移交催收系统"
+          },
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "移交催收的时点是逾期满 3 天，节假日不顺延"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "9. 贷后与催收",
+            "locator": "逾期满 7 天 后案件自动移交催收系统"
+          },
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "移交催收的时点是逾期满 7 天，节假日不顺延"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "9. 贷后与催收",
+            "locator": "逾期满 5 天 后案件自动移交催收系统"
+          },
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "移交催收的时点是逾期满 5 天，节假日不顺延"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "9. 贷后与催收",
+            "locator": "逾期满 1 天 后案件自动移交催收系统"
+          },
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "移交催收的时点是逾期满 1 天，节假日不顺延"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "9. 贷后与催收",
+            "locator": "逾期满 4 天 后案件自动移交催收系统"
+          },
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "移交催收的时点是逾期满 4 天，节假日不顺延"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-RETRAIN",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "模型重训周期",
+      "values": {
+        "B1-risk-hongyuan.md": "每 45 天",
+        "B2-risk-jinzhou.md": "每 180 天",
+        "B3-risk-nanxu.md": "每 90 天",
+        "B4-risk-qihe.md": "每 30 天",
+        "B5-risk-group.md": "每 120 天"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "评分模型的例行重训周期为 每 45 天，逾期未重训视为模型失效"
+          },
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "重训节奏保持 每 45 天，特征口径变更时需额外触发一次"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "评分模型的例行重训周期为 每 180 天，逾期未重训视为模型失效"
+          },
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "重训节奏保持 每 180 天，特征口径变更时需额外触发一次"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "评分模型的例行重训周期为 每 90 天，逾期未重训视为模型失效"
+          },
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "重训节奏保持 每 90 天，特征口径变更时需额外触发一次"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "评分模型的例行重训周期为 每 30 天，逾期未重训视为模型失效"
+          },
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "重训节奏保持 每 30 天，特征口径变更时需额外触发一次"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "评分模型的例行重训周期为 每 120 天，逾期未重训视为模型失效"
+          },
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "重训节奏保持 每 120 天，特征口径变更时需额外触发一次"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-EXPLAIN",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "拒绝原因返回条数",
+      "values": {
+        "B1-risk-hongyuan.md": "3 条",
+        "B2-risk-jinzhou.md": "5 条",
+        "B3-risk-nanxu.md": "4 条",
+        "B4-risk-qihe.md": "2 条",
+        "B5-risk-group.md": "3 条"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "被拒申请人有权获得不少于 3 条 的主要拒绝原因说明"
+          },
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "原因说明数量下限为 3 条，措辞需通过合规话术库校验"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "被拒申请人有权获得不少于 5 条 的主要拒绝原因说明"
+          },
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "原因说明数量下限为 5 条，措辞需通过合规话术库校验"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "被拒申请人有权获得不少于 4 条 的主要拒绝原因说明"
+          },
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "原因说明数量下限为 4 条，措辞需通过合规话术库校验"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "被拒申请人有权获得不少于 2 条 的主要拒绝原因说明"
+          },
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "原因说明数量下限为 2 条，措辞需通过合规话术库校验"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "被拒申请人有权获得不少于 3 条 的主要拒绝原因说明"
+          },
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "原因说明数量下限为 3 条，措辞需通过合规话术库校验"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-IMG",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "asset",
+      "claim_type": "passage",
+      "dimension": "风控架构图",
+      "values": {
+        "B1-risk-hongyuan.md": "https://upload.wikimedia.org/wikipedia/commons/1/13/Network_architecture_2levels.png",
+        "B2-risk-jinzhou.md": "https://upload.wikimedia.org/wikipedia/commons/1/13/Network_architecture_2levels.png",
+        "B3-risk-nanxu.md": "https://upload.wikimedia.org/wikipedia/commons/3/39/Synergix_Technologies_Organization_Chart.png",
+        "B4-risk-qihe.md": "https://upload.wikimedia.org/wikipedia/commons/3/39/Synergix_Technologies_Organization_Chart.png",
+        "B5-risk-group.md": "https://upload.wikimedia.org/wikipedia/commons/5/5e/UK_tv_viewing_share_line_chart_1999_-_2009.png"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/1/13/Network_architecture_2levels.png"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/1/13/Network_architecture_2levels.png"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/3/39/Synergix_Technologies_Organization_Chart.png"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/3/39/Synergix_Technologies_Organization_Chart.png"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/5/5e/UK_tv_viewing_share_line_chart_1999_-_2009.png"
+          }
+        ]
+      }
+    }
+  ]
+}

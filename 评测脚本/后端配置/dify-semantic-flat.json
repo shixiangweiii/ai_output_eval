@@ -1,0 +1,41 @@
+{
+  "name": "dify-semantic-flat",
+  "description": "Dify 非父子分段 + 纯向量检索（semantic_search）+ qwen3-rerank + score_threshold 0.55。对应 评测考试所测检索召回接口/Dify检索召回测试/非父子-纯向量-评测用-接口-可直接使用-for-v4.md。top_k 由考卷的 retrieval_protocol.request_k 注入。",
+  "url_template": "http://localhost:5001/v1/datasets/{dataset_id}/retrieve",
+  "method": "POST",
+  "auth": "bearer_env",
+  "auth_env": { "token": "DIFY_DATASET_API_KEY" },
+  "token_header": "authorization",
+  "token_format": "Bearer {token}",
+  "extra_headers": {
+    "origin": "http://localhost:3000",
+    "referer": "http://localhost:3000/"
+  },
+  "supports_request_k": true,
+  "request_template": {
+    "query": "{query}",
+    "attachment_ids": [],
+    "retrieval_model": {
+      "search_method": "semantic_search",
+      "reranking_enable": true,
+      "reranking_mode": null,
+      "reranking_model": {
+        "reranking_provider_name": "langgenius/tongyi/tongyi",
+        "reranking_model_name": "qwen3-rerank"
+      },
+      "weights": null,
+      "top_k": "{top_k}",
+      "score_threshold_enabled": true,
+      "score_threshold": 0.55
+    }
+  },
+  "records_path": "records",
+  "field_map": {
+    "document_name": "segment.document.name",
+    "content": "segment.content",
+    "relevance_score": "score",
+    "chunk_id": "segment.id",
+    "document_id": "segment.document_id",
+    "server_top": "segment.position"
+  }
+}

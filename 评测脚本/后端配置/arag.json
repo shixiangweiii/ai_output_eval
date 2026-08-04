@@ -1,0 +1,30 @@
+{
+  "name": "arag",
+  "description": "aRAG 单知识库检索召回接口；不支持请求侧 top_k，返回数量由服务端决定。",
+  "url_template": "https://deap.dingtalk.com/deapHttpProxy/studio2/proxy/dataset/fe/api/v2/dataset/manage/retrieval_test.json",
+  "method": "POST",
+  "auth": "cookie_csrf",
+  "auth_env": { "cookie": "RETRIEVAL_COOKIE", "token": "RETRIEVAL_XSRF_TOKEN" },
+  "cookie_header": "cookie",
+  "token_header": "x-xsrf-token",
+  "extra_headers": {
+    "origin": "https://deap.dingtalk.com",
+    "referer": "https://deap.dingtalk.com/fe/index"
+  },
+  "supports_request_k": false,
+  "request_template": {
+    "datasetId": "{dataset_id}",
+    "query": "{query}"
+  },
+  "success_path": "success",
+  "error_message_paths": ["responseMessage", "responseCode"],
+  "records_path": "content",
+  "field_map": {
+    "document_name": "documentName",
+    "content": "content",
+    "relevance_score": "relevanceScore",
+    "chunk_id": "chunkId",
+    "document_id": "documentId",
+    "server_top": "top"
+  }
+}

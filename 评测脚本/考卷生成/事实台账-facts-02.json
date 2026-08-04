@@ -1,0 +1,2782 @@
+{
+  "families": [
+    {
+      "id": "A",
+      "cluster_id": "C-A-anticoag",
+      "axis": "version",
+      "title": "口服抗凝药物用药安全警戒简报",
+      "documents": [
+        "A1-anticoag-2023.md",
+        "A2-anticoag-2024.md",
+        "A3-anticoag-2025.md",
+        "A4-anticoag-2025r.md",
+        "A5-anticoag-retired.md"
+      ]
+    },
+    {
+      "id": "B",
+      "cluster_id": "C-B-riskctl",
+      "axis": "entity",
+      "title": "消费信贷智能风控体系设计说明书",
+      "documents": [
+        "B1-risk-hongyuan.md",
+        "B2-risk-jinzhou.md",
+        "B3-risk-nanxu.md",
+        "B4-risk-qihe.md",
+        "B5-risk-group.md"
+      ]
+    }
+  ],
+  "chains": [
+    {
+      "id": "CH-C1",
+      "family": "C",
+      "cluster_id": "C-CH-C1",
+      "relation_type": "equity_control",
+      "path": "顾屿→砺岩精工←潮生重工←楼砚",
+      "endpoint_entities": [
+        "顾屿",
+        "楼砚"
+      ],
+      "bridge_entities": [
+        "砺岩精工",
+        "潮生重工"
+      ],
+      "endpoint_documents": [
+        "C1a-guyu-role.md",
+        "C1c-louyan-role.md"
+      ],
+      "bridge_documents": [
+        "C1b-liyan-equity.md"
+      ],
+      "documents": [
+        "C1a-guyu-role.md",
+        "C1b-liyan-equity.md",
+        "C1c-louyan-role.md"
+      ]
+    },
+    {
+      "id": "CH-C2",
+      "family": "C",
+      "cluster_id": "C-CH-C2",
+      "relation_type": "equity_control",
+      "path": "柏迟→云枢检测→屿白材料←岱川控股←聂昭",
+      "endpoint_entities": [
+        "柏迟",
+        "聂昭"
+      ],
+      "bridge_entities": [
+        "云枢检测",
+        "屿白材料",
+        "岱川控股"
+      ],
+      "endpoint_documents": [
+        "C2a-baichi-role.md",
+        "C2d-niezhao-role.md"
+      ],
+      "bridge_documents": [
+        "C2b-yunshu-service.md",
+        "C2c-yubai-equity.md"
+      ],
+      "documents": [
+        "C2a-baichi-role.md",
+        "C2b-yunshu-service.md",
+        "C2c-yubai-equity.md",
+        "C2d-niezhao-role.md"
+      ]
+    },
+    {
+      "id": "CH-D1",
+      "family": "D",
+      "cluster_id": "C-CH-D1",
+      "relation_type": "service_contract",
+      "path": "温阙→屏山修复院←澜庭档案馆←祁楠",
+      "endpoint_entities": [
+        "温阙",
+        "祁楠"
+      ],
+      "bridge_entities": [
+        "屏山修复院",
+        "澜庭档案馆"
+      ],
+      "endpoint_documents": [
+        "D1a-wenque-role.md",
+        "D1c-qinan-role.md"
+      ],
+      "bridge_documents": [
+        "D1b-pingshan-award.md"
+      ],
+      "documents": [
+        "D1a-wenque-role.md",
+        "D1b-pingshan-award.md",
+        "D1c-qinan-role.md"
+      ]
+    },
+    {
+      "id": "CH-D2",
+      "family": "D",
+      "cluster_id": "C-CH-D2",
+      "relation_type": "service_contract",
+      "path": "陆见→岫云教育→秋渡测评←明夷学会←邵微",
+      "endpoint_entities": [
+        "陆见",
+        "邵微"
+      ],
+      "bridge_entities": [
+        "岫云教育",
+        "秋渡测评",
+        "明夷学会"
+      ],
+      "endpoint_documents": [
+        "D2a-lujian-role.md",
+        "D2d-shaowei-role.md"
+      ],
+      "bridge_documents": [
+        "D2b-xiuyun-entrust.md",
+        "D2c-qiudu-affiliation.md"
+      ],
+      "documents": [
+        "D2a-lujian-role.md",
+        "D2b-xiuyun-entrust.md",
+        "D2c-qiudu-affiliation.md",
+        "D2d-shaowei-role.md"
+      ]
+    }
+  ],
+  "facts": [
+    {
+      "fact_id": "F-A-INR",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "华法林 INR 目标区间上限",
+      "values": {
+        "A1-anticoag-2023.md": "3.0",
+        "A2-anticoag-2024.md": "2.9",
+        "A3-anticoag-2025.md": "2.8",
+        "A4-anticoag-2025r.md": "2.7",
+        "A5-anticoag-retired.md": "3.2"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "2. 抗凝强度目标",
+            "locator": "本版把华法林 INR 目标区间上限设为 3.0，超过该值即判定为抗凝过度"
+          },
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "注意此处的判断基准是 3.0 这一封顶值，跨版本引用时务必核对"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "2. 抗凝强度目标",
+            "locator": "本版把华法林 INR 目标区间上限设为 2.9，超过该值即判定为抗凝过度"
+          },
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "注意此处的判断基准是 2.9 这一封顶值，跨版本引用时务必核对"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "2. 抗凝强度目标",
+            "locator": "本版把华法林 INR 目标区间上限设为 2.8，超过该值即判定为抗凝过度"
+          },
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "注意此处的判断基准是 2.8 这一封顶值，跨版本引用时务必核对"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "2. 抗凝强度目标",
+            "locator": "本版把华法林 INR 目标区间上限设为 2.7，超过该值即判定为抗凝过度"
+          },
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "注意此处的判断基准是 2.7 这一封顶值，跨版本引用时务必核对"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "2. 抗凝强度目标",
+            "locator": "本版把华法林 INR 目标区间上限设为 3.2，超过该值即判定为抗凝过度"
+          },
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "注意此处的判断基准是 3.2 这一封顶值，跨版本引用时务必核对"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-CRCL",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "达比加群减量的肌酐清除率阈值",
+      "values": {
+        "A1-anticoag-2023.md": "45 mL/min",
+        "A2-anticoag-2024.md": "42 mL/min",
+        "A3-anticoag-2025.md": "40 mL/min",
+        "A4-anticoag-2025r.md": "38 mL/min",
+        "A5-anticoag-retired.md": "50 mL/min"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "达比加群在肌酐清除率低于 45 mL/min 时必须减量，不得维持原剂量"
+          },
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "减量触发线仍以 45 mL/min 为准，检验科报告需附实测值"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "达比加群在肌酐清除率低于 42 mL/min 时必须减量，不得维持原剂量"
+          },
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "减量触发线仍以 42 mL/min 为准，检验科报告需附实测值"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "达比加群在肌酐清除率低于 40 mL/min 时必须减量，不得维持原剂量"
+          },
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "减量触发线仍以 40 mL/min 为准，检验科报告需附实测值"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "达比加群在肌酐清除率低于 38 mL/min 时必须减量，不得维持原剂量"
+          },
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "减量触发线仍以 38 mL/min 为准，检验科报告需附实测值"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "3. 肾功能与剂量调整",
+            "locator": "达比加群在肌酐清除率低于 50 mL/min 时必须减量，不得维持原剂量"
+          },
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "减量触发线仍以 50 mL/min 为准，检验科报告需附实测值"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-HOLD",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "择期手术前停药时长",
+      "values": {
+        "A1-anticoag-2023.md": "72 小时",
+        "A2-anticoag-2024.md": "60 小时",
+        "A3-anticoag-2025.md": "48 小时",
+        "A4-anticoag-2025r.md": "36 小时",
+        "A5-anticoag-retired.md": "96 小时"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "择期手术前应至少停药 72 小时，急诊手术另按拮抗流程处理"
+          },
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "停药窗口按 72 小时 倒推排期，麻醉访视时需二次确认"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "择期手术前应至少停药 60 小时，急诊手术另按拮抗流程处理"
+          },
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "停药窗口按 60 小时 倒推排期，麻醉访视时需二次确认"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "择期手术前应至少停药 48 小时，急诊手术另按拮抗流程处理"
+          },
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "停药窗口按 48 小时 倒推排期，麻醉访视时需二次确认"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "择期手术前应至少停药 36 小时，急诊手术另按拮抗流程处理"
+          },
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "停药窗口按 36 小时 倒推排期，麻醉访视时需二次确认"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "4. 围手术期停药管理",
+            "locator": "择期手术前应至少停药 96 小时，急诊手术另按拮抗流程处理"
+          },
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "停药窗口按 96 小时 倒推排期，麻醉访视时需二次确认"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-AGE",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "高龄自动减量起始年龄",
+      "values": {
+        "A1-anticoag-2023.md": "78 岁",
+        "A2-anticoag-2024.md": "76 岁",
+        "A3-anticoag-2025.md": "75 岁",
+        "A4-anticoag-2025r.md": "74 岁",
+        "A5-anticoag-retired.md": "80 岁"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "患者达到 78 岁 及以上时进入自动减量通道，由药师复核后执行"
+          },
+          {
+            "section": "6. 血象监测要求",
+            "locator": "自动减量的年龄门槛是 78 岁，系统会在开方环节直接拦截"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "患者达到 76 岁 及以上时进入自动减量通道，由药师复核后执行"
+          },
+          {
+            "section": "6. 血象监测要求",
+            "locator": "自动减量的年龄门槛是 76 岁，系统会在开方环节直接拦截"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "患者达到 75 岁 及以上时进入自动减量通道，由药师复核后执行"
+          },
+          {
+            "section": "6. 血象监测要求",
+            "locator": "自动减量的年龄门槛是 75 岁，系统会在开方环节直接拦截"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "患者达到 74 岁 及以上时进入自动减量通道，由药师复核后执行"
+          },
+          {
+            "section": "6. 血象监测要求",
+            "locator": "自动减量的年龄门槛是 74 岁，系统会在开方环节直接拦截"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "5. 特殊人群用药",
+            "locator": "患者达到 80 岁 及以上时进入自动减量通道，由药师复核后执行"
+          },
+          {
+            "section": "6. 血象监测要求",
+            "locator": "自动减量的年龄门槛是 80 岁，系统会在开方环节直接拦截"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-PLT",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "血小板计数停药下限",
+      "values": {
+        "A1-anticoag-2023.md": "60×10⁹/L",
+        "A2-anticoag-2024.md": "55×10⁹/L",
+        "A3-anticoag-2025.md": "50×10⁹/L",
+        "A4-anticoag-2025r.md": "45×10⁹/L",
+        "A5-anticoag-retired.md": "70×10⁹/L"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "6. 血象监测要求",
+            "locator": "血小板计数跌破 60×10⁹/L 应立即停药并请血液科会诊"
+          },
+          {
+            "section": "7. 出血事件识别",
+            "locator": "停药红线设在 60×10⁹/L，复查间隔不得超过两个工作日"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "6. 血象监测要求",
+            "locator": "血小板计数跌破 55×10⁹/L 应立即停药并请血液科会诊"
+          },
+          {
+            "section": "7. 出血事件识别",
+            "locator": "停药红线设在 55×10⁹/L，复查间隔不得超过两个工作日"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "6. 血象监测要求",
+            "locator": "血小板计数跌破 50×10⁹/L 应立即停药并请血液科会诊"
+          },
+          {
+            "section": "7. 出血事件识别",
+            "locator": "停药红线设在 50×10⁹/L，复查间隔不得超过两个工作日"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "6. 血象监测要求",
+            "locator": "血小板计数跌破 45×10⁹/L 应立即停药并请血液科会诊"
+          },
+          {
+            "section": "7. 出血事件识别",
+            "locator": "停药红线设在 45×10⁹/L，复查间隔不得超过两个工作日"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "6. 血象监测要求",
+            "locator": "血小板计数跌破 70×10⁹/L 应立即停药并请血液科会诊"
+          },
+          {
+            "section": "7. 出血事件识别",
+            "locator": "停药红线设在 70×10⁹/L，复查间隔不得超过两个工作日"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-REPORT",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "严重出血事件上报时限",
+      "values": {
+        "A1-anticoag-2023.md": "24 小时",
+        "A2-anticoag-2024.md": "12 小时",
+        "A3-anticoag-2025.md": "8 小时",
+        "A4-anticoag-2025r.md": "6 小时",
+        "A5-anticoag-retired.md": "48 小时"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "7. 出血事件识别",
+            "locator": "严重出血事件须在发现后 24 小时 内完成院内上报，逾期计入科室质控扣分"
+          },
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "上报计时从发现时刻起算，窗口为 24 小时，不因交接班顺延"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "7. 出血事件识别",
+            "locator": "严重出血事件须在发现后 12 小时 内完成院内上报，逾期计入科室质控扣分"
+          },
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "上报计时从发现时刻起算，窗口为 12 小时，不因交接班顺延"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "7. 出血事件识别",
+            "locator": "严重出血事件须在发现后 8 小时 内完成院内上报，逾期计入科室质控扣分"
+          },
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "上报计时从发现时刻起算，窗口为 8 小时，不因交接班顺延"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "7. 出血事件识别",
+            "locator": "严重出血事件须在发现后 6 小时 内完成院内上报，逾期计入科室质控扣分"
+          },
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "上报计时从发现时刻起算，窗口为 6 小时，不因交接班顺延"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "7. 出血事件识别",
+            "locator": "严重出血事件须在发现后 48 小时 内完成院内上报，逾期计入科室质控扣分"
+          },
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "上报计时从发现时刻起算，窗口为 48 小时，不因交接班顺延"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-HB",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "血红蛋白预警下限",
+      "values": {
+        "A1-anticoag-2023.md": "90 g/L",
+        "A2-anticoag-2024.md": "95 g/L",
+        "A3-anticoag-2025.md": "100 g/L",
+        "A4-anticoag-2025r.md": "105 g/L",
+        "A5-anticoag-retired.md": "85 g/L"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "血红蛋白低于 90 g/L 触发出血预警，需当日复查并记录"
+          },
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "预警阈值 90 g/L 由检验系统自动比对，不接受手工豁免"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "血红蛋白低于 95 g/L 触发出血预警，需当日复查并记录"
+          },
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "预警阈值 95 g/L 由检验系统自动比对，不接受手工豁免"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "血红蛋白低于 100 g/L 触发出血预警，需当日复查并记录"
+          },
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "预警阈值 100 g/L 由检验系统自动比对，不接受手工豁免"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "血红蛋白低于 105 g/L 触发出血预警，需当日复查并记录"
+          },
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "预警阈值 105 g/L 由检验系统自动比对，不接受手工豁免"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "8. 事件上报与追溯",
+            "locator": "血红蛋白低于 85 g/L 触发出血预警，需当日复查并记录"
+          },
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "预警阈值 85 g/L 由检验系统自动比对，不接受手工豁免"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-DUAL",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "双联抗栓最长疗程",
+      "values": {
+        "A1-anticoag-2023.md": "12 个月",
+        "A2-anticoag-2024.md": "9 个月",
+        "A3-anticoag-2025.md": "6 个月",
+        "A4-anticoag-2025r.md": "3 个月",
+        "A5-anticoag-retired.md": "18 个月"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "双联抗栓总疗程上限为 12 个月，超期需重新评估获益风险比"
+          },
+          {
+            "section": "10. 用药重整",
+            "locator": "疗程封顶 12 个月，延长申请必须经心内与药学双签"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "双联抗栓总疗程上限为 9 个月，超期需重新评估获益风险比"
+          },
+          {
+            "section": "10. 用药重整",
+            "locator": "疗程封顶 9 个月，延长申请必须经心内与药学双签"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "双联抗栓总疗程上限为 6 个月，超期需重新评估获益风险比"
+          },
+          {
+            "section": "10. 用药重整",
+            "locator": "疗程封顶 6 个月，延长申请必须经心内与药学双签"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "双联抗栓总疗程上限为 3 个月，超期需重新评估获益风险比"
+          },
+          {
+            "section": "10. 用药重整",
+            "locator": "疗程封顶 3 个月，延长申请必须经心内与药学双签"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "9. 抗栓联合治疗",
+            "locator": "双联抗栓总疗程上限为 18 个月，超期需重新评估获益风险比"
+          },
+          {
+            "section": "10. 用药重整",
+            "locator": "疗程封顶 18 个月，延长申请必须经心内与药学双签"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-REVIEW",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "用药重整复核周期",
+      "values": {
+        "A1-anticoag-2023.md": "90 天",
+        "A2-anticoag-2024.md": "60 天",
+        "A3-anticoag-2025.md": "45 天",
+        "A4-anticoag-2025r.md": "30 天",
+        "A5-anticoag-retired.md": "180 天"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "10. 用药重整",
+            "locator": "长期服药患者的用药重整复核周期不得长于 90 天"
+          },
+          {
+            "section": "11. 处方权与培训",
+            "locator": "复核周期 90 天 是硬性上限，门诊与住院口径一致"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "10. 用药重整",
+            "locator": "长期服药患者的用药重整复核周期不得长于 60 天"
+          },
+          {
+            "section": "11. 处方权与培训",
+            "locator": "复核周期 60 天 是硬性上限，门诊与住院口径一致"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "10. 用药重整",
+            "locator": "长期服药患者的用药重整复核周期不得长于 45 天"
+          },
+          {
+            "section": "11. 处方权与培训",
+            "locator": "复核周期 45 天 是硬性上限，门诊与住院口径一致"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "10. 用药重整",
+            "locator": "长期服药患者的用药重整复核周期不得长于 30 天"
+          },
+          {
+            "section": "11. 处方权与培训",
+            "locator": "复核周期 30 天 是硬性上限，门诊与住院口径一致"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "10. 用药重整",
+            "locator": "长期服药患者的用药重整复核周期不得长于 180 天"
+          },
+          {
+            "section": "11. 处方权与培训",
+            "locator": "复核周期 180 天 是硬性上限，门诊与住院口径一致"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-TRAIN",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "处方权培训学时",
+      "values": {
+        "A1-anticoag-2023.md": "16 学时",
+        "A2-anticoag-2024.md": "20 学时",
+        "A3-anticoag-2025.md": "24 学时",
+        "A4-anticoag-2025r.md": "28 学时",
+        "A5-anticoag-retired.md": "8 学时"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "11. 处方权与培训",
+            "locator": "取得抗凝处方权需完成 16 学时 的专项培训并通过考核"
+          },
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "培训学时要求为 16 学时，未达标者处方权自动冻结"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "11. 处方权与培训",
+            "locator": "取得抗凝处方权需完成 20 学时 的专项培训并通过考核"
+          },
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "培训学时要求为 20 学时，未达标者处方权自动冻结"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "11. 处方权与培训",
+            "locator": "取得抗凝处方权需完成 24 学时 的专项培训并通过考核"
+          },
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "培训学时要求为 24 学时，未达标者处方权自动冻结"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "11. 处方权与培训",
+            "locator": "取得抗凝处方权需完成 28 学时 的专项培训并通过考核"
+          },
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "培训学时要求为 28 学时，未达标者处方权自动冻结"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "11. 处方权与培训",
+            "locator": "取得抗凝处方权需完成 8 学时 的专项培训并通过考核"
+          },
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "培训学时要求为 8 学时，未达标者处方权自动冻结"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-A-IMG",
+      "family": "A",
+      "cluster_id": "C-A-anticoag",
+      "kind": "asset",
+      "claim_type": "passage",
+      "dimension": "处置流程图",
+      "values": {
+        "A1-anticoag-2023.md": "https://upload.wikimedia.org/wikipedia/commons/9/93/The_Risk_Management_Process.png",
+        "A2-anticoag-2024.md": "https://upload.wikimedia.org/wikipedia/commons/9/93/The_Risk_Management_Process.png",
+        "A3-anticoag-2025.md": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Flowchart_Process.svg",
+        "A4-anticoag-2025r.md": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Flowchart_Process.svg",
+        "A5-anticoag-retired.md": "https://upload.wikimedia.org/wikipedia/commons/a/a5/BalanceSheet.jpg"
+      },
+      "locations": {
+        "A1-anticoag-2023.md": [
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/9/93/The_Risk_Management_Process.png"
+          }
+        ],
+        "A2-anticoag-2024.md": [
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/9/93/The_Risk_Management_Process.png"
+          }
+        ],
+        "A3-anticoag-2025.md": [
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Flowchart_Process.svg"
+          }
+        ],
+        "A4-anticoag-2025r.md": [
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Flowchart_Process.svg"
+          }
+        ],
+        "A5-anticoag-retired.md": [
+          {
+            "section": "12. 附图与变更记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/a/a5/BalanceSheet.jpg"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-CUTOFF",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "评分卡自动通过分数线",
+      "values": {
+        "B1-risk-hongyuan.md": "612 分",
+        "B2-risk-jinzhou.md": "648 分",
+        "B3-risk-nanxu.md": "630 分",
+        "B4-risk-qihe.md": "605 分",
+        "B5-risk-group.md": "620 分"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "2. 评分卡与准入",
+            "locator": "评分卡自动通过线设在 612 分，达到该线的申请直接进入放款队列"
+          },
+          {
+            "section": "3. 拒绝策略",
+            "locator": "自动通过线 612 分 由风险管理部统一调参，业务侧无权自行调整"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "2. 评分卡与准入",
+            "locator": "评分卡自动通过线设在 648 分，达到该线的申请直接进入放款队列"
+          },
+          {
+            "section": "3. 拒绝策略",
+            "locator": "自动通过线 648 分 由风险管理部统一调参，业务侧无权自行调整"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "2. 评分卡与准入",
+            "locator": "评分卡自动通过线设在 630 分，达到该线的申请直接进入放款队列"
+          },
+          {
+            "section": "3. 拒绝策略",
+            "locator": "自动通过线 630 分 由风险管理部统一调参，业务侧无权自行调整"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "2. 评分卡与准入",
+            "locator": "评分卡自动通过线设在 605 分，达到该线的申请直接进入放款队列"
+          },
+          {
+            "section": "3. 拒绝策略",
+            "locator": "自动通过线 605 分 由风险管理部统一调参，业务侧无权自行调整"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "2. 评分卡与准入",
+            "locator": "评分卡自动通过线设在 620 分，达到该线的申请直接进入放款队列"
+          },
+          {
+            "section": "3. 拒绝策略",
+            "locator": "自动通过线 620 分 由风险管理部统一调参，业务侧无权自行调整"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-REJECT",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "自动拒绝分数线",
+      "values": {
+        "B1-risk-hongyuan.md": "480 分",
+        "B2-risk-jinzhou.md": "520 分",
+        "B3-risk-nanxu.md": "500 分",
+        "B4-risk-qihe.md": "465 分",
+        "B5-risk-group.md": "495 分"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "3. 拒绝策略",
+            "locator": "低于 480 分 的申请直接自动拒绝，不再进入人工环节"
+          },
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "自动拒绝线取 480 分，该线以下的申诉需走独立复议通道"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "3. 拒绝策略",
+            "locator": "低于 520 分 的申请直接自动拒绝，不再进入人工环节"
+          },
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "自动拒绝线取 520 分，该线以下的申诉需走独立复议通道"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "3. 拒绝策略",
+            "locator": "低于 500 分 的申请直接自动拒绝，不再进入人工环节"
+          },
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "自动拒绝线取 500 分，该线以下的申诉需走独立复议通道"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "3. 拒绝策略",
+            "locator": "低于 465 分 的申请直接自动拒绝，不再进入人工环节"
+          },
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "自动拒绝线取 465 分，该线以下的申诉需走独立复议通道"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "3. 拒绝策略",
+            "locator": "低于 495 分 的申请直接自动拒绝，不再进入人工环节"
+          },
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "自动拒绝线取 495 分，该线以下的申诉需走独立复议通道"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-DTI",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "债务收入比上限",
+      "values": {
+        "B1-risk-hongyuan.md": "65%",
+        "B2-risk-jinzhou.md": "50%",
+        "B3-risk-nanxu.md": "58%",
+        "B4-risk-qihe.md": "70%",
+        "B5-risk-group.md": "60%"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "申请人的债务收入比不得超过 65%，超限一票否决"
+          },
+          {
+            "section": "5. 模型效果验收",
+            "locator": "债务收入比红线为 65%，多头借贷数据需并表计算"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "申请人的债务收入比不得超过 50%，超限一票否决"
+          },
+          {
+            "section": "5. 模型效果验收",
+            "locator": "债务收入比红线为 50%，多头借贷数据需并表计算"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "申请人的债务收入比不得超过 58%，超限一票否决"
+          },
+          {
+            "section": "5. 模型效果验收",
+            "locator": "债务收入比红线为 58%，多头借贷数据需并表计算"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "申请人的债务收入比不得超过 70%，超限一票否决"
+          },
+          {
+            "section": "5. 模型效果验收",
+            "locator": "债务收入比红线为 70%，多头借贷数据需并表计算"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "4. 负债与多头风险",
+            "locator": "申请人的债务收入比不得超过 60%，超限一票否决"
+          },
+          {
+            "section": "5. 模型效果验收",
+            "locator": "债务收入比红线为 60%，多头借贷数据需并表计算"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-KS",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "模型上线最低 KS 值",
+      "values": {
+        "B1-risk-hongyuan.md": "0.32",
+        "B2-risk-jinzhou.md": "0.38",
+        "B3-risk-nanxu.md": "0.35",
+        "B4-risk-qihe.md": "0.30",
+        "B5-risk-group.md": "0.34"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "5. 模型效果验收",
+            "locator": "模型在跨时间验证集上的 KS 值不得低于 0.32，否则不予上线"
+          },
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "上线门槛 KS 为 0.32，验证集必须与训练期完全不重叠"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "5. 模型效果验收",
+            "locator": "模型在跨时间验证集上的 KS 值不得低于 0.38，否则不予上线"
+          },
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "上线门槛 KS 为 0.38，验证集必须与训练期完全不重叠"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "5. 模型效果验收",
+            "locator": "模型在跨时间验证集上的 KS 值不得低于 0.35，否则不予上线"
+          },
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "上线门槛 KS 为 0.35，验证集必须与训练期完全不重叠"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "5. 模型效果验收",
+            "locator": "模型在跨时间验证集上的 KS 值不得低于 0.30，否则不予上线"
+          },
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "上线门槛 KS 为 0.30，验证集必须与训练期完全不重叠"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "5. 模型效果验收",
+            "locator": "模型在跨时间验证集上的 KS 值不得低于 0.34，否则不予上线"
+          },
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "上线门槛 KS 为 0.34，验证集必须与训练期完全不重叠"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-PSI",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "特征漂移下线阈值",
+      "values": {
+        "B1-risk-hongyuan.md": "0.25",
+        "B2-risk-jinzhou.md": "0.15",
+        "B3-risk-nanxu.md": "0.20",
+        "B4-risk-qihe.md": "0.28",
+        "B5-risk-group.md": "0.18"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "单特征 PSI 超过 0.25 即触发强制下线并回滚上一版本"
+          },
+          {
+            "section": "7. 人工复核机制",
+            "locator": "漂移熔断线是 0.25，监控频率为每日一次全量比对"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "单特征 PSI 超过 0.15 即触发强制下线并回滚上一版本"
+          },
+          {
+            "section": "7. 人工复核机制",
+            "locator": "漂移熔断线是 0.15，监控频率为每日一次全量比对"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "单特征 PSI 超过 0.20 即触发强制下线并回滚上一版本"
+          },
+          {
+            "section": "7. 人工复核机制",
+            "locator": "漂移熔断线是 0.20，监控频率为每日一次全量比对"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "单特征 PSI 超过 0.28 即触发强制下线并回滚上一版本"
+          },
+          {
+            "section": "7. 人工复核机制",
+            "locator": "漂移熔断线是 0.28，监控频率为每日一次全量比对"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "6. 模型监控与熔断",
+            "locator": "单特征 PSI 超过 0.18 即触发强制下线并回滚上一版本"
+          },
+          {
+            "section": "7. 人工复核机制",
+            "locator": "漂移熔断线是 0.18，监控频率为每日一次全量比对"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-MANUAL",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "人工复核抽检比例",
+      "values": {
+        "B1-risk-hongyuan.md": "8%",
+        "B2-risk-jinzhou.md": "20%",
+        "B3-risk-nanxu.md": "35%",
+        "B4-risk-qihe.md": "5%",
+        "B5-risk-group.md": "12%"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "7. 人工复核机制",
+            "locator": "自动通过的申请需按 8% 的比例抽检人工复核"
+          },
+          {
+            "section": "8. 额度策略",
+            "locator": "抽检比例为 8%，样本由系统随机抽取，不接受人工指定"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "7. 人工复核机制",
+            "locator": "自动通过的申请需按 20% 的比例抽检人工复核"
+          },
+          {
+            "section": "8. 额度策略",
+            "locator": "抽检比例为 20%，样本由系统随机抽取，不接受人工指定"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "7. 人工复核机制",
+            "locator": "自动通过的申请需按 35% 的比例抽检人工复核"
+          },
+          {
+            "section": "8. 额度策略",
+            "locator": "抽检比例为 35%，样本由系统随机抽取，不接受人工指定"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "7. 人工复核机制",
+            "locator": "自动通过的申请需按 5% 的比例抽检人工复核"
+          },
+          {
+            "section": "8. 额度策略",
+            "locator": "抽检比例为 5%，样本由系统随机抽取，不接受人工指定"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "7. 人工复核机制",
+            "locator": "自动通过的申请需按 12% 的比例抽检人工复核"
+          },
+          {
+            "section": "8. 额度策略",
+            "locator": "抽检比例为 12%，样本由系统随机抽取，不接受人工指定"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-LIMIT",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "新客首次授信上限",
+      "values": {
+        "B1-risk-hongyuan.md": "2 万元",
+        "B2-risk-jinzhou.md": "5 万元",
+        "B3-risk-nanxu.md": "3 万元",
+        "B4-risk-qihe.md": "1.5 万元",
+        "B5-risk-group.md": "4 万元"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "8. 额度策略",
+            "locator": "新客首次授信额度上限为 2 万元，提额需在正常还款六期之后"
+          },
+          {
+            "section": "9. 贷后与催收",
+            "locator": "首次授信封顶 2 万元，任何白名单都不得突破该上限"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "8. 额度策略",
+            "locator": "新客首次授信额度上限为 5 万元，提额需在正常还款六期之后"
+          },
+          {
+            "section": "9. 贷后与催收",
+            "locator": "首次授信封顶 5 万元，任何白名单都不得突破该上限"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "8. 额度策略",
+            "locator": "新客首次授信额度上限为 3 万元，提额需在正常还款六期之后"
+          },
+          {
+            "section": "9. 贷后与催收",
+            "locator": "首次授信封顶 3 万元，任何白名单都不得突破该上限"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "8. 额度策略",
+            "locator": "新客首次授信额度上限为 1.5 万元，提额需在正常还款六期之后"
+          },
+          {
+            "section": "9. 贷后与催收",
+            "locator": "首次授信封顶 1.5 万元，任何白名单都不得突破该上限"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "8. 额度策略",
+            "locator": "新客首次授信额度上限为 4 万元，提额需在正常还款六期之后"
+          },
+          {
+            "section": "9. 贷后与催收",
+            "locator": "首次授信封顶 4 万元，任何白名单都不得突破该上限"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-OVERDUE",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "进入催收的逾期天数",
+      "values": {
+        "B1-risk-hongyuan.md": "3 天",
+        "B2-risk-jinzhou.md": "7 天",
+        "B3-risk-nanxu.md": "5 天",
+        "B4-risk-qihe.md": "1 天",
+        "B5-risk-group.md": "4 天"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "9. 贷后与催收",
+            "locator": "逾期满 3 天 后案件自动移交催收系统"
+          },
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "移交催收的时点是逾期满 3 天，节假日不顺延"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "9. 贷后与催收",
+            "locator": "逾期满 7 天 后案件自动移交催收系统"
+          },
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "移交催收的时点是逾期满 7 天，节假日不顺延"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "9. 贷后与催收",
+            "locator": "逾期满 5 天 后案件自动移交催收系统"
+          },
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "移交催收的时点是逾期满 5 天，节假日不顺延"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "9. 贷后与催收",
+            "locator": "逾期满 1 天 后案件自动移交催收系统"
+          },
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "移交催收的时点是逾期满 1 天，节假日不顺延"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "9. 贷后与催收",
+            "locator": "逾期满 4 天 后案件自动移交催收系统"
+          },
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "移交催收的时点是逾期满 4 天，节假日不顺延"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-RETRAIN",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "模型重训周期",
+      "values": {
+        "B1-risk-hongyuan.md": "每 45 天",
+        "B2-risk-jinzhou.md": "每 180 天",
+        "B3-risk-nanxu.md": "每 90 天",
+        "B4-risk-qihe.md": "每 30 天",
+        "B5-risk-group.md": "每 120 天"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "评分模型的例行重训周期为 每 45 天，逾期未重训视为模型失效"
+          },
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "重训节奏保持 每 45 天，特征口径变更时需额外触发一次"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "评分模型的例行重训周期为 每 180 天，逾期未重训视为模型失效"
+          },
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "重训节奏保持 每 180 天，特征口径变更时需额外触发一次"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "评分模型的例行重训周期为 每 90 天，逾期未重训视为模型失效"
+          },
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "重训节奏保持 每 90 天，特征口径变更时需额外触发一次"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "评分模型的例行重训周期为 每 30 天，逾期未重训视为模型失效"
+          },
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "重训节奏保持 每 30 天，特征口径变更时需额外触发一次"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "10. 模型迭代节奏",
+            "locator": "评分模型的例行重训周期为 每 120 天，逾期未重训视为模型失效"
+          },
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "重训节奏保持 每 120 天，特征口径变更时需额外触发一次"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-EXPLAIN",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "拒绝原因返回条数",
+      "values": {
+        "B1-risk-hongyuan.md": "3 条",
+        "B2-risk-jinzhou.md": "5 条",
+        "B3-risk-nanxu.md": "4 条",
+        "B4-risk-qihe.md": "2 条",
+        "B5-risk-group.md": "3 条"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "被拒申请人有权获得不少于 3 条 的主要拒绝原因说明"
+          },
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "原因说明数量下限为 3 条，措辞需通过合规话术库校验"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "被拒申请人有权获得不少于 5 条 的主要拒绝原因说明"
+          },
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "原因说明数量下限为 5 条，措辞需通过合规话术库校验"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "被拒申请人有权获得不少于 4 条 的主要拒绝原因说明"
+          },
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "原因说明数量下限为 4 条，措辞需通过合规话术库校验"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "被拒申请人有权获得不少于 2 条 的主要拒绝原因说明"
+          },
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "原因说明数量下限为 2 条，措辞需通过合规话术库校验"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "11. 可解释性与消费者权益",
+            "locator": "被拒申请人有权获得不少于 3 条 的主要拒绝原因说明"
+          },
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "原因说明数量下限为 3 条，措辞需通过合规话术库校验"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-B-IMG",
+      "family": "B",
+      "cluster_id": "C-B-riskctl",
+      "kind": "asset",
+      "claim_type": "passage",
+      "dimension": "风控架构图",
+      "values": {
+        "B1-risk-hongyuan.md": "https://upload.wikimedia.org/wikipedia/commons/1/13/Network_architecture_2levels.png",
+        "B2-risk-jinzhou.md": "https://upload.wikimedia.org/wikipedia/commons/1/13/Network_architecture_2levels.png",
+        "B3-risk-nanxu.md": "https://upload.wikimedia.org/wikipedia/commons/3/39/Synergix_Technologies_Organization_Chart.png",
+        "B4-risk-qihe.md": "https://upload.wikimedia.org/wikipedia/commons/3/39/Synergix_Technologies_Organization_Chart.png",
+        "B5-risk-group.md": "https://upload.wikimedia.org/wikipedia/commons/5/5e/UK_tv_viewing_share_line_chart_1999_-_2009.png"
+      },
+      "locations": {
+        "B1-risk-hongyuan.md": [
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/1/13/Network_architecture_2levels.png"
+          }
+        ],
+        "B2-risk-jinzhou.md": [
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/1/13/Network_architecture_2levels.png"
+          }
+        ],
+        "B3-risk-nanxu.md": [
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/3/39/Synergix_Technologies_Organization_Chart.png"
+          }
+        ],
+        "B4-risk-qihe.md": [
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/3/39/Synergix_Technologies_Organization_Chart.png"
+          }
+        ],
+        "B5-risk-group.md": [
+          {
+            "section": "12. 架构图与修订记录",
+            "locator": "https://upload.wikimedia.org/wikipedia/commons/5/5e/UK_tv_viewing_share_line_chart_1999_-_2009.png"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C1A-JOIN",
+      "family": "C",
+      "cluster_id": "C-CH-C1",
+      "chain_id": "CH-C1",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "顾屿声学工程任职纪要·一、任职与沿革",
+      "values": {
+        "C1a-guyu-role.md": "砺岩精工"
+      },
+      "locations": {
+        "C1a-guyu-role.md": [
+          {
+            "section": "一、任职与沿革",
+            "locator": "顾屿于 2022 年 3 月入职砺岩精工，最初承担水下换能器的一致性测试"
+          },
+          {
+            "section": "二、职级安排",
+            "locator": "砺岩精工在当年的技术序列评定中确认了顾屿的首席资格"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C1A-SCOPE",
+      "family": "C",
+      "cluster_id": "C-CH-C1",
+      "chain_id": "CH-C1",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "顾屿声学工程任职纪要·二、职级安排",
+      "values": {
+        "C1a-guyu-role.md": "砺岩精工"
+      },
+      "locations": {
+        "C1a-guyu-role.md": [
+          {
+            "section": "二、职级安排",
+            "locator": "顾屿主持的静默环校准方案已成为砺岩精工的内部基准方法"
+          },
+          {
+            "section": "三、工作边界",
+            "locator": "该方案的复核权限由砺岩精工的技术委员会单独授予顾屿"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C1A-LIMIT",
+      "family": "C",
+      "cluster_id": "C-CH-C1",
+      "chain_id": "CH-C1",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "顾屿声学工程任职纪要·三、工作边界",
+      "values": {
+        "C1a-guyu-role.md": "砺岩精工"
+      },
+      "locations": {
+        "C1a-guyu-role.md": [
+          {
+            "section": "三、工作边界",
+            "locator": "顾屿不代表砺岩精工签署任何资本类或股权类文件"
+          },
+          {
+            "section": "四、口径提示",
+            "locator": "砺岩精工的对外签署权集中在行政序列，与顾屿所在序列分离"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C1B-DEAL",
+      "family": "C",
+      "cluster_id": "C-CH-C1",
+      "chain_id": "CH-C1",
+      "hop_role": "bridge",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "砺岩精工控股权交割公告·一、交易结果",
+      "values": {
+        "C1b-liyan-equity.md": "潮生重工"
+      },
+      "locations": {
+        "C1b-liyan-equity.md": [
+          {
+            "section": "一、交易结果",
+            "locator": "潮生重工已完成对砺岩精工百分之七十股权的收购并办结全部交割手续"
+          },
+          {
+            "section": "二、交割后的治理安排",
+            "locator": "本次收购的对价由潮生重工以现金方式一次性支付给原股东"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C1B-CONSOLIDATE",
+      "family": "C",
+      "cluster_id": "C-CH-C1",
+      "chain_id": "CH-C1",
+      "hop_role": "bridge",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "砺岩精工控股权交割公告·二、交割后的治理安排",
+      "values": {
+        "C1b-liyan-equity.md": "潮生重工"
+      },
+      "locations": {
+        "C1b-liyan-equity.md": [
+          {
+            "section": "二、交割后的治理安排",
+            "locator": "自交割日起砺岩精工纳入潮生重工的合并报表范围"
+          },
+          {
+            "section": "三、条款拆分说明",
+            "locator": "潮生重工向砺岩精工委派了财务负责人与内控审计联络人"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C1B-AUTONOMY",
+      "family": "C",
+      "cluster_id": "C-CH-C1",
+      "chain_id": "CH-C1",
+      "hop_role": "bridge",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "砺岩精工控股权交割公告·三、条款拆分说明",
+      "values": {
+        "C1b-liyan-equity.md": "砺岩精工"
+      },
+      "locations": {
+        "C1b-liyan-equity.md": [
+          {
+            "section": "三、条款拆分说明",
+            "locator": "砺岩精工保留原有名称实验场地与技术职级体系"
+          },
+          {
+            "section": "四、口径提示",
+            "locator": "日常测试与人员任命继续由砺岩精工本地管理层决定"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C1C-APPOINT",
+      "family": "C",
+      "cluster_id": "C-CH-C1",
+      "chain_id": "CH-C1",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "楼砚船队技术岗位说明·一、岗位任命",
+      "values": {
+        "C1c-louyan-role.md": "潮生重工"
+      },
+      "locations": {
+        "C1c-louyan-role.md": [
+          {
+            "section": "一、岗位任命",
+            "locator": "楼砚现任潮生重工船队技术副总裁负责远洋船舶的导航设备更新"
+          },
+          {
+            "section": "二、汇报关系",
+            "locator": "潮生重工在本次任命中同时明确了楼砚的能效改造牵头职责"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C1C-REPORT",
+      "family": "C",
+      "cluster_id": "C-CH-C1",
+      "chain_id": "CH-C1",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "楼砚船队技术岗位说明·二、汇报关系",
+      "values": {
+        "C1c-louyan-role.md": "潮生重工"
+      },
+      "locations": {
+        "C1c-louyan-role.md": [
+          {
+            "section": "二、汇报关系",
+            "locator": "该岗位向潮生重工首席运营官汇报并按月提交设备状态简报"
+          },
+          {
+            "section": "三、权限限制",
+            "locator": "潮生重工要求楼砚所辖团队与岸基运维保持统一的口径"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C1C-LIMIT",
+      "family": "C",
+      "cluster_id": "C-CH-C1",
+      "chain_id": "CH-C1",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "楼砚船队技术岗位说明·三、权限限制",
+      "values": {
+        "C1c-louyan-role.md": "潮生重工"
+      },
+      "locations": {
+        "C1c-louyan-role.md": [
+          {
+            "section": "三、权限限制",
+            "locator": "楼砚无权单独批准潮生重工的并购股权转让或长期融资事项"
+          },
+          {
+            "section": "四、口径提示",
+            "locator": "涉及潮生重工控制权的议题必须以董事会文件为准"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C2A-ROLE",
+      "family": "C",
+      "cluster_id": "C-CH-C2",
+      "chain_id": "CH-C2",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "柏迟实验室岗位档案·一、岗位信息",
+      "values": {
+        "C2a-baichi-role.md": "云枢检测"
+      },
+      "locations": {
+        "C2a-baichi-role.md": [
+          {
+            "section": "一、岗位信息",
+            "locator": "柏迟自 2023 年起担任云枢检测的材料实验室主任"
+          },
+          {
+            "section": "二、资质与授权",
+            "locator": "云枢检测的检测报告签发权限中包含柏迟所在的实验室主任岗"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C2A-CERT",
+      "family": "C",
+      "cluster_id": "C-CH-C2",
+      "chain_id": "CH-C2",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "柏迟实验室岗位档案·二、资质与授权",
+      "values": {
+        "C2a-baichi-role.md": "云枢检测"
+      },
+      "locations": {
+        "C2a-baichi-role.md": [
+          {
+            "section": "二、资质与授权",
+            "locator": "柏迟持有的疲劳试验资质由云枢检测统一备案管理"
+          },
+          {
+            "section": "三、职责边界",
+            "locator": "云枢检测每两年组织一次资质复核柏迟均在复核名单内"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C2A-LIMIT",
+      "family": "C",
+      "cluster_id": "C-CH-C2",
+      "chain_id": "CH-C2",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "柏迟实验室岗位档案·三、职责边界",
+      "values": {
+        "C2a-baichi-role.md": "云枢检测"
+      },
+      "locations": {
+        "C2a-baichi-role.md": [
+          {
+            "section": "三、职责边界",
+            "locator": "柏迟不参与云枢检测的商务定价与合同谈判"
+          },
+          {
+            "section": "四、口径提示",
+            "locator": "云枢检测的对外报价由商务部门负责与柏迟所在部门无关"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C2B-PARTY",
+      "family": "C",
+      "cluster_id": "C-CH-C2",
+      "chain_id": "CH-C2",
+      "hop_role": "bridge",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "云枢检测年度服务协议摘要·一、协议主体与范围",
+      "values": {
+        "C2b-yunshu-service.md": "屿白材料"
+      },
+      "locations": {
+        "C2b-yunshu-service.md": [
+          {
+            "section": "一、协议主体与范围",
+            "locator": "云枢检测为屿白材料提供全年度的第三方力学性能检测服务"
+          },
+          {
+            "section": "二、交付安排",
+            "locator": "屿白材料按季度向云枢检测提交送检批次计划"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C2B-DELIVER",
+      "family": "C",
+      "cluster_id": "C-CH-C2",
+      "chain_id": "CH-C2",
+      "hop_role": "bridge",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "云枢检测年度服务协议摘要·二、交付安排",
+      "values": {
+        "C2b-yunshu-service.md": "屿白材料"
+      },
+      "locations": {
+        "C2b-yunshu-service.md": [
+          {
+            "section": "二、交付安排",
+            "locator": "检测报告在样品接收后十个工作日内出具并直送屿白材料质量部"
+          },
+          {
+            "section": "三、责任划分",
+            "locator": "屿白材料对报告有异议的须在收件后五个工作日内提出复检"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C2B-INDEPENDENT",
+      "family": "C",
+      "cluster_id": "C-CH-C2",
+      "chain_id": "CH-C2",
+      "hop_role": "bridge",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "云枢检测年度服务协议摘要·三、责任划分",
+      "values": {
+        "C2b-yunshu-service.md": "云枢检测"
+      },
+      "locations": {
+        "C2b-yunshu-service.md": [
+          {
+            "section": "三、责任划分",
+            "locator": "本协议不产生任何股权投资或人员编制上的合并安排"
+          },
+          {
+            "section": "四、口径提示",
+            "locator": "云枢检测在财务核算与对外责任上与委托方完全独立"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C2C-CONTROL",
+      "family": "C",
+      "cluster_id": "C-CH-C2",
+      "chain_id": "CH-C2",
+      "hop_role": "bridge",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "屿白材料股权结构变更说明·一、变更结果",
+      "values": {
+        "C2c-yubai-equity.md": "岱川控股"
+      },
+      "locations": {
+        "C2c-yubai-equity.md": [
+          {
+            "section": "一、变更结果",
+            "locator": "岱川控股经本次增资后持有屿白材料百分之六十五的表决权"
+          },
+          {
+            "section": "二、治理结构",
+            "locator": "岱川控股取得的表决权已在市场监督部门完成变更登记"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C2C-BOARD",
+      "family": "C",
+      "cluster_id": "C-CH-C2",
+      "chain_id": "CH-C2",
+      "hop_role": "bridge",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "屿白材料股权结构变更说明·二、治理结构",
+      "values": {
+        "C2c-yubai-equity.md": "岱川控股"
+      },
+      "locations": {
+        "C2c-yubai-equity.md": [
+          {
+            "section": "二、治理结构",
+            "locator": "屿白材料董事会五个席位中的三席由岱川控股提名"
+          },
+          {
+            "section": "三、存续安排",
+            "locator": "岱川控股对屿白材料的年度预算方案拥有否决权"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C2C-BRAND",
+      "family": "C",
+      "cluster_id": "C-CH-C2",
+      "chain_id": "CH-C2",
+      "hop_role": "bridge",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "屿白材料股权结构变更说明·三、存续安排",
+      "values": {
+        "C2c-yubai-equity.md": "屿白材料"
+      },
+      "locations": {
+        "C2c-yubai-equity.md": [
+          {
+            "section": "三、存续安排",
+            "locator": "屿白材料继续以原有主体资格对外签署合同"
+          },
+          {
+            "section": "四、口径提示",
+            "locator": "变更登记不影响屿白材料既有合同的效力与履行"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C2D-APPOINT",
+      "family": "C",
+      "cluster_id": "C-CH-C2",
+      "chain_id": "CH-C2",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "聂昭投资管理岗位任命书·一、任命内容",
+      "values": {
+        "C2d-niezhao-role.md": "岱川控股"
+      },
+      "locations": {
+        "C2d-niezhao-role.md": [
+          {
+            "section": "一、任命内容",
+            "locator": "聂昭出任岱川控股的产业投资部总经理"
+          },
+          {
+            "section": "二、管辖范围",
+            "locator": "岱川控股的投资决策委员会中聂昭为常任委员"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C2D-SCOPE",
+      "family": "C",
+      "cluster_id": "C-CH-C2",
+      "chain_id": "CH-C2",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "聂昭投资管理岗位任命书·二、管辖范围",
+      "values": {
+        "C2d-niezhao-role.md": "岱川控股"
+      },
+      "locations": {
+        "C2d-niezhao-role.md": [
+          {
+            "section": "二、管辖范围",
+            "locator": "聂昭分管岱川控股在新材料方向的全部参控股项目"
+          },
+          {
+            "section": "三、权限说明",
+            "locator": "岱川控股要求聂昭每季度提交投后管理评估报告"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-C2D-LIMIT",
+      "family": "C",
+      "cluster_id": "C-CH-C2",
+      "chain_id": "CH-C2",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "聂昭投资管理岗位任命书·三、权限说明",
+      "values": {
+        "C2d-niezhao-role.md": "岱川控股"
+      },
+      "locations": {
+        "C2d-niezhao-role.md": [
+          {
+            "section": "三、权限说明",
+            "locator": "聂昭的单笔审批权限以岱川控股董事会授权额度为上限"
+          },
+          {
+            "section": "四、口径提示",
+            "locator": "超出授权额度的事项须提交岱川控股董事会表决"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D1A-JOIN",
+      "family": "D",
+      "cluster_id": "C-CH-D1",
+      "chain_id": "CH-D1",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "温阙纸质文物修复履历·一、从业经历",
+      "values": {
+        "D1a-wenque-role.md": "屏山修复院"
+      },
+      "locations": {
+        "D1a-wenque-role.md": [
+          {
+            "section": "一、从业经历",
+            "locator": "温阙自 2019 年起在屏山修复院从事纸质文物的揭裱与加固"
+          },
+          {
+            "section": "二、技艺方向",
+            "locator": "屏山修复院将温阙列入本院的高级修复师名录"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D1A-SKILL",
+      "family": "D",
+      "cluster_id": "C-CH-D1",
+      "chain_id": "CH-D1",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "温阙纸质文物修复履历·二、技艺方向",
+      "values": {
+        "D1a-wenque-role.md": "屏山修复院"
+      },
+      "locations": {
+        "D1a-wenque-role.md": [
+          {
+            "section": "二、技艺方向",
+            "locator": "温阙负责屏山修复院承接项目中的霉斑处理工艺评审"
+          },
+          {
+            "section": "三、职责边界",
+            "locator": "屏山修复院要求温阙对每件出院文物出具工艺说明"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D1A-LIMIT",
+      "family": "D",
+      "cluster_id": "C-CH-D1",
+      "chain_id": "CH-D1",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "温阙纸质文物修复履历·三、职责边界",
+      "values": {
+        "D1a-wenque-role.md": "屏山修复院"
+      },
+      "locations": {
+        "D1a-wenque-role.md": [
+          {
+            "section": "三、职责边界",
+            "locator": "温阙不参与屏山修复院的项目投标与合同签署"
+          },
+          {
+            "section": "四、口径提示",
+            "locator": "屏山修复院的对外承接事务由院务办公室统一负责"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D1B-AWARD",
+      "family": "D",
+      "cluster_id": "C-CH-D1",
+      "chain_id": "CH-D1",
+      "hop_role": "bridge",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "屏山修复院修复服务定标公告·一、定标结果",
+      "values": {
+        "D1b-pingshan-award.md": "澜庭档案馆"
+      },
+      "locations": {
+        "D1b-pingshan-award.md": [
+          {
+            "section": "一、定标结果",
+            "locator": "澜庭档案馆的近代纸质档案修复项目由屏山修复院中标承接"
+          },
+          {
+            "section": "二、履约安排",
+            "locator": "屏山修复院与澜庭档案馆已就本项目签署三年期服务合同"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D1B-SITE",
+      "family": "D",
+      "cluster_id": "C-CH-D1",
+      "chain_id": "CH-D1",
+      "hop_role": "bridge",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "屏山修复院修复服务定标公告·二、履约安排",
+      "values": {
+        "D1b-pingshan-award.md": "澜庭档案馆"
+      },
+      "locations": {
+        "D1b-pingshan-award.md": [
+          {
+            "section": "二、履约安排",
+            "locator": "全部修复作业在澜庭档案馆指定的馆内工作间完成"
+          },
+          {
+            "section": "三、责任划分",
+            "locator": "澜庭档案馆不允许受托方将档案原件带离馆区"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D1B-INDEPENDENT",
+      "family": "D",
+      "cluster_id": "C-CH-D1",
+      "chain_id": "CH-D1",
+      "hop_role": "bridge",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "屏山修复院修复服务定标公告·三、责任划分",
+      "values": {
+        "D1b-pingshan-award.md": "屏山修复院"
+      },
+      "locations": {
+        "D1b-pingshan-award.md": [
+          {
+            "section": "三、责任划分",
+            "locator": "本次定标不涉及屏山修复院与委托方的机构合并或人员编制调整"
+          },
+          {
+            "section": "四、口径提示",
+            "locator": "屏山修复院在合同期内保持独立法人资格并独立核算"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D1C-APPOINT",
+      "family": "D",
+      "cluster_id": "C-CH-D1",
+      "chain_id": "CH-D1",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "祁楠馆藏管理岗位档案·一、岗位任命",
+      "values": {
+        "D1c-qinan-role.md": "澜庭档案馆"
+      },
+      "locations": {
+        "D1c-qinan-role.md": [
+          {
+            "section": "一、岗位任命",
+            "locator": "祁楠现任澜庭档案馆的馆藏管理部主任"
+          },
+          {
+            "section": "二、管辖范围",
+            "locator": "澜庭档案馆的库房准入名单由祁楠所在部门核定"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D1C-SCOPE",
+      "family": "D",
+      "cluster_id": "C-CH-D1",
+      "chain_id": "CH-D1",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "祁楠馆藏管理岗位档案·二、管辖范围",
+      "values": {
+        "D1c-qinan-role.md": "澜庭档案馆"
+      },
+      "locations": {
+        "D1c-qinan-role.md": [
+          {
+            "section": "二、管辖范围",
+            "locator": "祁楠负责澜庭档案馆全部纸质与影像档案的调阅审批"
+          },
+          {
+            "section": "三、权限说明",
+            "locator": "澜庭档案馆要求祁楠对外借档案的去向逐件登记"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D1C-LIMIT",
+      "family": "D",
+      "cluster_id": "C-CH-D1",
+      "chain_id": "CH-D1",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "祁楠馆藏管理岗位档案·三、权限说明",
+      "values": {
+        "D1c-qinan-role.md": "澜庭档案馆"
+      },
+      "locations": {
+        "D1c-qinan-role.md": [
+          {
+            "section": "三、权限说明",
+            "locator": "祁楠无权批准澜庭档案馆的对外服务采购事项"
+          },
+          {
+            "section": "四、口径提示",
+            "locator": "澜庭档案馆的采购与定标由专门的招标小组负责"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D2A-ROLE",
+      "family": "D",
+      "cluster_id": "C-CH-D2",
+      "chain_id": "CH-D2",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "陆见课程研发任职说明·一、任职信息",
+      "values": {
+        "D2a-lujian-role.md": "岫云教育"
+      },
+      "locations": {
+        "D2a-lujian-role.md": [
+          {
+            "section": "一、任职信息",
+            "locator": "陆见担任岫云教育的课程研发中心负责人"
+          },
+          {
+            "section": "二、研发方向",
+            "locator": "岫云教育的课程上线评审由陆见所在中心牵头组织"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D2A-SCOPE",
+      "family": "D",
+      "cluster_id": "C-CH-D2",
+      "chain_id": "CH-D2",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "陆见课程研发任职说明·二、研发方向",
+      "values": {
+        "D2a-lujian-role.md": "岫云教育"
+      },
+      "locations": {
+        "D2a-lujian-role.md": [
+          {
+            "section": "二、研发方向",
+            "locator": "陆见主持岫云教育理科课程体系的知识点重构工作"
+          },
+          {
+            "section": "三、职责边界",
+            "locator": "岫云教育要求陆见对课程与考纲的对应关系逐条留痕"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D2A-LIMIT",
+      "family": "D",
+      "cluster_id": "C-CH-D2",
+      "chain_id": "CH-D2",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "陆见课程研发任职说明·三、职责边界",
+      "values": {
+        "D2a-lujian-role.md": "岫云教育"
+      },
+      "locations": {
+        "D2a-lujian-role.md": [
+          {
+            "section": "三、职责边界",
+            "locator": "陆见不负责岫云教育的招生宣传与市场投放"
+          },
+          {
+            "section": "四、口径提示",
+            "locator": "岫云教育的对外宣传口径由品牌部门统一审核"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D2B-ENTRUST",
+      "family": "D",
+      "cluster_id": "C-CH-D2",
+      "chain_id": "CH-D2",
+      "hop_role": "bridge",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "岫云教育第三方测评委托说明·一、委托内容",
+      "values": {
+        "D2b-xiuyun-entrust.md": "秋渡测评"
+      },
+      "locations": {
+        "D2b-xiuyun-entrust.md": [
+          {
+            "section": "一、委托内容",
+            "locator": "岫云教育委托秋渡测评开展课程学习成效的独立评估"
+          },
+          {
+            "section": "二、交付与验收",
+            "locator": "秋渡测评按学期向委托方提交评估报告与原始数据说明"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D2B-METHOD",
+      "family": "D",
+      "cluster_id": "C-CH-D2",
+      "chain_id": "CH-D2",
+      "hop_role": "bridge",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "岫云教育第三方测评委托说明·二、交付与验收",
+      "values": {
+        "D2b-xiuyun-entrust.md": "秋渡测评"
+      },
+      "locations": {
+        "D2b-xiuyun-entrust.md": [
+          {
+            "section": "二、交付与验收",
+            "locator": "评估方案的抽样与统计口径由秋渡测评独立确定"
+          },
+          {
+            "section": "三、独立性声明",
+            "locator": "秋渡测评不接受委托方对结论方向的任何事先约定"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D2B-INDEPENDENT",
+      "family": "D",
+      "cluster_id": "C-CH-D2",
+      "chain_id": "CH-D2",
+      "hop_role": "bridge",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "岫云教育第三方测评委托说明·三、独立性声明",
+      "values": {
+        "D2b-xiuyun-entrust.md": "岫云教育"
+      },
+      "locations": {
+        "D2b-xiuyun-entrust.md": [
+          {
+            "section": "三、独立性声明",
+            "locator": "本次委托不涉及岫云教育与受托方的股权投资或人员互派"
+          },
+          {
+            "section": "四、口径提示",
+            "locator": "岫云教育与受托方在法律主体上各自独立互不隶属"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D2C-REGISTER",
+      "family": "D",
+      "cluster_id": "C-CH-D2",
+      "chain_id": "CH-D2",
+      "hop_role": "bridge",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "秋渡测评业务挂靠备案回执·一、备案事项",
+      "values": {
+        "D2c-qiudu-affiliation.md": "明夷学会"
+      },
+      "locations": {
+        "D2c-qiudu-affiliation.md": [
+          {
+            "section": "一、备案事项",
+            "locator": "秋渡测评的教育测量业务在明夷学会完成专业资质备案"
+          },
+          {
+            "section": "二、监督安排",
+            "locator": "明夷学会对备案机构的方法学规范执行情况实施年度检查"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D2C-SUPERVISE",
+      "family": "D",
+      "cluster_id": "C-CH-D2",
+      "chain_id": "CH-D2",
+      "hop_role": "bridge",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "秋渡测评业务挂靠备案回执·二、监督安排",
+      "values": {
+        "D2c-qiudu-affiliation.md": "明夷学会"
+      },
+      "locations": {
+        "D2c-qiudu-affiliation.md": [
+          {
+            "section": "二、监督安排",
+            "locator": "备案机构须接受明夷学会组织的同行评议与抽样复核"
+          },
+          {
+            "section": "三、名义使用",
+            "locator": "明夷学会有权对不符合规范的备案机构暂停其资质"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D2C-NAME",
+      "family": "D",
+      "cluster_id": "C-CH-D2",
+      "chain_id": "CH-D2",
+      "hop_role": "bridge",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "秋渡测评业务挂靠备案回执·三、名义使用",
+      "values": {
+        "D2c-qiudu-affiliation.md": "秋渡测评"
+      },
+      "locations": {
+        "D2c-qiudu-affiliation.md": [
+          {
+            "section": "三、名义使用",
+            "locator": "备案不改变秋渡测评的独立法人地位与经营自主权"
+          },
+          {
+            "section": "四、口径提示",
+            "locator": "秋渡测评对外承接业务时须注明备案编号而非主管关系"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D2D-APPOINT",
+      "family": "D",
+      "cluster_id": "C-CH-D2",
+      "chain_id": "CH-D2",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "邵微学术委员会委员履历·一、任职信息",
+      "values": {
+        "D2d-shaowei-role.md": "明夷学会"
+      },
+      "locations": {
+        "D2d-shaowei-role.md": [
+          {
+            "section": "一、任职信息",
+            "locator": "邵微当选明夷学会学术委员会的常务委员"
+          },
+          {
+            "section": "二、专业方向",
+            "locator": "明夷学会的方法学规范修订工作由邵微牵头执笔"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D2D-SCOPE",
+      "family": "D",
+      "cluster_id": "C-CH-D2",
+      "chain_id": "CH-D2",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "邵微学术委员会委员履历·二、专业方向",
+      "values": {
+        "D2d-shaowei-role.md": "明夷学会"
+      },
+      "locations": {
+        "D2d-shaowei-role.md": [
+          {
+            "section": "二、专业方向",
+            "locator": "邵微主管明夷学会在教育测量方向的同行评议流程"
+          },
+          {
+            "section": "三、职责边界",
+            "locator": "明夷学会的年度检查方案须经邵微所在委员会审议"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-D2D-LIMIT",
+      "family": "D",
+      "cluster_id": "C-CH-D2",
+      "chain_id": "CH-D2",
+      "hop_role": "endpoint",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "邵微学术委员会委员履历·三、职责边界",
+      "values": {
+        "D2d-shaowei-role.md": "明夷学会"
+      },
+      "locations": {
+        "D2d-shaowei-role.md": [
+          {
+            "section": "三、职责边界",
+            "locator": "邵微不参与明夷学会备案机构的具体商务活动"
+          },
+          {
+            "section": "四、口径提示",
+            "locator": "明夷学会与备案机构之间不存在经营层面的利益安排"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-X1-DATA",
+      "family": "X",
+      "cluster_id": null,
+      "chain_id": null,
+      "hop_role": "supporting",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "跨行业机构关系核验周报·一、装备制造方向",
+      "values": {
+        "X1-relation-review.md": "潮生重工"
+      },
+      "locations": {
+        "X1-relation-review.md": [
+          {
+            "section": "一、装备制造方向",
+            "locator": "潮生重工与极昼气象站签署了三年期海况数据合作协议"
+          },
+          {
+            "section": "二、文教服务方向",
+            "locator": "潮生重工在该协议中的联合值守仅指临时通信窗口"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-X1-SUPPLY",
+      "family": "X",
+      "cluster_id": null,
+      "chain_id": null,
+      "hop_role": "supporting",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "跨行业机构关系核验周报·二、文教服务方向",
+      "values": {
+        "X1-relation-review.md": "岱川控股"
+      },
+      "locations": {
+        "X1-relation-review.md": [
+          {
+            "section": "二、文教服务方向",
+            "locator": "岱川控股旗下企业向多家检测机构长期采购试验服务"
+          },
+          {
+            "section": "三、核验结论",
+            "locator": "岱川控股的采购关系不涉及对供方的表决权安排"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-X1-VENUE",
+      "family": "X",
+      "cluster_id": null,
+      "chain_id": null,
+      "hop_role": "supporting",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "跨行业机构关系核验周报·三、核验结论",
+      "values": {
+        "X1-relation-review.md": "澜庭档案馆"
+      },
+      "locations": {
+        "X1-relation-review.md": [
+          {
+            "section": "三、核验结论",
+            "locator": "澜庭档案馆与数家院校共用过同一处临时库房"
+          },
+          {
+            "section": "四、使用限制",
+            "locator": "澜庭档案馆的库房共用属于场地租赁不改变隶属关系"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-X2-SCOPE",
+      "family": "X",
+      "cluster_id": null,
+      "chain_id": null,
+      "hop_role": "supporting",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "教育测评数据互通备忘·一、互通范围",
+      "values": {
+        "X2-data-coop.md": "秋渡测评"
+      },
+      "locations": {
+        "X2-data-coop.md": [
+          {
+            "section": "一、互通范围",
+            "locator": "秋渡测评与两家区域教研中心约定共享脱敏后的题目难度参数"
+          },
+          {
+            "section": "二、技术安排",
+            "locator": "秋渡测评的共享范围仅限统计量不含学生个体信息"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-X2-TECH",
+      "family": "X",
+      "cluster_id": null,
+      "chain_id": null,
+      "hop_role": "supporting",
+      "kind": "text",
+      "claim_type": "passage",
+      "dimension": "教育测评数据互通备忘·二、技术安排",
+      "values": {
+        "X2-data-coop.md": "岫云教育"
+      },
+      "locations": {
+        "X2-data-coop.md": [
+          {
+            "section": "二、技术安排",
+            "locator": "岫云教育向互通平台开放了课程知识点编码的对照表"
+          },
+          {
+            "section": "三、边界声明",
+            "locator": "岫云教育要求对照表逐次申请且不得用于商业转售"
+          }
+        ]
+      }
+    },
+    {
+      "fact_id": "F-X2-BOUNDARY",
+      "family": "X",
+      "cluster_id": null,
+      "chain_id": null,
+      "hop_role": "supporting",
+      "kind": "text",
+      "claim_type": "anchor",
+      "dimension": "教育测评数据互通备忘·三、边界声明",
+      "values": {
+        "X2-data-coop.md": "明夷学会"
+      },
+      "locations": {
+        "X2-data-coop.md": [
+          {
+            "section": "三、边界声明",
+            "locator": "明夷学会仅作为方法学观察方列席互通工作组会议"
+          },
+          {
+            "section": "四、使用限制",
+            "locator": "明夷学会的列席不产生审批权也不构成业务背书"
+          }
+        ]
+      }
+    }
+  ]
+}

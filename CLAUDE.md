@@ -6,13 +6,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A RAG retrieval-evaluation workspace. **Every implemented evaluator scores retrieval / evidence recall — whether a knowledge base returns the Ground-Truth evidence needed to answer a query. None of them score final-answer correctness, reasoning quality, refusal behavior, citation faithfulness, conversation memory, or tool calls**, despite the schema carrying `reference_answer`/`evidence_chain` fields for human review. The agent-Q&A samples in `评测考试所测检索召回接口/DEAP智能体问答/` are groundwork for a future answer-quality evaluator that has not been written.
 
-There are **two active evaluator scripts**:
+There are **three evaluator scripts**:
 
-- **`评测脚本/retrieval_eval.py`** — the current general retrieval evaluator (metrics **v3.0**). Claim-based scoring, bootstrap confidence intervals, char-budget curves, relevance counterfactual, corpus SHA-256 pinning, a reproducibility `manifest_*.json`, and a paired `--compare` with randomization p-values.
+- **`评测脚本/retrieval_eval_v4.py`** — the **current** general retrieval evaluator (schema/metrics **4.1**). Config-driven multi-backend adapters (for comparing different RAG *products*), `document_key` normalization plus a pre-flight document-name gate, **five** parallel headline metrics (including entity-bridge multi-hop), cluster-level bootstrap inference, and N-way `--compare` that refuses same-backend config drift.
+- **`评测脚本/retrieval_eval.py`** — the **frozen** v3.0 evaluator. Kept only so archived `考试结果-v3-*` runs stay reproducible and so the multihop specialization keeps working. **Do not add new v3 runs.**
 - **`评测脚本/entity_bridge_multihop_eval.py`** — a multi-hop *specialization* layered on top of the v3 core (loaded via `importlib`), for "entity-bridge" cross-document chains (endpoint entity → bridge document → endpoint entity, plus image-asset references). Reuses v3's HTTP/normalization/Claim metrics and adds chain-level aggregation with the chain as the statistical clustering unit.
 
+**Why v4 exists.** Two Dify runs on the v3 exam (`考试结果-v3-dify父子` vs `考试结果-v3-非dify父子-纯向量`) showed a 0.1204 recall gap that `--compare` reported at `p=0.0079`. Re-scoring both runs under a matched `score_threshold` collapsed the gap to 0.0278 — **77% of the "result" was a config difference the script never checked**. The same data also showed all 15 "document hit / claim miss" cases were wrong-section retrievals (not chunk-boundary truncation), that 28 of 36 questions scored identically in both runs (14 at ceiling, 7 at floor), and that the char-budget curve was inert because the smallest budget (1000) exceeded every question's entire retrieved context (max 866 chars). v4 plus the v4 exam fix all of these.
+
 Directory names are intentionally Chinese; preserve them. Rough map:
-- `评测脚本/{retrieval_eval,entity_bridge_multihop_eval}.py` — the general evaluator and multi-hop specialization.
+- `评测脚本/retrieval_eval_v4.py` — the current evaluator; `评测脚本/后端配置/*.json` — one profile per RAG product.
+- `评测脚本/考卷生成/` — the v4 exam-generation pipeline (fact ledger, corpus synthesizer, span extractor, exam builder, quality gates, difficulty screening). **Never put the ledger or its intermediates inside a corpus dir** (they would get ingested into the KB) **or inside a 考卷 dir** (`discover_exam_files` globs `*.json` and would treat them as exams).
+- `评测考试/考卷-v4/考卷-2026-08-04-02.json` — the current v4 exam (56 q: 49 scored + 4 sanity + 3 unanswerable), corpus `2026-08-04-02`. `评测考试/考卷-v4-已废弃/考卷-2026-08-04-01.json` is the superseded 4.0 pilot, kept only so the archived first run's `exam_sha256` stays verifiable — it is **not runnable** under the 4.1 evaluator and must stay out of `考卷-v4/` (which is globbed).
+- `生成的原始文档语料/2026-08-04-02/` — v4 corpus, 26 docs: A/B sibling families (2 × 5) + C/D entity-bridge chains (14) + 2 fake-bridge decoys. ASCII filenames, Chinese H1 titles. `2026-08-04-01/` is the 10-doc predecessor.
+- `评测脚本/{retrieval_eval,entity_bridge_multihop_eval}.py` — the frozen v3 evaluator and multi-hop specialization.
 - `评测考试/考卷-v3/考卷-2026-07-15-03.json` — v3 retrieval exam (40 q: 36 scored + 4 diagnostic), corpus `2026-07-14-01`.
 - `评测考试/考卷-多跳/考卷-2026-07-17-01.json` — entity-bridge multi-hop exam, corpus `2026-07-17-多跳-无词面重合` (10 docs + `assets/*.png`).
 - `评测考试/考试结果-v3-<backend|比较>/` — v3 run archives (auto-named). `考试结果-v3-dify-new` is a **manual `--out-dir`** for the `coverage_search` (覆盖索引) Dify variant — not auto-named by any `--backend` value.
@@ -30,12 +37,25 @@ Run from the repo root. The checked-in `.venv/` is empty of dependencies — ins
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r 评测脚本/requirements-dev.txt   # requests + pytest; requirements.txt is requests only
 
-python -m py_compile 评测脚本/retrieval_eval.py 评测脚本/entity_bridge_multihop_eval.py  # offline syntax check
+python -m py_compile 评测脚本/*.py 评测脚本/考卷生成/*.py       # offline syntax check
 python -m pytest tests/                                          # full unit suite (no network/creds)
-python -m pytest tests/test_retrieval_eval.py::test_name -q      # single test
+python -m pytest tests/test_retrieval_eval_v4.py::test_name -q   # single test
+python 评测脚本/retrieval_eval_v4.py --validate-only --exam-dir 评测考试/考卷-v4   # validate v4 exam
 python 评测脚本/retrieval_eval.py --validate-only               # validate v3 exams, no creds/network
 python 评测脚本/entity_bridge_multihop_eval.py --validate-only   # validate multihop exam + PNG assets
 ```
+
+Regenerating the v4 corpus + exam (fully deterministic, offline):
+
+```bash
+python 评测脚本/考卷生成/synthesize_corpus.py --facts-out 评测脚本/考卷生成/事实台账-facts-02.json
+python 评测脚本/考卷生成/extract_spans.py --ledger 评测脚本/考卷生成/事实台账-2026-08-04-02.json --facts 评测脚本/考卷生成/事实台账-facts-02.json
+python 评测脚本/考卷生成/build_exam.py --ledger 评测脚本/考卷生成/事实台账-2026-08-04-02-resolved.json --out 评测考试/考卷-v4/考卷-2026-08-04-02.json
+python 评测脚本/考卷生成/audit_exam.py --exam 评测考试/考卷-v4/考卷-2026-08-04-02.json --ledger 评测脚本/考卷生成/事实台账-2026-08-04-02-resolved.json
+python 评测脚本/考卷生成/screen_candidates.py --exam 评测考试/考卷-v4/考卷-2026-08-04-02.json --check-bridge-unreachable --out 评测脚本/考卷生成/难度校准-2026-08-04-02.json
+```
+
+Regenerating the corpus changes its SHA-256, so the exam must be rebuilt **and the KB re-ingested** before any live run.
 
 `tests/` has two suites: `test_retrieval_eval.py` and `test_entity_bridge_multihop_eval.py`. Both mock HTTP, so no credentials are needed; the entity-bridge suite uses the real multi-hop exam and local corpus/PNG assets. Manual GLM/Kimi API examples live under `评测考试所测检索召回接口/大模型接口调用示例/` and are intentionally outside pytest.
 
@@ -78,6 +98,42 @@ python 评测脚本/retrieval_eval.py --compare <RUN_A_results.json> <RUN_B_resu
 `--dataset-revision` is a free-text label you supply to assert the remote KB was ingested from the same local snapshot; **omitting it marks the run not-comparison-eligible** (the multihop `--compare` rejects `unverified` outright). `--request-k` (default 10) is sent to Dify as `retrieval_model.top_k` (Dify-only; aRAG ignores it — request-side K is unsupported by aRAG, which returns whatever it returns). `--eval-k`/`--primary-k` (defaults `[1,3,5,10]`/`5`) are the **client-side evaluation windows**; `--char-budgets` (default `[1000,2000,4000]`) are normalized-character truncation budgets. Comparing backends fairly means holding `--primary-k`/`--eval-k`/`--char-budgets` constant.
 
 Credentials are environment-only: aRAG and Dify Console use `RETRIEVAL_COOKIE` / `RETRIEVAL_XSRF_TOKEN`; Dify Dataset API uses `DIFY_DATASET_API_KEY`. Keys and request headers must never be written to manifests, results, logs, commits, or reports.
+
+## How the v4 evaluator works (retrieval_eval_v4.py)
+
+Self-contained (does **not** import v3). `normalize_text` is byte-identical to v3's and a unit test asserts that — the two must never drift, or span-matching semantics silently diverge. `BackendProfile` is a plain class, not a `@dataclass`, because this repo's `importlib` loading pattern doesn't register modules in `sys.modules` and `@dataclass` fails under it.
+
+### Backend profiles — one JSON per RAG product
+`评测脚本/后端配置/{arag,dify-console,dify-dataset-api}.json`; external products via `--backend-profile <path>`. A profile declares `url_template`, `auth` (`cookie_csrf`/`bearer_env`/`header_env`/`none`, credentials named as env vars only), `request_template` (`{query}`/`{top_k}`/`{dataset_id}` placeholders keep their type when they are the whole string), `records_path`, and a `field_map` of dotted paths. **All metric math stays backend-agnostic** — adding a product is a config file, not code.
+
+### Document-name gate (the cross-product killer)
+Claim matching compares `document_key(name)` — basename, no extension, NFKC, lowercased, whitespace-stripped — not raw equality. `--document-alias-map` handles products that rename. After `PREFLIGHT_RESPONSES` (3) non-empty responses, if **zero** returned keys match the declared corpus, the run aborts with **exit 4**. Without this, a product whose names differ by `.md` scores zero on the whole exam and nothing says why.
+
+### Five parallel headline metrics (never averaged together)
+`query_macro_claim_recall@primary_k`, `complete_evidence_chain_rate@primary_k`, **`budget_claim_recall@primary_budget`** (top-k truncated to a normalized-char budget — the only chunking-neutral read, and mandatory when comparing products because substring matching inherently rewards bigger chunks), **`abstention_auc`** (Mann-Whitney AUC of answerable vs unanswerable top-1 score; empty response = `-inf`; threshold-free, so nobody can game it by tuning a cutoff), and **`bridge_claim_recall@primary_k`** (recall restricted to `hop_role == "bridge"` claims — the single read for real multi-hop). All CIs use **cluster-level** bootstrap (`cluster_id`). `sanity` questions form their own pass/fail bucket and never enter the headline. `novel_claim_rank_score` is demoted to diagnostics; `off_target_chunk_rate@k` is a new zero-annotation precision axis.
+
+### Entity-bridge multi-hop (the `multihop` block)
+**The gap between `endpoint_claim_recall` and `bridge_claim_recall` is the read for "can this product actually hop"** — if they are close, the bridge document was reachable from the query alone and the hop was never real. `bridge_only_miss_rate` counts the signature failure (both endpoints found, connecting document missed); `path_status` splits questions into `complete`/`bridge_missing`/`endpoint_missing`/`multiple_missing`/`supporting_missing`; `by_chain` breaks everything down per chain.
+
+### Comparison guards
+`comparison_eligible` also requires a verified `dataset_revision`, a clean git tree, and no unmatched document names. `--compare` takes **N** runs. Different products having different request bodies is expected and allowed; **the same `backend_profile` appearing twice with different `request_config` is a hard error** (exit 5, override with `--allow-config-diff`) — that is exactly the v3 trap. Questions that errored in any run are **excluded**, not scored 0. Pairwise deltas get cluster-clustered bootstrap CIs, randomization p-values, and Holm-adjusted p. Manifest records `evaluator_script_sha256` + `backend_profile_sha256`.
+
+### v4 exam schema (4.1) deltas from v3
+`question_role` (`scored`/`sanity`/`unanswerable`) replaces the `scored` bool; every question needs a declared `cluster_id`; every text claim needs **≥2 `accepted_spans`** each 12–40 normalized chars and **occurring exactly once** in its source document; claims carry `claim_type` (`anchor`/`passage`) for split sub-recall; `exam_meta.retrieval_protocol` (`primary_k`/`eval_ks`/`request_k`/`char_budgets`/`primary_budget`) is **authoritative** — CLI flags override it but print a warning and are recorded as `cli_override`.
+
+**4.1 adds the multi-hop contract.** `cross_doc_chain` questions must carry `hop_design` (`chain_id`, `relation_type`, exactly 2 `endpoint_entities` that appear verbatim in the question, `endpoint_documents`, `bridge_documents`, `bridge_entities`) and every one of their claims must carry `hop_role` (`endpoint`/`bridge`/`supporting`) matching its document's declared role; ≥2 endpoint claims and ≥1 bridge claim are required. `exam_meta.bridge_chains[]` declares the chains. **Validation hard-fails if any bridge document contains an endpoint entity** — that is the one guarantee that makes the hop real. Non-chain questions must not declare these fields.
+
+## The v4 exam-generation pipeline (评测脚本/考卷生成/)
+
+The exam is a deterministic projection of a **fact ledger**; the author never hand-picks a span. Order: `synthesize_corpus.py` (template + value table → sibling corpus + ledger `facts`段) → `extract_spans.py` (derives each span **from the written corpus** by expanding a short `locator` to a sentence fragment, then verifying length and in-document uniqueness) → `build_exam.py` (ledger → exam JSON, filling claims/negatives/evidence_chain/counts/corpus SHA) → `audit_exam.py` (gates G1–G9) → `--validate-only` → `screen_candidates.py`.
+
+`audit_exam.py` gates beyond the validator: span uniqueness (G1), ≥300-char separation between different questions' spans in one document so a chunk can't hit two questions (G2), GT span must carry the fact's discriminating value (G3), hard negatives must not come from a positive document and must carry a different value (G4), `reference_answer` must contain every claim's value (G5), the question must **not** (G6), at least one span per question must be lexically distant from the query (G7), claim balance + ASCII filenames (G8), cluster sizes (G9, default ≥3 — clustered bootstrap variance depends on the *number* of clusters, not their size), bridge name isolation (G10), **chain evidence heterogeneity (G11: pairwise char-3 Jaccard between different claims' first spans ≤ 0.35)**, and hop_role consistency (G12). Asset claims are exempt from G3/G5/G6 (their "value" is an image URL).
+
+**G11 exists because v4's first `cross_doc_chain` questions were not multi-hop at all.** Their three "hops" were the same sentence with a different number in three sibling documents — inter-claim span similarity 0.783 against the reference exam's 0.030 — so one semantic match retrieved all three. They scored 0.889, higher than single-document disambiguation at 0.438, which is exactly backwards and falsified the design. The corpus had **zero** cross-document references, so no chain was structurally possible. The current chains measure 0.063.
+
+**G13 lives in `screen_candidates.py` (`--check-bridge-unreachable`) and is the executable falsifiability test**: run the lexical baseline on the question text alone; the bridge documents must **not** appear in the top-10 and the endpoint documents **must**. A reachable bridge means the hop can be skipped. It caught two reachable bridges and two unreachable endpoints on the first build — the cause was that every chain document shared the same filler paragraphs, creating spurious lexical similarity, so the filler now carries each document's own subject name.
+
+`screen_candidates.py` runs a dependency-free char-bigram BM25 over product-agnostic 200/50 sliding chunks — deliberately **not** one of the systems under test, so the exam can't overfit to them. It separates `floor_by_design` (low-lexical-overlap questions a lexical baseline *should* miss) from `floor_suspicious` (untagged zero-scorers, which need human review). Current pilot: mean baseline recall 0.5048, 1/35 ceiling questions (2.9%), low-overlap questions 0.391 vs the rest 0.722, zero suspicious floors.
 
 ## How the v3 evaluator works (retrieval_eval.py)
 
@@ -132,9 +188,12 @@ Per-k bridge metrics: `endpoint_text_claim_recall`, `bridge_text_claim_recall`, 
 `claim_recall` is substring-based: a span hits only if it appears inside a returned chunk from the right document, so the metric is still **chunk-boundary-sensitive** (a backend whose chunks split differently can miss a span that another backend's chunk contains whole). That is exactly why `document_recall@k` and the `char_budget` curves are reported alongside the headline. The v3 exam `考卷-2026-07-15-03` is a regression exam on the existing 10 documents, not a blind benchmark; corpus pinning and paired comparison improve auditability but do not turn it into an unseen benchmark.
 
 ## Conventions specific to this repo
-- Exam ids and files follow `考卷-YYYY-MM-DD-NN`; v3 exams live under `考卷-v3/`, multihop under `考卷-多跳/`.
+- Exam ids and files follow `考卷-YYYY-MM-DD-NN`; v4 exams live under `考卷-v4/`, v3 under `考卷-v3/`, multihop under `考卷-多跳/`.
+- v4 corpus filenames are **ASCII** (`A1-anticoag-2023.md`) with the Chinese title as the document's H1 — Chinese filenames risk not round-tripping through some products' document-name field, which would zero out the whole exam. Directory names stay Chinese.
+- v4 output roots are `考试结果-v4-<profile>` (auto) and `考试结果-v4-比较`; always pass `--out-dir` when a product needs its own archive.
 - Keep metric math pure and backend-agnostic; isolate HTTP and filesystem I/O. Any new backend's differences go inside the header/call/parse trio.
 - Python 3, UTF-8, four-space indent, type hints, `snake_case` functions, `UPPER_SNAKE` constants, descriptive exception names. JSON output: `ensure_ascii=False`, 2-space indent; keep `metrics_version`/report terminology synced when metric semantics change.
-- For metric/schema/retry/backend/output changes, update the matching test file (`test_retrieval_eval.py` / `test_entity_bridge_multihop_eval.py`) in the same change, and run py_compile + `pytest tests/` + both `--validate-only` commands.
+- For metric/schema/retry/backend/output changes, update the matching test file (`test_retrieval_eval_v4.py` / `test_exam_builder.py` / `test_retrieval_eval.py` / `test_entity_bridge_multihop_eval.py`) in the same change, and run py_compile + `pytest tests/` + all three `--validate-only` commands.
+- `tests/fixtures/语料-v4单测/` is a 5-document fixture corpus for the v4 and generator suites (2 siblings + a 3-document bridge chain). Editing it changes SHA-256s that tests compute at runtime, but the derived spans in the fixtures are hand-written — re-run `pytest tests/` after any edit.
 - Commit code, corpus, and generated output as **separate** changes; don't commit `.venv/`, `.idea/`, `.qoder/`, `.claude/`, `.pytest_cache/`, or `__pycache__/`.
 - Keep manual online examples outside `tests/`; importing a test module must never trigger a live request.
