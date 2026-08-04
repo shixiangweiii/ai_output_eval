@@ -1,0 +1,166 @@
+{
+  "schema_version": "4.1",
+  "metrics_version": "4.1",
+  "timestamp": "20260804_193857",
+  "timezone": "CST",
+  "exam_id": "考卷-2026-08-04-02",
+  "exam_sha256": "74b289208d1f62f2331f93f47ac33b6356a7d625b8a3915b6984452fc1d85208",
+  "corpus": {
+    "snapshot_id": "2026-08-04-02-真多跳",
+    "relative_dir": "生成的原始文档语料/2026-08-04-02-真多跳",
+    "documents": [
+      {
+        "name": "A1-anticoag-2023.md",
+        "sha256": "2604533dcf4792dad13d82355812c54ea10cb7c443a24bf8c5b1440e7b40bc2e"
+      },
+      {
+        "name": "A2-anticoag-2024.md",
+        "sha256": "eb352d12cdc93369e0245f5551a32f079dfa5afca8fa005879a22115d151bc0b"
+      },
+      {
+        "name": "A3-anticoag-2025.md",
+        "sha256": "08db60fb1bcc718beba99c02994795b4ebbc4702327f3472d6a9503fe44904c6"
+      },
+      {
+        "name": "A4-anticoag-2025r.md",
+        "sha256": "c45ef86eb4cd8cc57a2323476479227123d35415bbb26a309508bb45039ba366"
+      },
+      {
+        "name": "A5-anticoag-retired.md",
+        "sha256": "1f49180eb4dfd5a243dac8accfa2886fc0d1a551859627d74f6d65ed1d238de6"
+      },
+      {
+        "name": "B1-risk-hongyuan.md",
+        "sha256": "879f809f113e45a08b04af99a16f879d4de69bb87320e21b25a9c3bd6b0b25e8"
+      },
+      {
+        "name": "B2-risk-jinzhou.md",
+        "sha256": "909266a97db9d77a88563ac9775c4f1ec6948c55ba79016428d058a4cefbef8e"
+      },
+      {
+        "name": "B3-risk-nanxu.md",
+        "sha256": "798808da42483498a7bf08ef59a0c4d556efb8d02df44ba4992ce2b9a8fc3747"
+      },
+      {
+        "name": "B4-risk-qihe.md",
+        "sha256": "3e416f7a6e1f8c89846cad3b86ddd0397d92a94347bae5389f4b7b01c129fefc"
+      },
+      {
+        "name": "B5-risk-group.md",
+        "sha256": "6cc28cc131ba49a2dbd69681434e84b62d63d4f98a0bda5cd828283e5fcd6182"
+      },
+      {
+        "name": "C1a-guyu-role.md",
+        "sha256": "5ed7637b03d8abb55815027a286adf093b557c6c3c4c84e92bba4d9aede8a491"
+      },
+      {
+        "name": "C1b-liyan-equity.md",
+        "sha256": "7d224c5b2009e5115d552d1787c88580991e98715870e03874af3737433f4702"
+      },
+      {
+        "name": "C1c-louyan-role.md",
+        "sha256": "0d209cc3dc717ab8c24c70f56f5a2ccfcd1f833fb8f47b4ab9cd83fd5125dfaa"
+      },
+      {
+        "name": "C2a-baichi-role.md",
+        "sha256": "90a89e27c6854a40c3c360910c79304b3e6a0575c7cd086782d58130dd49ad24"
+      },
+      {
+        "name": "C2b-yunshu-service.md",
+        "sha256": "ae3519ff7c7169f0aba33f0c6596b8c897ed84703a8700ee041fa038c1f2da8c"
+      },
+      {
+        "name": "C2c-yubai-equity.md",
+        "sha256": "9086ebeccb25a2c6a3b41246c909ef3173a02b9c8b345765a4b7da7f372f232e"
+      },
+      {
+        "name": "C2d-niezhao-role.md",
+        "sha256": "3d8e6e362567955e6e7a35854f98ec39b0a72a34a9a82e7306b74f9cb8bff71a"
+      },
+      {
+        "name": "D1a-wenque-role.md",
+        "sha256": "04e4625e8a04344248d98ca4b05bc68bf45c0fb68407ec1c799fc78379d6bd71"
+      },
+      {
+        "name": "D1b-pingshan-award.md",
+        "sha256": "d34de42f8b9ecf84247754b462efbdadc5a812b3f36613d33ebebcd06f499d81"
+      },
+      {
+        "name": "D1c-qinan-role.md",
+        "sha256": "570ade6e5ded1fc6a52ed7d1319b25704af5d9f7a68eaada7bac567d022a3ab4"
+      },
+      {
+        "name": "D2a-lujian-role.md",
+        "sha256": "99fcdd22173cccfbb2c2cb732199085fbebff5e8bdc89324d4e4e3b531309426"
+      },
+      {
+        "name": "D2b-xiuyun-entrust.md",
+        "sha256": "11a07ddbf2fff6fe311e5a07a8501a10cd6cd9341f1a07367259ce8cc9b93421"
+      },
+      {
+        "name": "D2c-qiudu-affiliation.md",
+        "sha256": "9535b215edace2ce63f482ec8be59e440f9641aa1a707b42dec8a76dd3d2233a"
+      },
+      {
+        "name": "D2d-shaowei-role.md",
+        "sha256": "59886d63c63a05652fb642c6a64d70761c21285f10cdddb31d6892d8cb716d93"
+      },
+      {
+        "name": "X1-relation-review.md",
+        "sha256": "680c9760c6bed3fd91d56d6a1bcc78d728e11139281b218520cfd1bb097ff9a5"
+      },
+      {
+        "name": "X2-data-coop.md",
+        "sha256": "da58d2f7a20e4aaa78572ef7ed3db9dfbf146846c80753f1ac05af3641447034"
+      }
+    ]
+  },
+  "corpus_drift": false,
+  "backend_profile": "arag",
+  "backend_profile_path": "/Users/shixiangweii/run_proj/ai_output_eval/评测脚本/后端配置/arag.json",
+  "backend_profile_sha256": "116a2926d27e008524c24cf0707fa26e4ff492589c0707480238f4f87afe0039",
+  "auth_mode": "cookie_csrf",
+  "endpoint": "https://deap.dingtalk.com/deapHttpProxy/studio2/proxy/dataset/fe/api/v2/dataset/manage/retrieval_test.json",
+  "dataset_id": "8d8c6c72-3aae-48f2-ad63-919ce99d035b",
+  "dataset_revision": "2026-08-04-02",
+  "request_config": {
+    "datasetId": "8d8c6c72-3aae-48f2-ad63-919ce99d035b",
+    "query": "<query>"
+  },
+  "request_k_support": "unsupported_by_backend",
+  "document_alias_map": {},
+  "retrieval_protocol": {
+    "primary_k": 10,
+    "eval_ks": [
+      1,
+      3,
+      5,
+      10,
+      20
+    ],
+    "request_k": 20,
+    "char_budgets": [
+      250,
+      500,
+      1000
+    ],
+    "primary_budget": 500
+  },
+  "retrieval_protocol_source": {
+    "primary_k": "exam",
+    "eval_ks": "exam",
+    "request_k": "exam",
+    "char_budgets": "exam",
+    "primary_budget": "exam"
+  },
+  "ranking_policy": "production_response_order",
+  "run_scope": "full",
+  "raw_content_limit": 800,
+  "python_version": "3.12.10",
+  "evaluator_script_sha256": "eda66ae012dbc69fa63cc52accc3b89d69a6b3e99ae620c740d14451b8d29407",
+  "git": {
+    "commit": "26fb32f2938b05803388df89e3d297c43ea0bfcc",
+    "dirty": false
+  },
+  "security": "credentials and request headers are never persisted"
+}
