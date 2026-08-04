@@ -24,12 +24,13 @@ This repository is a compact RAG retrieval-evaluation workspace. The active eval
 - `tests/test_retrieval_eval.py`: frozen v3 evaluator unit tests; all HTTP is mocked.
 - `tests/test_entity_bridge_multihop_eval.py`: specialization tests, including the real multi-hop exam and local PNG validation.
 - `生成的原始文档语料/2026-08-04-02-真多跳/`: v4 corpus — 26 documents: two sibling families (2 × 5), four entity-bridge chains (14), two fake-bridge decoys. ASCII filenames, Chinese H1 titles.
-- `评测考试/考卷-v4-含真多跳题/`: v4 exams (schema 4.1). `评测考试/考卷-v4-已废弃/` holds superseded exams; keep them out of the active directory, which is globbed, and never edit an archived exam — its `exam_sha256` is recorded in the run manifests.
+- `评测考试/考卷-v4-含真多跳题/`: v4 exams (schema 4.1). Superseded exams must be kept out of this directory, which is globbed, and never edited — an archived exam's `exam_sha256` is recorded in the run manifests. The 4.0 pilot exam and its single run were deleted outright in `a1a9b62`; only its fact ledgers remain under `评测脚本/考卷生成/`.
 - `生成的原始文档语料/2026-07-14-01/`: 10-document corpus used by the frozen v3 exam.
 - `生成的原始文档语料/2026-07-17-多跳-无词面重合/`: 10-document entity-bridge corpus plus PNG assets.
 - `评测考试/考卷-v3/`: general Claim-based exams.
 - `评测考试/考卷-多跳专项/`: entity-bridge specialized exams.
 - `评测考试/考试结果-v3-<backend>/`: generated general-evaluator artifacts.
+- `评测考试/考试结果-v4-<考卷+配置>/`: generated v4 artifacts; archives are named after the exam and retrieval configuration, not the profile.
 - `评测考试/考试结果-多跳-<backend>/`: generated specialized artifacts.
 - `评测考试所测检索召回接口/`: manual retrieval, agent-Q&A, and model API examples; these are not pytest tests.
 - `评测相关参考文档/`: methodology and historical design notes. Historical v2 descriptions are context, not current runtime behavior.

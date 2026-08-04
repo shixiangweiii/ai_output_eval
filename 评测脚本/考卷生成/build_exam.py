@@ -25,7 +25,7 @@ core = importlib.util.module_from_spec(CORE_SPEC)
 CORE_SPEC.loader.exec_module(core)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_LEDGER = Path(__file__).with_name("事实台账-2026-08-04-01-resolved.json")
+DEFAULT_LEDGER = Path(__file__).with_name("事实台账-2026-08-04-02-resolved.json")
 
 
 class BuildError(ValueError):
