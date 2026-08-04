@@ -17,11 +17,11 @@ There are **three evaluator scripts**:
 Directory names are intentionally Chinese; preserve them. Rough map:
 - `评测脚本/retrieval_eval_v4.py` — the current evaluator; `评测脚本/后端配置/*.json` — one profile per RAG product.
 - `评测脚本/考卷生成/` — the v4 exam-generation pipeline (fact ledger, corpus synthesizer, span extractor, exam builder, quality gates, difficulty screening). **Never put the ledger or its intermediates inside a corpus dir** (they would get ingested into the KB) **or inside a 考卷 dir** (`discover_exam_files` globs `*.json` and would treat them as exams).
-- `评测考试/考卷-v4/考卷-2026-08-04-02.json` — the current v4 exam (56 q: 49 scored + 4 sanity + 3 unanswerable), corpus `2026-08-04-02`. `评测考试/考卷-v4-已废弃/考卷-2026-08-04-01.json` is the superseded 4.0 pilot, kept only so the archived first run's `exam_sha256` stays verifiable — it is **not runnable** under the 4.1 evaluator and must stay out of `考卷-v4/` (which is globbed).
-- `生成的原始文档语料/2026-08-04-02/` — v4 corpus, 26 docs: A/B sibling families (2 × 5) + C/D entity-bridge chains (14) + 2 fake-bridge decoys. ASCII filenames, Chinese H1 titles. `2026-08-04-01/` is the 10-doc predecessor.
+- `评测考试/考卷-v4-含真多跳题/考卷-2026-08-04-02.json` — the current v4 exam (56 q: 49 scored + 4 sanity + 3 unanswerable), corpus `2026-08-04-02-真多跳`. `评测考试/考卷-v4-已废弃/考卷-2026-08-04-01.json` is the superseded 4.0 pilot, kept only so the archived first run's `exam_sha256` stays verifiable — **do not edit it** (that would break the hash) and keep it out of `考卷-v4-含真多跳题/`, which is globbed.
+- `生成的原始文档语料/2026-08-04-02-真多跳/` — v4 corpus, 26 docs: A/B sibling families (2 × 5) + C/D entity-bridge chains (14) + 2 fake-bridge decoys. ASCII filenames, Chinese H1 titles. `2026-08-04-01-非真正多跳/` is the 10-doc predecessor whose `cross_doc_chain` questions turned out not to be multi-hop at all — the directory name records that finding.
 - `评测脚本/{retrieval_eval,entity_bridge_multihop_eval}.py` — the frozen v3 evaluator and multi-hop specialization.
 - `评测考试/考卷-v3/考卷-2026-07-15-03.json` — v3 retrieval exam (40 q: 36 scored + 4 diagnostic), corpus `2026-07-14-01`.
-- `评测考试/考卷-多跳/考卷-2026-07-17-01.json` — entity-bridge multi-hop exam, corpus `2026-07-17-多跳-无词面重合` (10 docs + `assets/*.png`).
+- `评测考试/考卷-多跳专项/考卷-2026-07-17-01.json` — entity-bridge multi-hop exam, corpus `2026-07-17-多跳-无词面重合` (10 docs + `assets/*.png`).
 - `评测考试/考试结果-v3-<backend|比较>/` — v3 run archives (auto-named). `考试结果-v3-dify-new` is a **manual `--out-dir`** for the `coverage_search` (覆盖索引) Dify variant — not auto-named by any `--backend` value.
 - `评测考试/考试结果-多跳-<backend|比较>/` — entity-bridge run and comparison archives.
 - `生成的原始文档语料/{2026-07-14-01,2026-07-17-多跳-无词面重合}/` — source corpora. **This on-disk corpus must stay in sync with the live retrieval KB**: scoring matches GT spans against chunks returned by a fixed knowledge base, so **editing the corpus changes nothing until it is re-ingested**.
@@ -40,7 +40,7 @@ pip install -r 评测脚本/requirements-dev.txt   # requests + pytest; requirem
 python -m py_compile 评测脚本/*.py 评测脚本/考卷生成/*.py       # offline syntax check
 python -m pytest tests/                                          # full unit suite (no network/creds)
 python -m pytest tests/test_retrieval_eval_v4.py::test_name -q   # single test
-python 评测脚本/retrieval_eval_v4.py --validate-only --exam-dir 评测考试/考卷-v4   # validate v4 exam
+python 评测脚本/retrieval_eval_v4.py --validate-only --exam-dir 评测考试/考卷-v4-含真多跳题   # validate v4 exam
 python 评测脚本/retrieval_eval.py --validate-only               # validate v3 exams, no creds/network
 python 评测脚本/entity_bridge_multihop_eval.py --validate-only   # validate multihop exam + PNG assets
 ```
@@ -50,14 +50,14 @@ Regenerating the v4 corpus + exam (fully deterministic, offline):
 ```bash
 python 评测脚本/考卷生成/synthesize_corpus.py --facts-out 评测脚本/考卷生成/事实台账-facts-02.json
 python 评测脚本/考卷生成/extract_spans.py --ledger 评测脚本/考卷生成/事实台账-2026-08-04-02.json --facts 评测脚本/考卷生成/事实台账-facts-02.json
-python 评测脚本/考卷生成/build_exam.py --ledger 评测脚本/考卷生成/事实台账-2026-08-04-02-resolved.json --out 评测考试/考卷-v4/考卷-2026-08-04-02.json
-python 评测脚本/考卷生成/audit_exam.py --exam 评测考试/考卷-v4/考卷-2026-08-04-02.json --ledger 评测脚本/考卷生成/事实台账-2026-08-04-02-resolved.json
-python 评测脚本/考卷生成/screen_candidates.py --exam 评测考试/考卷-v4/考卷-2026-08-04-02.json --check-bridge-unreachable --out 评测脚本/考卷生成/难度校准-2026-08-04-02.json
+python 评测脚本/考卷生成/build_exam.py --ledger 评测脚本/考卷生成/事实台账-2026-08-04-02-resolved.json --out 评测考试/考卷-v4-含真多跳题/考卷-2026-08-04-02.json
+python 评测脚本/考卷生成/audit_exam.py --exam 评测考试/考卷-v4-含真多跳题/考卷-2026-08-04-02.json --ledger 评测脚本/考卷生成/事实台账-2026-08-04-02-resolved.json
+python 评测脚本/考卷生成/screen_candidates.py --exam 评测考试/考卷-v4-含真多跳题/考卷-2026-08-04-02.json --check-bridge-unreachable --out 评测脚本/考卷生成/难度校准-2026-08-04-02.json
 ```
 
 Regenerating the corpus changes its SHA-256, so the exam must be rebuilt **and the KB re-ingested** before any live run.
 
-`tests/` has two suites: `test_retrieval_eval.py` and `test_entity_bridge_multihop_eval.py`. Both mock HTTP, so no credentials are needed; the entity-bridge suite uses the real multi-hop exam and local corpus/PNG assets. Manual GLM/Kimi API examples live under `评测考试所测检索召回接口/大模型接口调用示例/` and are intentionally outside pytest.
+`tests/` has four suites: `test_retrieval_eval_v4.py` (current evaluator), `test_exam_builder.py` (generation pipeline), plus the frozen `test_retrieval_eval.py` and `test_entity_bridge_multihop_eval.py`. All mock HTTP, so no credentials are needed; the entity-bridge suite uses the real multi-hop exam and local corpus/PNG assets. Manual GLM/Kimi API examples live under `评测考试所测检索召回接口/大模型接口调用示例/` and are intentionally outside pytest.
 
 ## Backends — arag + dify, three Dify retrieval modes
 
@@ -89,7 +89,7 @@ RETRIEVAL_COOKIE=... RETRIEVAL_XSRF_TOKEN=... \
 RETRIEVAL_COOKIE=... RETRIEVAL_XSRF_TOKEN=... \
   python 评测脚本/entity_bridge_multihop_eval.py --backend dify \
   --dataset-id <kb-id-with-multihop-corpus> --dataset-revision <rev> \
-  --exam 评测考试/考卷-多跳/考卷-2026-07-17-01.json
+  --exam 评测考试/考卷-多跳专项/考卷-2026-07-17-01.json
 
 # paired comparison of two completed/full runs → 考试结果-v3-比较 (or 考试结果-多跳-比较)
 python 评测脚本/retrieval_eval.py --compare <RUN_A_results.json> <RUN_B_results.json>
@@ -188,9 +188,9 @@ Per-k bridge metrics: `endpoint_text_claim_recall`, `bridge_text_claim_recall`, 
 `claim_recall` is substring-based: a span hits only if it appears inside a returned chunk from the right document, so the metric is still **chunk-boundary-sensitive** (a backend whose chunks split differently can miss a span that another backend's chunk contains whole). That is exactly why `document_recall@k` and the `char_budget` curves are reported alongside the headline. The v3 exam `考卷-2026-07-15-03` is a regression exam on the existing 10 documents, not a blind benchmark; corpus pinning and paired comparison improve auditability but do not turn it into an unseen benchmark.
 
 ## Conventions specific to this repo
-- Exam ids and files follow `考卷-YYYY-MM-DD-NN`; v4 exams live under `考卷-v4/`, v3 under `考卷-v3/`, multihop under `考卷-多跳/`.
+- Exam ids and files follow `考卷-YYYY-MM-DD-NN`; v4 exams live under `考卷-v4-含真多跳题/`, v3 under `考卷-v3/`, the v3-era entity-bridge exam under `考卷-多跳专项/`. **Directory names carry findings** (`-真多跳` / `-非真正多跳` / `-已废弃`); when renaming a directory, update `corpus_relative_dir` in the ledger and rebuild the exam rather than hand-editing the exam JSON.
 - v4 corpus filenames are **ASCII** (`A1-anticoag-2023.md`) with the Chinese title as the document's H1 — Chinese filenames risk not round-tripping through some products' document-name field, which would zero out the whole exam. Directory names stay Chinese.
-- v4 output roots are `考试结果-v4-<profile>` (auto) and `考试结果-v4-比较`; always pass `--out-dir` when a product needs its own archive.
+- v4 output roots default to `考试结果-v4-<profile>` and `考试结果-v4-比较`, but every archive so far uses an explicit `--out-dir` naming the *configuration* rather than the profile (`考试结果-v4-dify父子-混合`, `考试结果-v4-非dify父子-纯向量`, `考试结果-v4-真多跳-arag`) — the config, not the product, is what the comparison guard cares about.
 - Keep metric math pure and backend-agnostic; isolate HTTP and filesystem I/O. Any new backend's differences go inside the header/call/parse trio.
 - Python 3, UTF-8, four-space indent, type hints, `snake_case` functions, `UPPER_SNAKE` constants, descriptive exception names. JSON output: `ensure_ascii=False`, 2-space indent; keep `metrics_version`/report terminology synced when metric semantics change.
 - For metric/schema/retry/backend/output changes, update the matching test file (`test_retrieval_eval_v4.py` / `test_exam_builder.py` / `test_retrieval_eval.py` / `test_entity_bridge_multihop_eval.py`) in the same change, and run py_compile + `pytest tests/` + all three `--validate-only` commands.

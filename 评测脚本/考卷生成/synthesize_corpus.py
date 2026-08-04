@@ -27,7 +27,7 @@ bridge = importlib.util.module_from_spec(BRIDGE_SPEC)
 BRIDGE_SPEC.loader.exec_module(bridge)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_OUT_DIR = PROJECT_ROOT / "生成的原始文档语料" / "2026-08-04-02"
+DEFAULT_OUT_DIR = PROJECT_ROOT / "生成的原始文档语料" / "2026-08-04-02-真多跳"
 
 IMAGE_BASE = "https://upload.wikimedia.org/wikipedia/commons"
 

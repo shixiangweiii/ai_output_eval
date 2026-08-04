@@ -205,8 +205,8 @@
       "claim_reuse_policy": "同一 source_document + normalized accepted_span 不得在正式题中复用"
     },
     "corpus": {
-      "snapshot_id": "2026-08-04-02",
-      "relative_dir": "生成的原始文档语料/2026-08-04-02",
+      "snapshot_id": "2026-08-04-02-真多跳",
+      "relative_dir": "生成的原始文档语料/2026-08-04-02-真多跳",
       "documents": [
         {
           "name": "A1-anticoag-2023.md",

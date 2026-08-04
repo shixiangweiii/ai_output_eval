@@ -4,8 +4,8 @@
   "exam_title": "RAG 检索评测考卷 v4 试点：兄弟文档判别、完整证据链与拒答分离度",
   "generated_date": "2026-08-04",
   "purpose": "试点考卷，覆盖 A（版本轴）与 B（主体轴）两个文档族，用于横向评测不同 RAG 产品的检索召回；不作为独立盲测基准。",
-  "corpus_snapshot_id": "2026-08-04-01",
-  "corpus_relative_dir": "生成的原始文档语料/2026-08-04-01",
+  "corpus_snapshot_id": "2026-08-04-01-非真正多跳",
+  "corpus_relative_dir": "生成的原始文档语料/2026-08-04-01-非真正多跳",
   "scoring_note": "只有 claims 进入检索评分。sanity 题单列不进主指标；unanswerable 题用于计算拒答分离度 AUC；reference_answer 供人工复核与质量闸门使用。",
   "retrieval_protocol": {
     "primary_k": 10,

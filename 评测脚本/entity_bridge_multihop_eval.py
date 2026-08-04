@@ -31,7 +31,7 @@ CORE_SPEC.loader.exec_module(core)
 
 SPECIALIZED_METRICS_VERSION = "entity-bridge-2.0"
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_EXAM_DIR = PROJECT_ROOT / "评测考试" / "考卷-多跳"
+DEFAULT_EXAM_DIR = PROJECT_ROOT / "评测考试" / "考卷-多跳专项"
 RESULTS_ROOT = PROJECT_ROOT / "评测考试"
 ALLOWED_HOP_ROLES = {"endpoint", "bridge", "supporting"}
 IMAGE_REFERENCE_METRIC_FIELDS = (

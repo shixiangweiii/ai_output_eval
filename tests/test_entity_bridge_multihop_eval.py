@@ -10,7 +10,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "评测脚本" / "entity_bridge_multihop_eval.py"
-REAL_EXAM = ROOT / "评测考试" / "考卷-多跳" / "考卷-2026-07-17-01.json"
+REAL_EXAM = ROOT / "评测考试" / "考卷-多跳专项" / "考卷-2026-07-17-01.json"
 SPEC = importlib.util.spec_from_file_location("entity_bridge_multihop_eval", SCRIPT)
 assert SPEC and SPEC.loader
 MODULE = importlib.util.module_from_spec(SPEC)

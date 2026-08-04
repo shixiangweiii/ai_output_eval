@@ -23,12 +23,12 @@ This repository is a compact RAG retrieval-evaluation workspace. The active eval
 - `tests/fixtures/语料-v4单测/`: five-document fixture corpus for both suites above — two sibling documents plus a three-document entity-bridge chain.
 - `tests/test_retrieval_eval.py`: frozen v3 evaluator unit tests; all HTTP is mocked.
 - `tests/test_entity_bridge_multihop_eval.py`: specialization tests, including the real multi-hop exam and local PNG validation.
-- `生成的原始文档语料/2026-08-04-02/`: v4 corpus — 26 documents: two sibling families (2 × 5), four entity-bridge chains (14), two fake-bridge decoys. ASCII filenames, Chinese H1 titles.
-- `评测考试/考卷-v4/`: v4 exams (schema 4.1). `评测考试/考卷-v4-已废弃/` holds superseded exams; keep them out of `考卷-v4/`, which is globbed.
+- `生成的原始文档语料/2026-08-04-02-真多跳/`: v4 corpus — 26 documents: two sibling families (2 × 5), four entity-bridge chains (14), two fake-bridge decoys. ASCII filenames, Chinese H1 titles.
+- `评测考试/考卷-v4-含真多跳题/`: v4 exams (schema 4.1). `评测考试/考卷-v4-已废弃/` holds superseded exams; keep them out of the active directory, which is globbed, and never edit an archived exam — its `exam_sha256` is recorded in the run manifests.
 - `生成的原始文档语料/2026-07-14-01/`: 10-document corpus used by the frozen v3 exam.
 - `生成的原始文档语料/2026-07-17-多跳-无词面重合/`: 10-document entity-bridge corpus plus PNG assets.
 - `评测考试/考卷-v3/`: general Claim-based exams.
-- `评测考试/考卷-多跳/`: entity-bridge specialized exams.
+- `评测考试/考卷-多跳专项/`: entity-bridge specialized exams.
 - `评测考试/考试结果-v3-<backend>/`: generated general-evaluator artifacts.
 - `评测考试/考试结果-多跳-<backend>/`: generated specialized artifacts.
 - `评测考试所测检索召回接口/`: manual retrieval, agent-Q&A, and model API examples; these are not pytest tests.
@@ -46,21 +46,21 @@ python3 -m venv .venv
 
 .venv/bin/python -m py_compile 评测脚本/*.py 评测脚本/考卷生成/*.py
 .venv/bin/python -m pytest tests/ -q
-.venv/bin/python 评测脚本/retrieval_eval_v4.py --validate-only --exam-dir 评测考试/考卷-v4
+.venv/bin/python 评测脚本/retrieval_eval_v4.py --validate-only --exam-dir 评测考试/考卷-v4-含真多跳题
 .venv/bin/python 评测脚本/retrieval_eval.py --validate-only
 .venv/bin/python 评测脚本/entity_bridge_multihop_eval.py --validate-only
 ```
 
-The validation commands require no credentials or network access. v4 validates `评测考试/考卷-v4/`; the frozen v3 evaluator validates `评测考试/考卷-v3/`; the specialization validates `评测考试/考卷-多跳/`, its corpus snapshot, and all declared PNG assets.
+The validation commands require no credentials or network access. v4 validates `评测考试/考卷-v4-含真多跳题/`; the frozen v3 evaluator validates `评测考试/考卷-v3/`; the specialization validates `评测考试/考卷-多跳专项/`, its corpus snapshot, and all declared PNG assets.
 
 Rebuilding the v4 corpus and exam is fully offline and deterministic:
 
 ```bash
 .venv/bin/python 评测脚本/考卷生成/synthesize_corpus.py --facts-out 评测脚本/考卷生成/事实台账-facts-02.json
 .venv/bin/python 评测脚本/考卷生成/extract_spans.py --ledger 评测脚本/考卷生成/事实台账-2026-08-04-02.json --facts 评测脚本/考卷生成/事实台账-facts-02.json
-.venv/bin/python 评测脚本/考卷生成/build_exam.py --ledger 评测脚本/考卷生成/事实台账-2026-08-04-02-resolved.json --out 评测考试/考卷-v4/考卷-2026-08-04-02.json
-.venv/bin/python 评测脚本/考卷生成/audit_exam.py --exam 评测考试/考卷-v4/考卷-2026-08-04-02.json --ledger 评测脚本/考卷生成/事实台账-2026-08-04-02-resolved.json
-.venv/bin/python 评测脚本/考卷生成/screen_candidates.py --exam 评测考试/考卷-v4/考卷-2026-08-04-02.json --check-bridge-unreachable
+.venv/bin/python 评测脚本/考卷生成/build_exam.py --ledger 评测脚本/考卷生成/事实台账-2026-08-04-02-resolved.json --out 评测考试/考卷-v4-含真多跳题/考卷-2026-08-04-02.json
+.venv/bin/python 评测脚本/考卷生成/audit_exam.py --exam 评测考试/考卷-v4-含真多跳题/考卷-2026-08-04-02.json --ledger 评测脚本/考卷生成/事实台账-2026-08-04-02-resolved.json
+.venv/bin/python 评测脚本/考卷生成/screen_candidates.py --exam 评测考试/考卷-v4-含真多跳题/考卷-2026-08-04-02.json --check-bridge-unreachable
 ```
 
 Any corpus regeneration changes SHA-256 values: rebuild the exam and re-ingest the knowledge base before running live.
